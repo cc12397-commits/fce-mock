@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FCE for Schools 模擬考（離線版）</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;
+  --bg:#F6F4EF;--card:#fff;--ink:#22223A;--soft:#66657A;--line:#E4E0D6;
+  --navy:#1F2D5A;--navy2:#E3E8F6;--orange:#FF8A3D;--teal:#1FB5A6;--teal2:#D3F4EF;
+  --red:#D93B41;--red2:#FFE1E1;--green:#22985A;--green2:#DDF6E6;--yellow2:#FFF3CC;--purple:#6C4FE0;--purple2:#ECE7FF;
+  --cam:#D0614B;}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.65}
+input,textarea,select{color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--ink);font-family:inherit}
+input::placeholder,textarea::placeholder{color:#A9A6B8;-webkit-text-fill-color:#A9A6B8}
+.en{font-family:Georgia,"Times New Roman",serif}
+.bal{font-family:"Baloo 2","Noto Sans TC",sans-serif}
+header{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff}
+.hin{max-width:900px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.brand{font-weight:900;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{display:block;font-weight:500;font-size:12px;opacity:.75}
+.timer{margin-left:auto;font-family:"Baloo 2";font-weight:800;font-size:22px;background:rgba(255,255,255,.12);padding:2px 12px;border-radius:10px;white-space:nowrap}
+.timer.low{background:var(--red)}
+.partnav{max-width:900px;margin:0 auto;display:flex;gap:6px;padding:0 12px 10px;overflow-x:auto}
+.partnav button{flex:0 0 auto;background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:999px;padding:4px 12px;font-weight:700;font-size:13px}
+.partnav button.on{background:#fff;color:var(--navy)}
+main{max-width:900px;margin:0 auto;padding:18px 16px 110px}
+h1{font-size:24px;line-height:1.3;margin:4px 0 8px;font-weight:900}
+h2{font-size:19px;margin:22px 0 10px;font-weight:900}
+h3{font-size:16px;margin:0 0 6px;font-weight:800}
+p{margin:6px 0}
+.sub{color:var(--soft);font-size:15px}
+.small{font-size:13px;color:var(--soft)}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.pill{display:inline-block;font-size:12px;font-weight:800;padding:2px 10px;border-radius:999px;background:var(--navy2);color:var(--navy)}
+.pill.g{background:var(--green2);color:#14683B}.pill.r{background:var(--red2);color:#9B1E23}.pill.y{background:var(--yellow2);color:#7A5600}.pill.p{background:var(--purple2);color:#4227B5}
+button{font-family:inherit;font-weight:800;font-size:15px;border:none;border-radius:12px;padding:10px 16px;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+.b-main{background:var(--navy);color:#fff}
+.b-org{background:var(--orange);color:#fff}
+.b-teal{background:var(--teal);color:#fff}
+.b-ghost{background:#fff;color:var(--soft);border:1.5px solid var(--line)}
+.b-red{background:var(--red);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.paper{cursor:pointer}
+.paper .em{font-size:28px}
+.paper .st{font-size:13px;font-weight:700;margin-top:6px}
+.instr{background:var(--navy2);border-radius:12px;padding:12px 14px;margin:10px 0}
+.instr .en{font-size:15.5px;font-weight:600}
+.instr .zh{font-size:13.5px;color:var(--soft);margin-top:4px}
+.passage{font-size:17px;line-height:2.05}
+.passage p{margin:0 0 10px}
+.gapn{display:inline-block;font-family:"Baloo 2";font-weight:800;background:var(--navy);color:#fff;border-radius:6px;padding:0 6px;font-size:13px;line-height:1.6;margin-right:3px}
+.passage input{width:110px;font-size:16px;padding:1px 6px;border:1.5px solid #B9B4A6;border-radius:6px;background:#FFFDF8;text-align:center}
+.passage .stem{font-family:"Baloo 2";font-weight:800;color:var(--purple);font-size:14px;margin-left:3px}
+.q{border-top:1px solid var(--line);padding:12px 0}
+.q:first-child{border-top:none}
+.qn{font-family:"Baloo 2";font-weight:800;color:var(--navy);margin-right:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border:1.5px solid var(--line);border-radius:10px;margin:6px 0;cursor:pointer;background:#FFFDF8}
+.opts input{margin-top:5px;width:18px;height:18px;accent-color:var(--navy)}
+.opts label.sel{border-color:var(--navy);background:var(--navy2)}
+.inline-opts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.inline-opts label{margin:0}
+@media (max-width:560px){.inline-opts{grid-template-columns:1fr 1fr}}
+.kwin{width:100%;font-size:16px;padding:9px 10px;border:1.5px solid #B9B4A6;border-radius:10px;background:#FFFDF8;margin-top:6px}
+.key{display:inline-block;background:var(--ink);color:#fff;font-weight:800;padding:0 10px;border-radius:6px;font-family:"Baloo 2";letter-spacing:1px;margin:6px 0}
+select{font-size:15px;padding:7px 8px;border:1.5px solid #B9B4A6;border-radius:8px;background:#FFFDF8}
+.sentlist p{padding:6px 10px;border-radius:8px;background:#FAF8F2;margin:6px 0}
+.textbox{background:#FAF8F2;border-radius:12px;padding:10px 14px;margin:8px 0}
+.textbox b{font-family:"Baloo 2";color:var(--navy)}
+textarea{width:100%;min-height:240px;font-size:16px;line-height:1.7;padding:12px;border:1.5px solid #B9B4A6;border-radius:12px;background:#FFFDF8;resize:vertical}
+.wc{font-family:"Baloo 2";font-weight:800}
+.foot{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1.5px solid var(--line);z-index:15}
+.footin{max-width:900px;margin:0 auto;padding:10px 16px;display:flex;gap:8px;align-items:center}
+.footin .grow{flex:1;font-size:13px;color:var(--soft)}
+.play{display:flex;gap:10px;align-items:center;background:var(--teal2);border-radius:12px;padding:10px 12px;margin:8px 0}
+.play .cnt{font-size:13px;font-weight:700;color:#0E7067}
+/* results */
+.res-q{border-top:1px solid var(--line);padding:10px 0;font-size:15px}
+.res-q .mk{font-family:"Baloo 2";font-weight:800;float:right}
+.ok{color:var(--green)}.no{color:var(--red)}.half{color:#B07800}
+.expl{background:#FAF8F2;border-radius:10px;padding:8px 10px;margin-top:6px;font-size:14px}
+.bigscore{font-family:"Baloo 2";font-weight:800;font-size:46px;line-height:1;color:var(--navy)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--soft);font-size:13px}
+.sor{border:2px solid var(--cam);border-radius:14px;overflow:hidden}
+.sor .top{background:var(--cam);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-weight:800}
+.bars{display:flex;flex-direction:column;gap:10px;padding:14px}
+.bar{display:grid;grid-template-columns:120px 1fr 54px;gap:8px;align-items:center;font-size:14px;font-weight:700}
+.track{position:relative;height:20px;background:#EFECE4;border-radius:999px}
+.fill{height:100%;border-radius:999px;background:var(--cam)}
+.mark{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink)}
+.ai{border-left:5px solid var(--purple);background:var(--purple2);border-radius:12px;padding:12px 14px;margin:10px 0}
+.crit{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:15px}
+.crit b{font-family:"Baloo 2";font-size:17px}
+.spin{display:inline-block;width:16px;height:16px;border:3px solid var(--purple2);border-top-color:var(--purple);border-radius:50%;animation:sp 1s linear infinite;vertical-align:-3px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.pic{background:linear-gradient(160deg,#E7F2FF,#FFF4E3);border-radius:12px;text-align:center;padding:16px 6px;font-size:40px;line-height:1.3;border:1.5px solid var(--line)}
+.pic span{display:block;font-size:12px;color:var(--soft);font-family:"Noto Sans TC"}
+.mind{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;text-align:center}
+.mind .c{grid-column:1/-1;background:var(--navy);color:#fff;border-radius:12px;padding:10px;font-weight:700}
+.mind div:not(.c){background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px;font-size:15px}
+.mic{background:var(--red);color:#fff}
+.mic.on{animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.6}}
+.live{color:var(--soft);font-style:italic;min-height:22px;font-size:14px}
+.modal{position:fixed;inset:0;background:rgba(20,20,40,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:#fff;border-radius:18px;padding:20px;max-width:380px;width:100%;text-align:center}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 18px;border-radius:999px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+.toast.on{opacity:1}
+.beta{background:var(--yellow2);border:1.5px dashed #E0B640;border-radius:12px;padding:10px 14px;font-size:14px;margin:10px 0}
+.petin{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.petin label{font-size:14px;font-weight:700;display:flex;flex-direction:column;gap:4px}
+.petin input{font-size:18px;padding:8px 10px;border:1.5px solid #B9B4A6;border-radius:10px;background:#FFFDF8;width:100%;font-family:'Baloo 2'}
+.namebox{display:flex;gap:8px}
+.namebox input{flex:1;font-size:17px;padding:9px 12px;border:1.5px solid #B9B4A6;border-radius:10px;background:#FFFDF8;min-width:0}
+</style>
+</head>
+<body>
+<header>
+  <div class="hin">
+    <div class="brand" id="brand">B2 First for Schools 模擬考<small id="brandSub">離線版</small></div>
+    <div class="timer" id="timer" style="display:none">00:00</div>
+  </div>
+  <div class="partnav" id="partnav"></div>
+</header>
+<main id="main"></main>
+<div class="foot" id="foot" style="display:none"><div class="footin"><div class="grow" id="footInfo"></div><button class="b-ghost" id="prevBtn">← 上一部分</button><button class="b-main" id="nextBtn">下一部分 →</button></div></div>
+<div class="modal" id="modal"><div class="box"><div id="mBody"></div><div class="row" style="justify-content:center;margin-top:14px" id="mBtns"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= utilities ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s||'').toLowerCase().replace(/[’‘`]/g,"'").replace(/[.,!?;:"]/g,'').replace(/\s+/g,' ').trim();
+const store={get(k,d){try{const v=localStorage.getItem('fcemock_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('fcemock_'+k,JSON.stringify(v))}catch(e){}}};
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1600);}
+function modal(html,btns){$('#mBody').innerHTML=html;const w=$('#mBtns');w.innerHTML='';btns.forEach(([t,cls,fn])=>{const b=document.createElement('button');b.className=cls;b.textContent=t;b.onclick=()=>{$('#modal').classList.remove('on');fn&&fn();};w.appendChild(b);});$('#modal').classList.add('on');}
+const wordCount=s=>(String(s).trim().match(/[A-Za-z0-9’'-]+/g)||[]).length;
+/* Cambridge-style estimate: raw % → scale (approximate, for practice only) */
+function toScale(p){if(p>=80)return Math.round(180+(p-80)/20*10);if(p>=60)return Math.round(160+(p-60));if(p>=40)return Math.round(140+(p-40));return Math.round(102+p/40*38);}
+function level(s){return s>=180?'C1':s>=160?'B2':s>=140?'B1':s>=120?'A2':'A2 以下';}
+const LVCOL={C1:'g',B2:'g',B1:'y',A2:'r','A2 以下':'r'};
+function lvPill(s){const l=level(s);return `<span class="pill ${LVCOL[l]}">程度 ${l}</span>`;}
+/* count fully-correct and partly-correct questions in given parts */
+function qCount(P,r,f){let ok=0,half=0,n=0;P.parts.forEach((p,pi)=>{if(f&&!f(p))return;const max=p.type==='kwt'?2:(p.marks||1);r.parts[pi].each.forEach(g=>{n++;if(g===max)ok++;else if(g>0)half++;});});return {ok,half,n};}
+function scoreCard(title,scale,raw,q){const zero=raw[0]===0;
+  return `<div class="card"><div class="small">${title}</div><div class="bigscore" style="${zero?'color:var(--red)':''}">${zero?'未得分':scale}</div>
+  <div style="margin-top:6px;font-weight:700">答對 ${q.ok} / ${q.n} 題${q.half?`（另有 ${q.half} 題拿部分分數）`:''}</div>
+  <div class="small">得分 ${raw[0]} / ${raw[1]} 分</div><div style="margin-top:6px">${zero?'<span class="pill r">這部分沒有拿到分數</span>':lvPill(scale)}</div></div>`;}
+const SCALE_NOTE='<p class="small">分數是依「得分比例」換算的估算：得分 40% ≈ 140（B1）、60% ≈ 160（B2 及格）、80% ≈ 180（C1）。有些題目 1 分、有些 2 分，所以「答對題數」和「得分」會不一樣。</p>';
+function grade(s){return s>=180?'Grade A（C1）':s>=173?'Grade B（B2）':s>=160?'Grade C（B2）':s>=140?'Level B1':'未達 B1';}
+const CAND=()=>store.get('name','');
+
+/* ================= exam content (original practice material) ================= */
+/* ===== shared instructions (B2 First for Schools format). {R} = question range ===== */
+const RU_META={
+ 1:{type:'mcCloze',marks:1,instr:'For questions {R}, read the text below and decide which answer (A, B, C or D) best fits each gap.',zh:'讀短文，每個空格選出最適合的 A、B、C 或 D。每題 1 分。'},
+ 2:{type:'open',marks:1,instr:'For questions {R}, read the text below and think of the word which best fits each gap. Use only one word in each gap.',zh:'每個空格只填一個字。每題 1 分。'},
+ 3:{type:'wf',marks:1,instr:'For questions {R}, read the text below. Use the word given in capitals at the end of some of the lines to form a word that fits in the gap in the same line.',zh:'用括號裡的大寫字變化成適合的字。每題 1 分。'},
+ 4:{type:'kwt',marks:2,instr:'For questions {R}, complete the second sentence so that it has a similar meaning to the first sentence, using the word given. Do not change the word given. You must use between two and five words, including the word given.',zh:'用框框裡的字（不可改變）完成第二句，意思和第一句相同，填 2–5 個字。每題 2 分，可得部分分數。'},
+ 5:{type:'mc',marks:2,instr:'You are going to read an article. For questions {R}, choose the answer (A, B, C or D) which you think fits best according to the text.',zh:'閱讀文章，依照文章內容選出最適合的答案。每題 2 分。'},
+ 6:{type:'gapped',marks:2,instr:'You are going to read an article. Six sentences have been removed from the article. Choose from the sentences A–G the one which fits each gap ({R}). There is one extra sentence which you do not need to use.',zh:'把句子 A–G 放回文章的空格，有一句用不到。每題 2 分。'},
+ 7:{type:'match',marks:1,instr:'You are going to read about four young people. For questions {R}, choose from the people (A–D). The people may be chosen more than once.',zh:'閱讀四個人的介紹，判斷每題說的是誰。同一個人可以選不只一次。每題 1 分。'}
+};
+const LI_META={
+ 1:{type:'lmc',instr:'You will hear people talking in eight different situations. For questions {R}, choose the best answer (A, B or C).',zh:'聽八段不同情境的對話，選出最適合的答案。每段播 2 次，先讀題目再播放。'},
+ 2:{type:'gapfill',instr:'You will hear a talk. For questions {R}, complete the sentences with a word or short phrase.',zh:'聽一段介紹，用一個字或短語完成句子。整段播 2 次。'},
+ 3:{type:'lmatch',instr:'You will hear five young people talking. For questions {R}, choose from the list (A–H) what each speaker says. Use the letters only once. There are three extra letters which you do not need to use.',zh:'聽五個人說話，從 A–H 選出每個人說的。每個字母只能用一次，有三個用不到。'},
+ 4:{type:'lmc',shared:true,instr:'You will hear an interview. For questions {R}, choose the best answer (A, B or C).',zh:'聽一段訪問，選出最適合的答案。整段播 2 次。'}
+};
+
+const SETS={};
+/* ===================== SET 1 ===================== */
+SETS[1]={
+ruoe:[
+ {part:1,title:"The Mystery of Sleep",
+  text:"Scientists have long been interested in why we sleep. Although we spend about a third of our lives asleep, researchers are still trying to {1} the mystery of what happens in our brains at night. One popular {2} is that sleep helps the brain to store new information. Studies have shown that students who sleep well before an exam tend to {3} better than those who stay up late revising. Sleep also plays an important {4} in keeping us healthy: without enough rest, our bodies find it harder to {5} off illnesses such as colds. Teenagers need between eight and ten hours a night, but many of them {6} to get this amount because of homework and screens. As a result, they often feel tired at school and find it hard to {7} on their lessons. Experts suggest switching off phones an hour before bed. It may sound simple, but it can make a real {8} to how we feel the next day.",
+  items:[
+   {n:1,o:["solve","answer","repair","fix"],a:0,e:"solve a mystery（解開謎團）是固定搭配。answer 是回答問題，repair/fix 是修理東西。"},
+   {n:2,o:["theory","reason","method","cause"],a:0,e:"One popular theory is that…（一個常見的理論是…）。reason/cause 是原因，後面不會接「…是說」。"},
+   {n:3,o:["perform","act","succeed","achieve"],a:0,e:"perform better（表現得比較好）。succeed 和 achieve 不能直接接 better。"},
+   {n:4,o:["duty","role","job","work"],a:1,e:"play an important role（扮演重要角色）是固定搭配。"},
+   {n:5,o:["beat","hit","fight","push"],a:2,e:"fight off an illness（抵抗疾病）。beat 後面不接 off。"},
+   {n:6,o:["miss","lack","lose","fail"],a:3,e:"fail to do something（沒能做到）。lack 後面直接接名詞，不接 to。"},
+   {n:7,o:["attend","concentrate","notice","listen"],a:1,e:"concentrate on（專心於）。listen 要接 to，notice 後面直接接東西。"},
+   {n:8,o:["effect","result","difference","influence"],a:2,e:"make a difference to（對…產生影響/差別）是固定搭配。effect 要用 have an effect on。"}]},
+ {part:2,title:"A School Without Plastic",
+  text:"When our head teacher announced that our school would become plastic-free, most of us thought it would be impossible. After {9}, plastic seemed to be everywhere – in our lunch boxes, our pens and even our uniforms. However, {10} took only a few months to make a real change. The first step was to get rid {11} plastic bottles. Every student was given a metal one, {12} could be refilled at new water fountains. Then the school canteen stopped using plastic forks and spoons. Some students complained at first, but {13} the end of the term, almost everyone agreed it was a good idea. Our school is now {14} of the cleanest in the city, and other schools have asked us {15} advice. I'm proud that we have shown how much difference a small group of people {16} make.",
+  items:[
+   {n:9,a:["all"],e:"After all（畢竟）是固定說法。"},
+   {n:10,a:["it"],e:"it took + 時間 + to do（花了多少時間做）。"},
+   {n:11,a:["of"],e:"get rid of（擺脫、丟掉）。"},
+   {n:12,a:["which"],e:"指 a metal one（水壺），逗號後面要用 which，不能用 that。"},
+   {n:13,a:["by","at"],e:"by the end of the term（到學期結束時）。at the end of 也可以。"},
+   {n:14,a:["one"],e:"one of the + 最高級 + 複數名詞（最…之一）。"},
+   {n:15,a:["for"],e:"ask somebody for advice（向某人請教）。"},
+   {n:16,a:["can","could"],e:"how much difference people can make（人能帶來多大的改變）。"}]},
+ {part:3,title:"Learning to Code",
+  text:"Coding used to be seen as a skill only for {17}, but today it is taught in many primary schools. Supporters say it improves children's {18} and teaches them to solve problems {19}. When young people write a program, they quickly see the {20} between their instructions and what happens on the screen. Making mistakes is a normal part of the process, so pupils also learn {21}. Some parents worry that children already spend too much time in front of screens, and this is {22}. However, most teachers believe that coding lessons are {23} valuable, since many future {24} will expect basic digital skills.",
+  items:[
+   {n:17,stem:"SCIENCE",a:["scientists"],e:"a skill only for ___（只給某種人）→ 人，複數 scientists。"},
+   {n:18,stem:"CREATE",a:["creativity"],e:"children's ___ 後面要名詞 → creativity（創造力）。"},
+   {n:19,stem:"LOGIC",a:["logically"],e:"修飾動詞 solve → 副詞 logically。"},
+   {n:20,stem:"CONNECT",a:["connection","connections"],e:"the ___ between A and B → 名詞 connection（關聯）。"},
+   {n:21,stem:"PATIENT",a:["patience"],e:"learn ___ → 名詞 patience（耐心）。"},
+   {n:22,stem:"UNDERSTAND",a:["understandable"],e:"this is ___ → 形容詞 understandable（可以理解的）。"},
+   {n:23,stem:"EXTREME",a:["extremely"],e:"修飾形容詞 valuable → 副詞 extremely。"},
+   {n:24,stem:"EMPLOY",a:["employers"],e:"many future ___ will expect → 人（雇主），複數 employers。"}]},
+ {part:4,
+  items:[
+   {n:25,s1:"It was such a boring film that I fell asleep.",key:"SO",s2:"The film ____ I fell asleep.",chunks:[["was so boring"],["that"]],full:"was so boring that",e:"such a + 形容詞 + 名詞 that = so + 形容詞 + that。was so boring（1 分）＋ that（1 分）。"},
+   {n:26,s1:"I'd prefer to stay at home tonight.",key:"RATHER",s2:"I ____ at home tonight.",chunks:[["would rather","'d rather"],["stay"]],full:"would rather stay",e:"would prefer to = would rather + 原形動詞（不加 to）。"},
+   {n:27,s1:"They are building a new sports centre in our town.",key:"BEING",s2:"A new sports centre ____ in our town.",chunks:[["is being"],["built"]],full:"is being built",e:"現在進行式的被動：is being + 過去分詞 built。"},
+   {n:28,s1:"Lucy didn't go to the party because she was ill.",key:"IF",s2:"Lucy would have gone to the party ____ ill.",chunks:[["if she"],["hadn't been","had not been"]],full:"if she hadn't been",e:"第三類條件句（和過去事實相反）：if + had not + 過去分詞。"},
+   {n:29,s1:"'Where do you live?' Tom asked me.",key:"WHERE",s2:"Tom asked me ____.",chunks:[["where i"],["lived"]],full:"where I lived",e:"轉述問句：語順變成「主詞＋動詞」，而且時態往前一格 live → lived。"},
+   {n:30,s1:"It's not worth watching that programme.",key:"POINT",s2:"There's ____ that programme.",chunks:[["no point"],["watching","in watching"]],full:"no point in watching",e:"There's no point (in) + V-ing（做…沒有意義）。"}]},
+ {part:5,title:"Learning to Sail",
+  passage:["When my uncle offered to teach me to sail last summer, I almost said no. I had never been a confident swimmer, and the idea of being in a small boat on open water made my stomach turn. But my uncle, who has been sailing since he was a boy, promised that we would stay close to the shore until I felt ready. 'The sea is only frightening when you don't understand it,' he told me.",
+   "The first lesson was not what I expected. Instead of getting into the boat, we spent a whole morning on the beach, tying knots and learning the names of every rope and sail. I remember feeling impatient; I wanted to be out on the water, not sitting on the sand. Only later did I realise why my uncle had insisted on this. When the wind suddenly changes, there is no time to think about which rope to pull.",
+   "On my third day, the wind picked up just as we were turning back towards the harbour. Waves splashed over the side, and for a moment I froze. My uncle didn't take the controls from me. He simply said, calmly, 'Let the sail out a little.' I did, and the boat steadied almost immediately. I was shaking, but I had done it myself.",
+   "By the end of the summer, I was sailing alone in the bay while my uncle watched from the beach. What surprised me most was not that I had learned a new skill, but how differently I felt about the sea. It no longer seemed like an enemy. It was more like a powerful friend that needed to be respected.",
+   "I still wouldn't call myself a brave person. But I have learned that fear is often just a sign that you don't yet know enough. Next summer, I'm hoping to enter the junior race at the local sailing club – something I could never have imagined a year ago."],
+  items:[
+   {n:31,q:"Why did the writer nearly refuse her uncle's offer?",o:["She had already made other plans.","She felt nervous about being on the sea.","She did not think her uncle was a good teacher.","She thought sailing would be boring."],a:1,e:"第 1 段：她游泳不好，想到在小船上就 made my stomach turn（很緊張）→ B。"},
+   {n:32,q:"What does the phrase 'made my stomach turn' in paragraph 1 suggest?",o:["She felt ill because of something she ate.","The idea made her feel anxious.","She was excited about the trip.","She was hungry."],a:1,e:"made my stomach turn = 讓人很不舒服、很緊張，這裡指想到出海就害怕 → B。"},
+   {n:33,q:"How did the writer feel during the first lesson?",o:["frustrated that they stayed on land","confused by the instructions","proud of how quickly she learned","worried about the weather"],a:0,e:"第 2 段：I remember feeling impatient; I wanted to be out on the water → 不耐煩一直待在岸上 → A。"},
+   {n:34,q:"What does the writer say about her third day?",o:["Her uncle had to take control of the boat.","She dealt with a difficult moment with a little advice.","The weather forced them to stay in the harbour.","She decided she did not want to continue."],a:1,e:"第 3 段：叔叔沒有接手，只說 Let the sail out a little，她自己做到了 → B。陷阱 A：文中說 didn't take the controls。"},
+   {n:35,q:"What surprised the writer most by the end of the summer?",o:["how quickly she could sail alone","the change in her feelings about the sea","how much her uncle trusted her","how strong the wind could be"],a:1,e:"第 4 段：What surprised me most was not… but how differently I felt about the sea → B。陷阱 A：not that I had learned a new skill。"},
+   {n:36,q:"What is the writer's main point in the final paragraph?",o:["Brave people never feel afraid.","Knowing more can help you overcome fear.","Racing is more enjoyable than sailing alone.","She wants to become a sailing teacher."],a:1,e:"fear is often just a sign that you don't yet know enough → 知道得更多就能克服害怕 → B。"}]},
+ {part:6,title:"The Secret Life of Octopuses",
+  passage:["Octopuses are some of the most intelligent animals in the ocean. They have been observed using tools, solving puzzles and even escaping from aquarium tanks. {37}",
+   "One reason for their intelligence may be the way their nervous system is organised. An octopus has around 500 million nerve cells, but most of these are not in its head. {38} This means each arm can taste, touch and even make simple decisions without waiting for instructions from the brain.",
+   "Octopuses are also masters of disguise. Special cells in their skin allow them to change colour in less than a second. {39} Some species can even change the texture of their skin, making it look rough like a rock or soft like seaweed.",
+   "Scientists have recorded many examples of octopuses behaving in surprisingly clever ways. In one aquarium in New Zealand, an octopus named Inky squeezed through a small gap in his tank, crossed the floor and escaped down a pipe into the sea. {40}",
+   "Despite their intelligence, octopuses live surprisingly short lives. {41} This makes their ability to learn so quickly even more remarkable, as they have very little time to gain experience.",
+   "Researchers hope that studying octopuses will help us understand how intelligence develops in creatures very different from ourselves. {42} After all, if a creature with eight arms and no bones can be so clever, intelligence may be far more common in nature than we once believed."],
+  sents:{A:"Instead, they are spread throughout its eight arms.",B:"They use this ability both to hide from enemies and to surprise their prey.",C:"Most species survive for only one or two years.",D:"Staff only realised what had happened when they found the tank empty the next morning.",E:"In fact, some experts believe they may be as clever as some mammals.",F:"Their findings could change the way we think about other animals too.",G:"Octopuses are closely related to fish and share many of their abilities."},
+  items:[
+   {n:37,a:"E",e:"前面列出牠們很聰明的例子，接著 In fact… as clever as some mammals 再加強 → E。"},
+   {n:38,a:"A",e:"前一句說神經細胞「不在頭裡」，Instead 說明在哪裡（八隻手臂）；後一句 each arm can taste… → A。"},
+   {n:39,a:"B",e:"前一句說能在一秒內變色，this ability 指變色能力 → B。"},
+   {n:40,a:"D",e:"講 Inky 逃跑的故事，接著說工作人員隔天才發現 → D。"},
+   {n:41,a:"C",e:"前一句說壽命很短，C 給出具體年數；後一句 very little time 呼應 → C。"},
+   {n:42,a:"F",e:"Researchers hope… 後面接 Their findings（他們的研究發現）→ F。G 是錯的：章魚不是魚的近親，用不到。"}]},
+ {part:7,
+  texts:[
+   {id:"A",name:"Lena",t:"I spent two weeks living with a family in Valencia in Spain. Before I left, I was worried that my Spanish wasn't good enough, but my host family were so patient that I soon stopped worrying about mistakes. The food was a big surprise – dinner wasn't served until ten o'clock at night! The hardest part was saying goodbye. I still message my host sister every week."},
+   {id:"B",name:"Omar",t:"Japan had always been my dream destination, so I applied for the exchange the moment it was announced. School there was much stricter than I'd expected – we even had to clean the classrooms ourselves at the end of the day. At first I found it strange, but now I think it's a great idea. I've started helping more at home since I got back, which my parents are very happy about."},
+   {id:"C",name:"Maya",t:"Because Canada is an English-speaking country, I assumed the trip would be easy. I was wrong! Everyone spoke so fast that I understood very little in the first few days. What helped most was joining the school's basketball team – sport is a language everyone understands. I'd love to go back and study there when I'm older."},
+   {id:"D",name:"Ethan",t:"To be honest, I only signed up for the exchange to Germany because my best friend was going. Then, a week before we left, he broke his leg and couldn't come. I was nervous about travelling without him, but it turned out to be the best thing that could have happened. Without him, I was forced to talk to new people, and I made friends from all over the world."}],
+  items:[
+   {n:43,q:"has changed a habit since returning home?",a:"B",e:"Omar：I've started helping more at home since I got back。"},
+   {n:44,q:"was surprised by the time of a meal?",a:"A",e:"Lena：dinner wasn't served until ten o'clock at night!"},
+   {n:45,q:"found that an activity helped them to communicate?",a:"C",e:"Maya：joining the basketball team – sport is a language everyone understands。"},
+   {n:46,q:"decided to take part mainly because of a friend?",a:"D",e:"Ethan：I only signed up… because my best friend was going。"},
+   {n:47,q:"was concerned about their language level before the trip?",a:"A",e:"Lena：I was worried that my Spanish wasn't good enough。陷阱 C：Maya 是以為會很簡單，不是擔心。"},
+   {n:48,q:"is still in regular contact with someone they met?",a:"A",e:"Lena：I still message my host sister every week。"},
+   {n:49,q:"now thinks positively about something they first found strange?",a:"B",e:"Omar：打掃教室 At first I found it strange, but now I think it's a great idea。"},
+   {n:50,q:"had expected the experience to be easier than it was?",a:"C",e:"Maya：I assumed the trip would be easy. I was wrong!"},
+   {n:51,q:"would like to study in that country in the future?",a:"C",e:"Maya：I'd love to go back and study there when I'm older。"},
+   {n:52,q:"benefited from an unexpected change of plan?",a:"D",e:"Ethan：朋友摔斷腿不能去，結果 it turned out to be the best thing。"}]}
+],
+lis:[
+ {part:1,items:[
+   {n:1,q:"You hear a girl talking about her new phone. What does she dislike about it?",o:["its size","its battery","its camera"],a:1,s:[["G","Everyone told me the camera on this phone was amazing, and they were right – my photos look brilliant. It fits nicely in my pocket, too."],["G","My only complaint is that I have to charge it twice a day, which is a real pain."]],e:"每天要充兩次電，是電池的問題 → B。相機和大小她都很滿意。"},
+   {n:2,q:"You hear a boy talking to his teacher. Why did he miss the class trip?",o:["He was ill.","He forgot to bring a form.","His family went away."],a:1,s:[["B","I'm really sorry I wasn't on the coach yesterday, Miss Hall. I wasn't sick or anything – I just left the permission form on the kitchen table, so they wouldn't let me go."],["W","Oh, that's a shame. Never mind, there'll be another trip next term."]],e:"同意書忘在廚房桌上 → B。陷阱 A：他說 I wasn't sick。"},
+   {n:3,q:"You hear a woman on the radio talking about a new museum. What is special about it?",o:["Visitors can touch the objects.","It stays open all night.","Entry is free for students."],a:0,s:[["W","The new science museum opens this Saturday. Tickets are twelve pounds for adults, and students pay half price."],["W","But what makes it different from other museums is that nothing is behind glass – you're encouraged to pick things up and experiment with them."]],e:"nothing is behind glass… pick things up → 可以摸展品 → A。陷阱 C：學生是半價，不是免費。"},
+   {n:4,q:"You hear two friends talking about a film. What do they agree about?",o:["The story was confusing.","The music was excellent.","The film was too long."],a:1,s:[["G","I thought the ending was a bit confusing, didn't you?"],["B","Not really, it made sense to me. But the soundtrack – wow!"],["G","I know! I've been listening to it all morning."]],e:"兩人都覺得配樂很棒 → B。結局的部分他們意見不同。"},
+   {n:5,q:"You hear a boy talking about a piano concert. How did he feel afterwards?",o:["disappointed","bored","proud"],a:2,s:[["B","I'd been practising that piece for months. When I finished without a single mistake, I felt so pleased with myself."],["B","I didn't win a prize, but that didn't matter at all. My teacher said it was the best I'd ever played."]],e:"pleased with myself = 對自己很滿意、驕傲 → C。陷阱 A：沒得獎但他說 didn't matter at all。"},
+   {n:6,q:"You hear a girl leaving a voice message. What does she want her friend to do?",o:["bring a book","call her back","meet her earlier"],a:1,s:[["G","Hi Tom, it's Ana. I'm at the library now, so don't worry about bringing that book – I've already found a copy."],["G","Can you ring me when you get this? I need to ask you something about the homework."]],e:"Can you ring me = 回電話給我 → B。陷阱 A：她說不用帶書了。"},
+   {n:7,q:"You hear a man talking to a group of students. Where are they?",o:["at a zoo","in a forest","on a farm"],a:1,s:[["M","Right, everyone, stay on the path, please. In a moment you'll see the oldest tree in the park – it's over three hundred years old."],["M","And keep your eyes open. There are deer living among these trees, and if we're quiet, we might spot one."]],e:"小路、老樹、樹林裡的鹿 → 森林 B。"},
+   {n:8,q:"You hear a boy talking about learning Korean. What does he find most difficult?",o:["remembering vocabulary","understanding native speakers","writing correctly"],a:1,s:[["B","Learning new words is actually quite fun – I use an app for that. And my written work usually gets good marks."],["B","But when I watch videos made by people from Korea, they speak so fast that I can hardly follow anything."]],e:"韓國人說話太快聽不懂 → B。單字和寫作他都說沒問題。"}]},
+ {part:2,
+  s:[["G","Hi everyone, I'm Zoe, and I want to tell you about our rooftop garden project. It all started two years ago, when our science teacher, Mr Patel, noticed that the school roof was completely empty. He thought it would be the perfect place to grow food."],
+     ["G","At first, there were only six of us in the gardening club, but now we have over forty members. We grow lots of different things, but our biggest success has been tomatoes. Last summer we picked so many that the school kitchen used them in soup for a whole week. We tried growing carrots too, but they didn't do well because the soil on the roof isn't deep enough."],
+     ["G","Of course, there have been problems. The biggest one has been the wind, which is much stronger on the roof than at ground level. We had to build wooden walls around the beds to protect the plants. Birds were also a nuisance at first, but we solved that with some old CDs hanging from strings – the light scares them away."],
+     ["G","Every Friday afternoon, we sell some of our vegetables to parents at the school gate. So far we've raised about three hundred pounds, and we're going to use the money to buy a small greenhouse."],
+     ["G","Next term, we're planning to start keeping bees on the roof. A local beekeeper has offered to help us. And if all goes well, we'd like to enter the city's young gardeners competition in June."]],
+  items:[
+   {n:9,before:"The idea for the garden came from the school's",after:"teacher.",a:["science"],e:"our science teacher, Mr Patel, noticed…"},
+   {n:10,before:"The gardening club now has more than",after:"members.",a:["forty","40"],e:"now we have over forty members。陷阱：six 是一開始的人數。"},
+   {n:11,before:"The most successful plants have been the",after:".",a:["tomatoes","tomato"],e:"our biggest success has been tomatoes。"},
+   {n:12,before:"Carrots did not grow well because the",after:"was not deep enough.",a:["soil"],e:"the soil on the roof isn't deep enough。"},
+   {n:13,before:"The biggest problem on the roof has been the",after:".",a:["wind","strong wind","the wind"],e:"The biggest one has been the wind。陷阱：birds 只是一開始的小麻煩。"},
+   {n:14,before:"To keep birds away, the students hung old",after:"from strings.",a:["cds","cd","compact discs"],e:"some old CDs hanging from strings。"},
+   {n:15,before:"Vegetables are sold to parents every",after:"afternoon.",a:["friday"],e:"Every Friday afternoon, we sell some of our vegetables。"},
+   {n:16,before:"The money will be used to buy a small",after:".",a:["greenhouse"],e:"use the money to buy a small greenhouse。"},
+   {n:17,before:"Next term, the club plans to start keeping",after:".",a:["bees"],e:"start keeping bees on the roof。"},
+   {n:18,before:"The club would like to enter a competition in",after:".",a:["june"],e:"the young gardeners competition in June。"}]},
+ {part:3,
+  opts:{A:"They wanted to become more confident.",B:"A family member encouraged them.",C:"They hope it will help them in a future job.",D:"Their friends were already members.",E:"They wanted to try something completely new.",F:"It fitted in well with their timetable.",G:"They wanted to get fitter.",H:"A teacher suggested it."},
+  items:[
+   {n:19,sp:"Speaker 1",s:[["G","I joined the drama club at the start of the year. My friends all thought I was mad – none of them would ever go on stage! But I've always been really shy, and I thought performing might help me feel more comfortable speaking in front of people. It's already working."]],a:"A",e:"很害羞，想讓自己在人前說話更自在 → 變得更有自信 A。陷阱 D：朋友都不參加。"},
+   {n:20,sp:"Speaker 2",s:[["B","I'm in the chess club. I'd never played before, to be honest – I'd always done sports clubs like football and swimming. I just fancied doing something totally different, something that used my brain instead of my legs!"]],a:"E",e:"something totally different → 想嘗試全新的東西 E。陷阱 G：運動是他以前做的。"},
+   {n:21,sp:"Speaker 3",s:[["G","My mum's a journalist, and she's always telling me how exciting her job is, but that's not why I joined the school newspaper. Ms Rivera, my English teacher, read one of my stories and said I should write for it. I wasn't sure at first, but I'm so glad I listened."]],a:"H",e:"英文老師說她應該加入 → H。陷阱 B：她特別說媽媽 not why I joined。"},
+   {n:22,sp:"Speaker 4",s:[["B","I joined the coding club because I'm hoping to become a games designer one day. Lots of people think it's just for fun, but you learn really useful skills. It's on Wednesday lunchtimes, which is a bit annoying, because that's when I usually see my friends."]],a:"C",e:"想以後當遊戲設計師 → 對未來工作有幫助 C。陷阱 F：時間其實不太方便。"},
+   {n:23,sp:"Speaker 5",s:[["G","I'd put on a bit of weight over the holidays, and I wanted to get back in shape, so I joined the dance club. My older brother laughed at me, but I don't care – it's brilliant exercise, and the music is great."]],a:"G",e:"get back in shape、brilliant exercise → 想變健康 G。陷阱 B：哥哥是取笑她，不是鼓勵。"}]},
+ {part:4,
+  s:[["W","My guest today is fifteen-year-old Mia Cole, whose first novel came out last month. Mia, when did you start writing?"],
+     ["G","I've always made up stories, but I only started writing them down when I was eleven. We'd just moved house, and I didn't know anyone at my new school, so I spent a lot of time on my own. Writing was a way of making friends – even if they were imaginary!"],
+     ["W","Where did the idea for your novel come from?"],
+     ["G","People always assume it's based on my own life, but it isn't really. The idea came from a dream I had about a city floating in the sky. I woke up and wrote down everything I could remember before I forgot it."],
+     ["W","How long did it take you to write?"],
+     ["G","The first draft took about eight months, which was quick. But then I rewrote it three times. The rewriting was much harder than the writing – I had to cut out some of my favourite chapters because they slowed the story down."],
+     ["W","How did you find a publisher?"],
+     ["G","My aunt works in a bookshop, and everyone thinks she helped me, but actually I entered a national writing competition. I didn't win, but one of the judges was an editor, and she contacted me afterwards."],
+     ["W","How do you manage writing and schoolwork?"],
+     ["G","It isn't easy. I write for an hour every morning before school, when the house is quiet. At weekends I try not to write at all – I think your brain needs a rest."],
+     ["W","What do your friends think about your success?"],
+     ["G","They're really supportive, though some of them were surprised. I'd never told anyone at school I was writing a book! Now they keep asking if they're going to appear in the next one."],
+     ["W","Finally, what advice would you give young writers?"],
+     ["G","Read as much as you can – that's what everyone says, and it's true. But my main advice is: don't show your work to anyone until it's finished. If people criticise it too early, you might give up."]],
+  items:[
+   {n:24,q:"Why did Mia start writing her stories down?",o:["Her teacher asked her to.","She felt lonely after moving house.","She wanted to become famous."],a:1,e:"剛搬家、在新學校誰都不認識，常常一個人 → B。"},
+   {n:25,q:"Where did the idea for her novel come from?",o:["her own experiences","a book she had read","a dream she had"],a:2,e:"The idea came from a dream → C。陷阱 A：她說 it isn't really（不是自己的生活）。"},
+   {n:26,q:"What did Mia find hardest?",o:["finding time to write","removing parts she liked","writing the first draft"],a:1,e:"改寫比較難，要刪掉喜歡的章節 → B。陷阱 C：初稿 was quick。"},
+   {n:27,q:"How did Mia find a publisher?",o:["Her aunt introduced her to one.","She won a competition.","A judge contacted her."],a:2,e:"比賽沒得獎，但評審之一是編輯，之後聯絡她 → C。"},
+   {n:28,q:"When does Mia usually write?",o:["early in the morning","late at night","at weekends"],a:0,e:"every morning before school → A。陷阱 C：週末她 try not to write。"},
+   {n:29,q:"How did Mia's friends react to her success?",o:["Some of them were jealous.","Some of them had not known about the book.","They wanted to write books too."],a:1,e:"I'd never told anyone at school → 有些朋友不知道她在寫書 → B。"},
+   {n:30,q:"What is Mia's main advice for young writers?",o:["Read as many books as possible.","Keep your writing private until it is finished.","Ask friends for their opinions."],a:1,e:"my main advice is: don't show your work to anyone until it's finished → B。陷阱 A：那是 what everyone says。"}]}
+],
+wri:{p1:{task:"In your English class you have been talking about free time. Now, your English teacher has asked you to write an essay.\nWrite an essay using all the notes and giving reasons for your point of view.",q:"Is it better for young people to spend their free time outdoors or indoors?",notes:["health","making friends","........ (your own idea)"]},
+ p2:[{id:"article",title:"Article（文章）",task:"You see this announcement in an English-language magazine for teenagers.\n\nARTICLES WANTED!\nMy favourite place\nTell us about a place you love to go to. Why is it special to you? What do you do there?\nThe best articles will be published next month.\n\nWrite your article."},
+  {id:"email",title:"Email（電子郵件）",task:"You have received this email from your English-speaking friend, Alex.\n\n\"I'm coming to visit your country next month! What will the weather be like? Which food should I try? And what could we do together at the weekend?\"\n\nWrite your email."},
+  {id:"story",title:"Story（故事）",task:"Your English teacher has asked you to write a story.\nYour story must begin with this sentence:\nWhen Sam opened the box, he couldn't believe his eyes.\n\nYour story must include:\n• a phone call\n• a surprise\n\nWrite your story."}]},
+spk:[
+ {part:1,title:"Part 1 · Interview",zh:"考官問你關於自己的問題，每題回答 2–3 句。",secs:20,q:"Where do you live? What do you like about it?"},
+ {part:1,title:"Part 1 · Interview",zh:"",secs:20,q:"What do you usually do at the weekend?"},
+ {part:1,title:"Part 1 · Interview",zh:"",secs:20,q:"Tell us about a teacher you really like."},
+ {part:1,title:"Part 1 · Interview",zh:"",secs:20,q:"What would you like to learn to do in the future? Why?"},
+ {part:2,title:"Part 2 · Long turn (1)",zh:"比較兩張圖片並回答上方的問題，講滿 1 分鐘。",secs:60,q:"Here are your photographs. They show families on holiday in different places. I'd like you to compare the photographs, and say why you think the families have chosen these holidays.",pics:[["🏕️⛺🌲<br>👨‍👩‍👧‍👦🔥","露營 Camping"],["🏨🏊‍♀️🌴<br>👨‍👩‍👧🍹","飯店度假 Hotel"]]},
+ {part:2,title:"Part 2 · Follow-up",zh:"簡短回答（約 30 秒）。",secs:30,q:"Which of these holidays would you prefer? Why?"},
+ {part:2,title:"Part 2 · Long turn (2)",zh:"比較兩張圖片並回答上方的問題，講滿 1 分鐘。",secs:60,q:"Now here are some more photographs. They show young people doing activities after school. Compare the photographs, and say why you think the young people enjoy these activities.",pics:[["🎨🖌️🖼️<br>👧👦","美術課 Art class"],["⚽🏃‍♂️🥅<br>👦👦","足球隊 Football team"]]},
+ {part:2,title:"Part 2 · Follow-up",zh:"簡短回答（約 30 秒）。",secs:30,q:"Which of these activities would you like to do? Why?"},
+ {part:3,title:"Part 3 · Collaborative task",zh:"真的考試是和同伴討論。這裡請你自己說：每個點子的好處和壞處（2 分鐘）。",secs:120,q:"Here are some things that could make a town better for young people. Talk about how these things could help young people.",mind:{c:"How could these things help young people in a town?",o:["a skate park","free music lessons","a youth café","more bike paths","a science museum"]}},
+ {part:3,title:"Part 3 · Decision",zh:"做出決定並說明原因（1 分鐘）。",secs:60,q:"Now decide which two things would be the most useful for young people."},
+ {part:4,title:"Part 4 · Discussion",zh:"說出看法＋理由＋例子。",secs:40,q:"Do you think young people have enough places to meet their friends?"},
+ {part:4,title:"Part 4 · Discussion",zh:"",secs:40,q:"Is it better to have lots of hobbies or just one? Why?"},
+ {part:4,title:"Part 4 · Discussion",zh:"",secs:40,q:"Some people say children spend too much time on screens. What do you think?"}
+]};
+/* ===================== SET 2 ===================== */
+SETS[2]={
+ruoe:[
+ {part:1,title:"The Story of Chocolate",
+  text:"Chocolate is one of the world's most popular treats, but it has not always been eaten as a sweet. For thousands of years, people in Central America made a bitter drink from cocoa beans, which they believed had special powers. The beans were {1} so highly that they were even used as money. When the Spanish {2} cocoa to Europe in the sixteenth century, it quickly {3} on among wealthy people, who added sugar to make it sweeter. However, it was not until the 1840s that a British company {4} up with the idea of making solid chocolate bars. Today, the chocolate industry is {5} billions of dollars a year. Yet many cocoa farmers, most of whom live in West Africa, earn very little. Some companies have now {6} to pay farmers fairer prices, and more shoppers are choosing chocolate with a 'fair trade' label. So next time you {7} yourself to a bar of chocolate, it might be worth {8} a moment to think about where it came from.",
+  items:[
+   {n:1,o:["valued","priced","charged","cost"],a:0,e:"be valued highly（被高度重視、珍視）。priced/charged/cost 都和「定價、收費」有關，不能接 so highly。"},
+   {n:2,o:["introduced","presented","delivered","showed"],a:0,e:"introduce something to a place（把…引進某地）。"},
+   {n:3,o:["caught","took","picked","got"],a:0,e:"catch on（流行起來），過去式 caught on。"},
+   {n:4,o:["came","thought","made","put"],a:0,e:"come up with an idea（想出一個點子），過去式 came up with。"},
+   {n:5,o:["worth","valued","priced","cost"],a:0,e:"be worth + 金額（值…錢）。valued 後面要加 at。"},
+   {n:6,o:["promised","assured","ensured","insisted"],a:0,e:"promise to do（承諾去做）。insist 要用 insist on doing。"},
+   {n:7,o:["treat","give","offer","serve"],a:0,e:"treat yourself to something（犒賞自己…）是固定說法。"},
+   {n:8,o:["taking","passing","keeping","holding"],a:0,e:"take a moment（花一點時間）。worth 後面接 V-ing → taking。"}]},
+ {part:2,title:"Why Do Cats Purr?",
+  text:"Most people think that cats purr only {9} they are happy, but scientists have discovered that the truth is more complicated. Cats also purr when they are hurt or frightened. Some researchers believe that purring may help cats to heal, {10} the vibrations are thought to strengthen their bones. {11} is more, cats seem to use a special kind of purr when they want food. This sound includes a high-pitched cry, similar {12} that of a human baby, which makes it very difficult for owners to ignore. In one study, people were asked to listen to recordings of different purrs. Even those {13} had never owned a cat could tell which purrs were requests for food. {14} cats have lived with humans for thousands of years, there is still a great deal we do not know {15} them. Perhaps that is part of the reason {16} they remain so popular.",
+  items:[
+   {n:9,a:["when","if"],e:"purr only when they are happy（只在開心時發出呼嚕聲）。if 也可以。"},
+   {n:10,a:["as","because","since"],e:"表示原因的連接詞：as / because / since。"},
+   {n:11,a:["what"],e:"What is more（而且、更重要的是）是固定說法。"},
+   {n:12,a:["to"],e:"similar to（和…相似）。"},
+   {n:13,a:["who","that"],e:"those who…（那些…的人）。"},
+   {n:14,a:["although","though","while","whilst"],e:"雖然貓和人類一起生活了幾千年，但… → Although / Though / While。"},
+   {n:15,a:["about"],e:"know about something（了解…）。"},
+   {n:16,a:["why","that"],e:"the reason why…（…的原因）。"}]},
+ {part:3,title:"Becoming a Vet",
+  text:"Many children dream of becoming a vet, but the job is far more {17} than most people imagine. Vets need a wide {18} of different animals, from tiny hamsters to enormous horses. The training is long and {19}, and many students have to borrow money to pay for it. Dealing with worried pet owners also requires great {20}. Working hours can be {21}, as animals often fall ill in the middle of the night. {22}, some animals cannot be saved, which can be emotionally {23} for everyone involved. Despite all this, most vets say their work is {24} rewarding.",
+  items:[
+   {n:17,stem:"DEMAND",a:["demanding"],e:"far more ___ than…（比…更…）→ 形容詞 demanding（要求很高的、辛苦的）。"},
+   {n:18,stem:"KNOW",a:["knowledge"],e:"a wide ___ of → 名詞 knowledge（知識）。"},
+   {n:19,stem:"EXPENSE",a:["expensive"],e:"long and ___ → 形容詞 expensive（後面說要借錢）。"},
+   {n:20,stem:"SENSITIVE",a:["sensitivity"],e:"requires great ___ → 名詞 sensitivity（體貼、細心）。"},
+   {n:21,stem:"PREDICT",a:["unpredictable"],e:"動物半夜會生病 → 時間「無法預測」→ un + predict + able。"},
+   {n:22,stem:"FORTUNE",a:["unfortunately"],e:"有些動物救不回來 → 「不幸地」→ Unfortunately。"},
+   {n:23,stem:"EXHAUST",a:["exhausting"],e:"情緒上「讓人筋疲力盡的」→ exhausting（-ing 是「讓人覺得」）。"},
+   {n:24,stem:"INCREDIBLE",a:["incredibly"],e:"修飾形容詞 rewarding → 副詞 incredibly。"}]},
+ {part:4,
+  items:[
+   {n:25,s1:"I last went swimming three months ago.",key:"FOR",s2:"I ____ three months.",chunks:[["haven't","have not"],["been swimming for","swum for"]],full:"haven't been swimming for",e:"最後一次是三個月前 = 三個月沒…了 → 現在完成式 haven't been swimming / haven't swum for。"},
+   {n:26,s1:"My brother is too young to drive a car.",key:"OLD",s2:"My brother is ____ to drive a car.",chunks:[["not"],["old enough"]],full:"not old enough",e:"too young = not old enough。enough 放在形容詞後面。"},
+   {n:27,s1:"Someone has stolen my bag!",key:"BEEN",s2:"My bag ____!",chunks:[["has been"],["stolen"]],full:"has been stolen",e:"現在完成式的被動：has been + 過去分詞 stolen。"},
+   {n:28,s1:"You should take an umbrella in case it rains.",key:"BETTER",s2:"You ____ an umbrella in case it rains.",chunks:[["had better","'d better"],["take"]],full:"had better take",e:"should = had better + 原形動詞（不加 to）。"},
+   {n:29,s1:"Jack regrets not studying harder.",key:"WISHES",s2:"Jack ____ harder.",chunks:[["wishes he"],["had studied","'d studied"]],full:"wishes he had studied",e:"後悔過去的事 → wish + had + 過去分詞。"},
+   {n:30,s1:"It took me two hours to finish the project.",key:"SPENT",s2:"I ____ the project.",chunks:[["spent two hours"],["finishing","on","doing"]],full:"spent two hours finishing",e:"spend + 時間 + V-ing / on something。"}]},
+ {part:5,title:"My Great-Grandmother's Recipe Book",
+  passage:["Every summer, I spend a few weeks with my grandmother in her small house by the sea. Last year, while I was looking for a torch in her kitchen cupboard, I came across an old notebook with a faded red cover. Inside were dozens of handwritten recipes, some in my grandmother's neat writing and others in a style I didn't recognise.",
+   "When I showed it to her, she went quiet for a moment. 'That belonged to my mother,' she said eventually. 'I thought it had been lost years ago.' She explained that her mother had been a cook in a large hotel and had collected recipes from guests who came from all over the world. Some of the pages had notes in the margins – 'too much salt!' or 'Mr Brown's favourite'.",
+   "My grandmother suggested we cook one recipe from the book every day. I wasn't especially keen at first. I'd never cooked anything more complicated than toast, and some of the dishes had ingredients I'd never heard of. But my grandmother was patient, and she let me make my own mistakes. My first attempt at bread was as hard as a brick, and we laughed about it for days.",
+   "As the weeks went by, I realised that cooking was only part of what we were doing. While we chopped and stirred, my grandmother told me stories about her childhood that I had never heard before – about the hotel, the guests and her mother, who sounded like a remarkable woman. The recipes became a way of getting to know a member of my family I had never met.",
+   "When I got home, I typed up all the recipes and made a copy for each of my cousins. My grandmother kept the original, of course. Now, whenever I make one of the dishes, I feel connected to two generations of women in my family – and, I like to think, to some of those hotel guests too."],
+  items:[
+   {n:31,q:"How did the writer find the notebook?",o:["Her grandmother gave it to her.","She found it by chance.","She had been searching for it.","A cousin showed it to her."],a:1,e:"第 1 段：找手電筒時 came across（偶然發現）→ B。"},
+   {n:32,q:"How did the grandmother react when she saw the notebook?",o:["She was annoyed that the writer had found it.","She was surprised because she thought it was lost.","She was unsure who had written it.","She immediately wanted to start cooking."],a:1,e:"I thought it had been lost years ago → B。"},
+   {n:33,q:"What do we learn about the notes in the margins?",o:["They were written by the writer's grandmother.","They gave opinions about some of the dishes.","They were very difficult to read.","They explained how to cook each dish."],a:1,e:"'too much salt!'、'Mr Brown's favourite' 都是對菜的評語 → B。"},
+   {n:34,q:"How did the writer feel about cooking every day at first?",o:["excited","unenthusiastic","embarrassed","curious"],a:1,e:"I wasn't especially keen at first（一開始不太想）→ B。"},
+   {n:35,q:"What does the writer realise in paragraph 4?",o:["Cooking was harder than she had expected.","Her grandmother was a better cook than her mother.","Cooking helped her to learn about her family's past.","The hotel guests had not been very friendly."],a:2,e:"做菜時奶奶講了很多家族故事，認識了從沒見過的曾祖母 → C。"},
+   {n:36,q:"What did the writer do after returning home?",o:["She gave the original notebook to her cousins.","She shared the recipes with other family members.","She started cooking for a hotel.","She asked her grandmother to send more recipes."],a:1,e:"打字整理、給每個表親一份 → B。陷阱 A：原本的筆記本奶奶留著。"}]},
+ {part:6,title:"The Return of the Wolves",
+  passage:["In 1995, wolves were brought back to Yellowstone National Park in the United States after an absence of around 70 years. {37} However, what happened next surprised even the scientists who had planned the project.",
+   "Without wolves, the number of elk – a type of large deer – had grown enormously. The elk ate so many young trees and plants that some areas of the valleys had become almost bare. {38} The elk began to avoid open areas where they could easily be caught, and plants in those places started to grow back.",
+   "As trees returned along the rivers, so did many birds. {39} Beavers also came back, as they rely on trees to build their dams. These dams created pools of water, which in turn provided homes for fish, frogs and other creatures.",
+   "Some scientists even claim that the wolves changed the shape of the rivers themselves. {40} With fewer animals eating the plants on the riverbanks, the soil was held together by roots and the banks became more stable.",
+   "Not everyone agrees with this version of events. {41} They point out that other factors, such as changes in rainfall and human activity, may also have played a part.",
+   "Whatever the full explanation, the Yellowstone story has become a famous example of how removing or returning a single species can affect an entire area. {42}"],
+  sents:{A:"When the wolves arrived, this began to change.",B:"Their aim was to restore a natural balance to the park.",C:"Songbirds, for example, nested in the new branches and fed on the insects that lived there.",D:"Their argument is that the riverbanks stopped falling apart as quickly.",E:"Some researchers believe the effects of the wolves have been exaggerated.",F:"It has encouraged similar projects in other parts of the world.",G:"Wolves are now the most common animal in the park."},
+  items:[
+   {n:37,a:"B",e:"前面說把狼帶回公園，Their aim 說明目的；後面 However… surprised 形成對比 → B。"},
+   {n:38,a:"A",e:"前面說鹿太多、植物被吃光；this began to change 接著說鹿開始避開空地 → A。"},
+   {n:39,a:"C",e:"前一句說鳥回來了，Songbirds, for example 舉例 → C。"},
+   {n:40,a:"D",e:"前一句說狼改變了河流形狀，Their argument is that… 解釋說法；後一句說河岸變穩固 → D。"},
+   {n:41,a:"E",e:"Not everyone agrees… 接著 Some researchers believe… exaggerated；後面 They point out 指這些研究者 → E。"},
+   {n:42,a:"F",e:"結尾說這是有名的例子，It has encouraged similar projects 收尾 → F。G 不對：文中沒說狼是最常見的動物。"}]},
+ {part:7,
+  texts:[
+   {id:"A",name:"Sofia",t:"I started the violin when I was six because my parents thought it would be good for me. For years I hated practising, and I almost gave up when I was ten. What changed my mind was joining a youth orchestra. Playing with other people is completely different from practising alone – suddenly the music made sense. Now I practise every day without anyone telling me to."},
+   {id:"B",name:"Leo",t:"I taught myself the drums by watching online videos. My parents weren't thrilled about the noise, so I built a soundproof corner in our garage using old mattresses! I'm in a band with three friends now. We've only played one concert, at a school fair, but we were paid with free pizza, which I think counts as our first professional job."},
+   {id:"C",name:"Hana",t:"My grandfather gave me his old guitar for my twelfth birthday. It's not a particularly good instrument, and a teacher once suggested I should buy a better one, but I'd never swap it. I mostly play songs I write myself. They're quite personal, so I rarely perform them for anyone – I just play for my own enjoyment."},
+   {id:"D",name:"Josh",t:"I take piano exams every year, and last year I got the highest mark in my region. People assume I must practise for hours, but actually I only do thirty minutes a day. The secret is to practise properly – focusing on the difficult parts rather than playing the bits you already know. I'd like to study music at university."}],
+  items:[
+   {n:43,q:"started learning because of their parents' wishes?",a:"A",e:"Sofia：because my parents thought it would be good for me。"},
+   {n:44,q:"learnt to play without a teacher?",a:"B",e:"Leo：I taught myself the drums by watching online videos。"},
+   {n:45,q:"had to solve a problem caused by their playing?",a:"B",e:"Leo：爸媽受不了噪音，所以做了隔音角落。"},
+   {n:46,q:"prefers to keep their music private?",a:"C",e:"Hana：I rarely perform them for anyone。"},
+   {n:47,q:"has achieved an excellent result in an assessment?",a:"D",e:"Josh：got the highest mark in my region（考試成績全區最高）。"},
+   {n:48,q:"says that playing with others changed their attitude?",a:"A",e:"Sofia：What changed my mind was joining a youth orchestra。"},
+   {n:49,q:"has ignored some advice they were given?",a:"C",e:"Hana：老師建議換一把好吉他，but I'd never swap it。"},
+   {n:50,q:"believes the way you practise matters more than how long you practise?",a:"D",e:"Josh：只練 30 分鐘，The secret is to practise properly。"},
+   {n:51,q:"has been rewarded for performing?",a:"B",e:"Leo：we were paid with free pizza。"},
+   {n:52,q:"has plans for further study?",a:"D",e:"Josh：I'd like to study music at university。"}]}
+],
+lis:[
+ {part:1,items:[
+   {n:1,q:"You hear a girl talking about a holiday. What did she enjoy most?",o:["the beach","the food","the hotel"],a:1,s:[["G","The hotel was lovely, with a huge pool, and the beach was only five minutes away – though it was a bit too crowded for me."],["G","But honestly, the thing I'll remember is the meals. I tried something new every single day, and I still dream about the fish soup."]],e:"the thing I'll remember is the meals → B。海灘她覺得太擠。"},
+   {n:2,q:"You hear a boy talking about a football match. Why didn't he play?",o:["He was injured.","He arrived late.","The coach chose someone else."],a:1,s:[["B","I'd been training all week and I felt great – no problems with my knee any more."],["B","But the bus got stuck in traffic, and by the time I got to the pitch, the game had already started, so the coach couldn't put me in."]],e:"公車塞車、比賽已經開始 → 遲到 B。陷阱 A：膝蓋已經沒問題。"},
+   {n:3,q:"You hear a teacher talking to her class. What is she telling them about?",o:["a change to an exam date","a new library rule","a school trip"],a:0,s:[["W","Listen carefully, everyone. The history exam was supposed to be on Monday, but because the hall is being used for the school concert, it's been moved to Wednesday."],["W","It'll still start at nine o'clock, so please don't be late."]],e:"考試從星期一改到星期三 → A。"},
+   {n:4,q:"You hear two friends talking about a new café. What does the boy think of it?",o:["It's too expensive.","The service is slow.","The drinks are excellent."],a:2,s:[["G","Have you been to that new café on the corner yet?"],["B","Yeah, last week. The hot chocolate was amazing – the best I've ever had. It wasn't cheap, but I didn't mind paying a bit more for something that good."]],e:"熱可可是喝過最好的 → C。陷阱 A：不便宜，但他 didn't mind。"},
+   {n:5,q:"You hear a girl talking about a book. Why did she choose it?",o:["A friend recommended it.","She liked the cover.","She had seen the film."],a:0,s:[["G","I'd never heard of the author, and to be honest, I haven't seen the film either."],["G","My best friend kept going on about it, saying I'd love it, so in the end I borrowed her copy. She was right!"]],e:"好朋友一直推薦 → A。陷阱 C：她沒看過電影。"},
+   {n:6,q:"You hear a man on the radio. What is he doing?",o:["advertising a product","describing a sports event","giving a weather forecast"],a:2,s:[["M","It's going to be a cold start tomorrow, with frost in the north. By the afternoon, though, the sun will come out and temperatures will rise to around twelve degrees."],["M","Perfect conditions, then, for this weekend's city marathon."]],e:"霜、出太陽、溫度 → 天氣預報 C。馬拉松只是順便提。"},
+   {n:7,q:"You hear a boy talking to his mother. What does he want?",o:["permission to go out","help with his homework","some money"],a:0,s:[["B","Mum, I've finished all my homework, honestly. So can I go round to Jake's house?"],["B","His dad said he'll drive me home before nine."]],e:"可以去 Jake 家嗎 → 想得到外出的許可 A。"},
+   {n:8,q:"You hear a girl talking about her first day at a new school. How did she feel at the end of the day?",o:["worried","relieved","bored"],a:1,s:[["G","I'd been so nervous about not knowing anyone that I hardly slept the night before."],["G","But a girl in my class showed me around and we had lunch together. By home time I thought, 'Phew, that wasn't so bad after all.'"]],e:"Phew, that wasn't so bad → 鬆了一口氣 B。陷阱 A：緊張是前一天晚上。"}]},
+ {part:2,
+  s:[["B","Hello, I'm Daniel, and last summer I spent two weeks at Ridgeway Adventure Camp in Wales. I went with my school, and there were about sixty of us altogether."],
+     ["B","We slept in wooden cabins, eight people in each. I'd expected tents, so that was a nice surprise."],
+     ["B","Every day started with a run at seven o'clock, which most of us hated! Then we did different activities. My favourite was kayaking on the lake, although rock climbing was the most popular with everyone else."],
+     ["B","The food was better than I expected. The cook, a woman called Mrs Evans, made the best pancakes I've ever eaten – we had them every Sunday."],
+     ["B","On the last night there was a talent show. I played the guitar with two friends, and we came second. The winner was a girl who did magic tricks."],
+     ["B","The best thing I learned at camp was how to work as part of a team. And if you're thinking of going, my advice is: bring lots of warm socks – it gets surprisingly cold at night, even in summer."]],
+  items:[
+   {n:9,before:"Daniel stayed at the camp for",after:".",a:["two weeks","2 weeks","a fortnight"],e:"I spent two weeks at Ridgeway Adventure Camp。"},
+   {n:10,before:"There were about",after:"students at the camp.",a:["sixty","60"],e:"there were about sixty of us altogether。"},
+   {n:11,before:"The students slept in wooden",after:".",a:["cabins","cabin"],e:"We slept in wooden cabins。陷阱：tents 是他原本以為的。"},
+   {n:12,before:"Daniel's favourite activity was",after:".",a:["kayaking"],e:"My favourite was kayaking on the lake。"},
+   {n:13,before:"The most popular activity with the other students was",after:".",a:["rock climbing","rock-climbing","climbing"],e:"rock climbing was the most popular with everyone else。"},
+   {n:14,before:"The camp served pancakes every",after:".",a:["sunday"],e:"we had them every Sunday。"},
+   {n:15,before:"In the talent show, Daniel played the",after:".",a:["guitar"],e:"I played the guitar with two friends。"},
+   {n:16,before:"The winner of the talent show did",after:".",a:["magic tricks","magic","tricks"],e:"The winner was a girl who did magic tricks。"},
+   {n:17,before:"Daniel says the camp taught him to work as part of a",after:".",a:["team"],e:"how to work as part of a team。"},
+   {n:18,before:"Daniel advises people to bring warm",after:".",a:["socks"],e:"bring lots of warm socks。"}]},
+ {part:3,
+  opts:{A:"They enjoy being surrounded by nature.",B:"They like having time to do nothing.",C:"They use the time to earn money.",D:"They spend it with their grandparents.",E:"They use it to catch up on schoolwork.",F:"They are learning a new skill.",G:"They meet their friends in town.",H:"They play a sport in a team that competes."},
+  items:[
+   {n:19,sp:"Speaker 1",s:[["G","During the week I'm so busy with school and swimming training that at weekends I just want to stay in bed, watch films and not think about anything. My mum says I'm lazy, but I think I deserve the rest!"]],a:"B",e:"週末只想躺著什麼都不做 → B。陷阱 H：游泳訓練是平日。"},
+   {n:20,sp:"Speaker 2",s:[["B","My grandparents live on a farm, and we used to go there every weekend, but now they've moved into town. These days I go hiking in the hills with my dad. There's nothing better than being surrounded by trees and hearing nothing but birds."]],a:"A",e:"在山裡健行、被樹包圍 → A。陷阱 D：那是以前的事。"},
+   {n:21,sp:"Speaker 3",s:[["G","I help out at my uncle's bakery on Saturday mornings. I have to get up at five, which is tough, but he pays me well and I'm saving for a new bike. After that I'm usually too tired to go anywhere."]],a:"C",e:"在麵包店幫忙、有工資、存錢買腳踏車 → C。"},
+   {n:22,sp:"Speaker 4",s:[["B","I've recently started going to a cooking class on Sunday afternoons. Last week we learned how to make fresh pasta. I'd never cooked anything before, so everything is new and exciting."]],a:"F",e:"上烹飪課、學新的東西 → F。"},
+   {n:23,sp:"Speaker 5",s:[["G","Saturdays are match days for my volleyball team. We're top of the league at the moment, so every game really matters. By Sunday I'm usually exhausted!"]],a:"H",e:"排球隊、聯賽第一名、比賽 → H。"}]},
+ {part:4,
+  s:[["W","Today I'm talking to sixteen-year-old Lily Grant, who has just won a national award for young inventors. Lily, tell us about your invention."],
+     ["G","It's a small device that reminds people to drink water. It lights up and makes a gentle sound every hour. I made it for my grandmother, who often forgets to drink enough, especially in summer."],
+     ["W","How did you build it?"],
+     ["G","I'd learned some basic electronics at a weekend club, but I'd never made anything this complicated. I watched lots of online tutorials, and my physics teacher let me use the school lab after lessons. That's where I built it."],
+     ["W","Were there any problems?"],
+     ["G","Loads! The first version was far too big – it was the size of a shoebox. My grandmother said she'd never carry that around. So I had to start again and make everything much smaller."],
+     ["W","How did you feel when you won the award?"],
+     ["G","I honestly didn't expect it. The other inventions were amazing – one boy had built a robot that sorts rubbish for recycling. When they called my name, I just stood there. I couldn't move."],
+     ["W","What happens next?"],
+     ["G","A company has asked whether they can produce it, which is exciting. But first I want to test it with more older people to see what they think. I don't want to rush it."],
+     ["W","Do you want to be an inventor when you grow up?"],
+     ["G","Maybe. Everyone assumes I'll study engineering, but actually I'm really interested in medicine. Perhaps I can combine the two and design equipment for hospitals."],
+     ["W","Any advice for young inventors?"],
+     ["G","Start with a problem that someone you know actually has. If you care about the person, you won't give up when things go wrong."]],
+  items:[
+   {n:24,q:"Why did Lily make the device?",o:["to enter a competition","to help a relative","to sell it online"],a:1,e:"I made it for my grandmother → B。"},
+   {n:25,q:"Where did Lily build the device?",o:["at home","at a weekend club","in the school lab"],a:2,e:"my physics teacher let me use the school lab… That's where I built it → C。陷阱 B：週末社團只是學過基礎電子。"},
+   {n:26,q:"What was the problem with the first version?",o:["It was too large.","It was too noisy.","It did not work."],a:0,e:"far too big – the size of a shoebox → A。"},
+   {n:27,q:"How did Lily feel when she won?",o:["She had expected to win.","She was too shocked to react.","She felt sorry for the other competitors."],a:1,e:"I just stood there. I couldn't move → 嚇到不知道怎麼反應 B。"},
+   {n:28,q:"What does Lily want to do before the device is produced?",o:["get opinions from more users","make it cheaper","add new features"],a:0,e:"test it with more older people to see what they think → A。"},
+   {n:29,q:"What is Lily most interested in studying?",o:["engineering","medicine","design"],a:1,e:"actually I'm really interested in medicine → B。陷阱 A：那是大家以為的。"},
+   {n:30,q:"What is Lily's advice for young inventors?",o:["Try to solve a real problem for someone you know.","Always work as part of a team.","Don't worry about making mistakes."],a:0,e:"Start with a problem that someone you know actually has → A。"}]}
+],
+wri:{p1:{task:"In your English class you have been talking about technology and learning. Now, your English teacher has asked you to write an essay.\nWrite an essay using all the notes and giving reasons for your point of view.",q:"Should schools replace paper textbooks with tablets?",notes:["cost","health","........ (your own idea)"]},
+ p2:[{id:"review",title:"Review（評論）",task:"You see this notice on an English-language website for teenagers.\n\nREVIEWS WANTED!\nA film or TV series you have enjoyed\nTell us what it is about, what you liked about it and who you would recommend it to.\nThe best reviews will appear on our website.\n\nWrite your review."},
+  {id:"email",title:"Email（電子郵件）",task:"You have received this email from your English-speaking friend, Sam.\n\n\"Our class is doing a project about free-time activities in different countries. What do young people in your country usually do after school? Do you prefer doing activities alone or with friends? Why?\"\n\nWrite your email."},
+  {id:"story",title:"Story（故事）",task:"Your English teacher has asked you to write a story.\nYour story must begin with this sentence:\nIt was the last day of the school year, and Mia had a secret.\n\nYour story must include:\n• a letter\n• a mistake\n\nWrite your story."}]},
+spk:[
+ {part:1,title:"Part 1 · Interview",zh:"考官問你關於自己的問題，每題回答 2–3 句。",secs:20,q:"What's your favourite season? Why?"},
+ {part:1,title:"Part 1 · Interview",zh:"",secs:20,q:"How do you usually travel to school?"},
+ {part:1,title:"Part 1 · Interview",zh:"",secs:20,q:"Tell us about something you enjoy doing with your family."},
+ {part:1,title:"Part 1 · Interview",zh:"",secs:20,q:"Do you prefer watching films at home or at the cinema? Why?"},
+ {part:2,title:"Part 2 · Long turn (1)",zh:"比較兩張圖片並回答上方的問題，講滿 1 分鐘。",secs:60,q:"Here are your photographs. They show students learning in different places. I'd like you to compare the photographs, and say what the students might be learning in each situation.",pics:[["🏫📚✏️<br>👩‍🏫👧👦","教室上課 Classroom"],["🌳🔍🐞<br>👩‍🏫👧👦","戶外教學 Outdoor lesson"]]},
+ {part:2,title:"Part 2 · Follow-up",zh:"簡短回答（約 30 秒）。",secs:30,q:"Where do you prefer to learn? Why?"},
+ {part:2,title:"Part 2 · Long turn (2)",zh:"比較兩張圖片並回答上方的問題，講滿 1 分鐘。",secs:60,q:"Now here are some more photographs. They show people celebrating in different ways. Compare the photographs, and say why you think people enjoy celebrating in these ways.",pics:[["🎂🎈🏠<br>👨‍👩‍👧‍👦","家庭生日會 Family party"],["🎤🎆🎶<br>👫👬👭","音樂節 Music festival"]]},
+ {part:2,title:"Part 2 · Follow-up",zh:"簡短回答（約 30 秒）。",secs:30,q:"Which way of celebrating would you prefer? Why?"},
+ {part:3,title:"Part 3 · Collaborative task",zh:"真的考試是和同伴討論。這裡請你自己說：每個點子的好處和壞處（2 分鐘）。",secs:120,q:"Here are some ideas for helping the environment at school. Talk about how these things could help the environment.",mind:{c:"How could these things help the environment at school?",o:["recycling bins","a school garden","walking or cycling to school","saving electricity","using less paper"]}},
+ {part:3,title:"Part 3 · Decision",zh:"做出決定並說明原因（1 分鐘）。",secs:60,q:"Now decide which idea would be the easiest for students to do."},
+ {part:4,title:"Part 4 · Discussion",zh:"說出看法＋理由＋例子。",secs:40,q:"Do you think young people care enough about the environment?"},
+ {part:4,title:"Part 4 · Discussion",zh:"",secs:40,q:"Should students be allowed to use phones at school? Why or why not?"},
+ {part:4,title:"Part 4 · Discussion",zh:"",secs:40,q:"What can families do to protect the environment at home?"}
+]};
+/* ===================== SET 3 ===================== */
+SETS[3]={
+ruoe:[
+ {part:1,title:"The Rise of Esports",
+  text:"Not long ago, playing video games was seen as a waste of time. Today, however, professional gaming, or 'esports', has {1} into a huge international industry. Top players {2} part in tournaments watched by millions of fans around the world, and the best teams can win prizes {3} millions of dollars. Like traditional athletes, professional gamers follow strict training programmes. They often practise for eight hours a day and {4} close attention to their diet and fitness. Some universities now even {5} scholarships to talented players. However, not everyone is convinced. Critics argue that spending so long in front of a screen can {6} a negative effect on young people's health. Supporters, {7} the other hand, believe that esports teach valuable skills such as teamwork and quick thinking. Whatever your opinion, it seems that esports are here to {8}.",
+  items:[
+   {n:1,o:["grown","risen","raised","increased"],a:0,e:"grow into（發展成為）。rise/increase 不接 into + 名詞這種用法，raise 是及物動詞。"},
+   {n:2,o:["take","have","make","do"],a:0,e:"take part in（參加）。"},
+   {n:3,o:["worth","valued","costing","priced"],a:0,e:"prizes worth millions（價值數百萬的獎金）。valued 要加 at。"},
+   {n:4,o:["pay","give","put","take"],a:0,e:"pay attention to（注意）。"},
+   {n:5,o:["offer","hand","pass","lend"],a:0,e:"offer scholarships to（提供獎學金給）。"},
+   {n:6,o:["have","make","do","take"],a:0,e:"have an effect on（對…有影響）。"},
+   {n:7,o:["on","in","at","by"],a:0,e:"on the other hand（另一方面）是固定說法。"},
+   {n:8,o:["stay","remain","keep","last"],a:0,e:"be here to stay（會一直存在下去）是固定說法。"}]},
+ {part:2,title:"The Four-Day School Week",
+  text:"In some parts of the world, schools have started experimenting with a four-day week. Students attend school {9} Monday to Thursday, and Fridays are free {10} sports, hobbies or family time. {11} the school day is slightly longer, students actually spend about the same number of hours in lessons overall. Supporters say the change has {12} number of benefits. Teachers report that students are less tired and more focused, and attendance has improved. However, not everyone is in favour {13} the idea. Some parents find it difficult to arrange childcare on Fridays, especially {14} both parents work full-time. Others worry that students will simply spend the extra day playing computer games. It is still too early to say {15} the four-day week will become common, but it is certainly an idea {16} is being taken seriously.",
+  items:[
+   {n:9,a:["from"],e:"from Monday to Thursday（從星期一到星期四）。"},
+   {n:10,a:["for"],e:"free for + 用途（空出來做…）。"},
+   {n:11,a:["because","as","since"],e:"因為每天上課時間比較長，所以總時數差不多 → Because / As / Since。"},
+   {n:12,a:["a"],e:"a number of（一些、許多）。"},
+   {n:13,a:["of"],e:"in favour of（贊成）。"},
+   {n:14,a:["when","if"],e:"especially when/if both parents work（尤其是當父母都上班時）。"},
+   {n:15,a:["whether","if"],e:"too early to say whether…（現在說是否…還太早）。"},
+   {n:16,a:["that","which"],e:"an idea that is being taken seriously → 關係代名詞 that / which。"}]},
+ {part:3,title:"The Benefits of Boredom",
+  text:"We usually think of boredom as something to avoid. But some psychologists now believe that being bored can be surprisingly {17}. When we have nothing to do, our minds start to wander, and this can lead to {18} ideas. Many famous {19} have said their best ideas came to them during quiet moments. {20}, modern technology means we are rarely bored. As soon as we have a spare minute, we reach for our phones. Experts say this constant {21} may be reducing our {22} to think creatively. They suggest that parents should not worry too much when children complain of having nothing to do, as boredom can encourage {23}. In other words, a little boredom is {24} fine.",
+  items:[
+   {n:17,stem:"USE",a:["useful"],e:"can be surprisingly ___ → 形容詞 useful（有用的）。"},
+   {n:18,stem:"EXPECT",a:["unexpected"],e:"lead to ___ ideas → 形容詞 unexpected（意想不到的）。"},
+   {n:19,stem:"INVENT",a:["inventors"],e:"Many famous ___ have said → 人，複數 inventors。"},
+   {n:20,stem:"SAD",a:["sadly"],e:"句首表示「可惜的是」→ 副詞 Sadly。"},
+   {n:21,stem:"ENTERTAIN",a:["entertainment"],e:"this constant ___ → 名詞 entertainment（娛樂）。"},
+   {n:22,stem:"ABLE",a:["ability"],e:"our ___ to think → 名詞 ability（能力）。"},
+   {n:23,stem:"INDEPENDENT",a:["independence"],e:"encourage ___ → 名詞 independence（獨立）。"},
+   {n:24,stem:"ABSOLUTE",a:["absolutely"],e:"修飾形容詞 fine → 副詞 absolutely。"}]},
+ {part:4,
+  items:[
+   {n:25,s1:"I'm sure Anna didn't break the window.",key:"CAN'T",s2:"Anna ____ the window.",chunks:[["can't have"],["broken"]],full:"can't have broken",e:"確定過去「不可能」做了某事 → can't have + 過去分詞。"},
+   {n:26,s1:"It's a long time since I last saw them.",key:"FOR",s2:"I ____ a long time.",chunks:[["haven't seen","have not seen"],["them for"]],full:"haven't seen them for",e:"It's a long time since… = 已經很久沒… → 現在完成式 haven't seen them for。"},
+   {n:27,s1:"The test was easier than I expected.",key:"AS",s2:"The test wasn't ____ I expected.",chunks:[["as difficult","as hard"],["as"]],full:"as difficult as",e:"easier than = not as difficult as（沒有像…那麼難）。"},
+   {n:28,s1:"Please don't make so much noise.",key:"MIND",s2:"Would you ____ so much noise?",chunks:[["mind"],["not making"]],full:"mind not making",e:"Would you mind + V-ing（可以請你…嗎）；否定是 mind not making。"},
+   {n:29,s1:"'I'll help you with your homework,' said Dad.",key:"OFFERED",s2:"Dad ____ with my homework.",chunks:[["offered to"],["help me"]],full:"offered to help me",e:"offer to do something（主動提出要做…）；you 轉述時變成 me。"},
+   {n:30,s1:"They cancelled the match because of the rain.",key:"CALLED",s2:"The match ____ because of the rain.",chunks:[["was called"],["off"]],full:"was called off",e:"call off = cancel（取消）；被動 was called off。"}]},
+ {part:5,title:"A Lesson from an Owl",
+  passage:["I've always loved animals, so when our local wildlife rescue centre asked for teenage volunteers, I signed up straight away. I imagined myself feeding baby deer and playing with fox cubs. The reality, as I soon discovered, was rather different.",
+   "For the first two weeks, my main job was cleaning. I scrubbed cages, washed bowls and swept floors until my arms ached. I'll admit I was disappointed. One afternoon, I complained to the manager, Ruth, that I wasn't doing anything 'real'. She looked at me for a moment and then said, 'Clean cages stop animals getting sick. That's about as real as it gets.' I didn't complain after that.",
+   "In my third week, a woman brought in a young owl she had found by the side of the road. One of its wings was badly injured. Ruth asked me to help her examine it, and I was amazed by how calm she stayed, speaking softly to the frightened bird the whole time. She told me the owl had probably been hit by a car and that it might never fly again.",
+   "Over the next month, I helped to feed the owl and watched as its wing slowly healed. Ruth warned me not to get too attached – the aim, she said, was always to return animals to the wild, not to keep them as pets. It was good advice, but hard to follow. I found myself thinking about the owl even when I was at school.",
+   "On the day we released it, I felt a mixture of pride and sadness. The owl sat on my glove for a few seconds, as if it was deciding whether to trust its wing. Then it took off, flew low over the field and disappeared into the trees. I still volunteer at the centre every weekend, and I still clean a lot of cages. But now I understand why it matters."],
+  items:[
+   {n:31,q:"What does the writer say about his expectations before he started?",o:["He thought the work would be easy.","He expected to spend time with young animals.","He was worried about being bitten.","He hoped to become a vet."],a:1,e:"第 1 段：想像自己餵小鹿、和小狐狸玩 → B。"},
+   {n:32,q:"Why did the writer stop complaining about the cleaning?",o:["Ruth gave him more interesting jobs.","He understood why it was important.","He was afraid of losing his place.","Other volunteers did the cleaning instead."],a:1,e:"Ruth 說乾淨的籠子能讓動物不生病，他就懂了 → B。"},
+   {n:33,q:"What impressed the writer when the owl arrived?",o:["how quickly Ruth worked","how gently Ruth treated the bird","how badly the owl was injured","how large the owl was"],a:1,e:"amazed by how calm she stayed, speaking softly → B。"},
+   {n:34,q:"What does 'get too attached' mean in paragraph 4?",o:["spend too much time at the centre","develop strong feelings for the animal","hold the bird too tightly","become too confident"],a:1,e:"get attached = 產生感情；後面說目的是放回野外不是當寵物 → B。"},
+   {n:35,q:"How did the writer feel on the day the owl was released?",o:["completely happy","both proud and sad","worried that it would not survive","annoyed that it flew away"],a:1,e:"a mixture of pride and sadness → B。"},
+   {n:36,q:"What has changed for the writer by the end of the article?",o:["He no longer has to clean cages.","He now sees the value of his everyday tasks.","He has decided to work only with owls.","He volunteers less often than before."],a:1,e:"I still clean a lot of cages. But now I understand why it matters → B。陷阱 A：他還是在清籠子。"}]},
+ {part:6,title:"Why Do We Yawn?",
+  passage:["Everyone yawns – and so do most animals, from dogs to fish. Yet scientists still do not fully understand why we do it. {37}",
+   "For a long time, it was believed that yawning helped to bring more oxygen into the body when levels were low. {38} When volunteers breathed air with extra oxygen, they yawned just as often as usual.",
+   "A more recent theory is that yawning helps to cool the brain. Like a computer, the brain works best at a certain temperature. {39} Supporting this idea, studies have found that people yawn more in warm weather than in very hot or very cold conditions.",
+   "Perhaps the most mysterious thing about yawning is that it is 'catching'. {40} Even reading about yawning can be enough – you may have yawned already while reading this article!",
+   "Interestingly, people are more likely to catch a yawn from family members and close friends than from strangers. {41} This has led some researchers to suggest that catching yawns is linked to our ability to understand how others feel.",
+   "Young children do not usually catch yawns until they are about four or five years old. {42} So the next time someone accuses you of yawning because you are bored, you can tell them you are simply showing how much you care."],
+  sents:{A:"However, experiments have not supported this idea.",B:"Taking in a large amount of air may help to bring its temperature down.",C:"Watching someone else yawn often makes us yawn too.",D:"This is around the same age at which they start to recognise other people's emotions.",E:"Several explanations have been suggested, but none has been fully proved.",F:"Dogs have even been seen yawning after watching their owners yawn.",G:"Fish, however, are the only animals that never yawn."},
+  items:[
+   {n:37,a:"E",e:"前面說科學家還不完全了解原因，E 接著說有幾種解釋但都沒證實 → E。"},
+   {n:38,a:"A",e:"前面說以前認為打哈欠是補充氧氣，However… not supported；後面舉實驗反證 → A。"},
+   {n:39,a:"B",e:"前面說大腦在某個溫度最好運作，B 說吸大量空氣能降溫（its = the brain's）→ B。"},
+   {n:40,a:"C",e:"前面說打哈欠會「傳染」，C 解釋：看到別人打哈欠我們也會；後面 Even reading… → C。"},
+   {n:41,a:"F",e:"前面說會從親近的人身上「傳染」，F 補充連狗也會跟主人打哈欠；後面說和理解別人感受有關 → F。"},
+   {n:42,a:"D",e:"前面說四、五歲才會被傳染，D 說這剛好是開始認識別人情緒的年紀 → D。G 和第一句矛盾（文中說魚也會打哈欠），用不到。"}]},
+ {part:7,
+  texts:[
+   {id:"A",name:"Ruby",t:"Last year I decided to read one book a week for a whole year. I'd always been a slow reader, so my friends were sure I'd give up by February. There were weeks when I had to stay up late to finish, but I managed fifty-two books in the end. The best part was discovering types of books I'd never have tried, like science fiction."},
+   {id:"B",name:"Kai",t:"I did a sponsored silence for 24 hours to raise money for a children's hospital. It sounds easy, but it was incredibly hard – I'm a very talkative person! My little sister kept trying to make me laugh. In the end I raised over £400, which was much more than I'd hoped for."},
+   {id:"C",name:"Priya",t:"I spent the summer learning to juggle. It started as a joke after my brother said I'd never be able to do it. I practised for an hour every day and dropped the balls hundreds of times. Now I can juggle five balls, and I've even performed at a local festival. My brother has stopped laughing at me!"},
+   {id:"D",name:"Felix",t:"My challenge was to cycle from my home to my grandparents' village – about 200 kilometres – over three days. My dad came with me. On the second day it poured with rain and we got completely lost, which I actually think was the most memorable part. I'd love to do a longer ride next year, maybe across another country."}],
+  items:[
+   {n:43,q:"took on the challenge because someone said they couldn't do it?",a:"C",e:"Priya：my brother said I'd never be able to do it。陷阱 A：朋友覺得她會放棄，但那不是她開始的原因。"},
+   {n:44,q:"raised money for a good cause?",a:"B",e:"Kai：raise money for a children's hospital。"},
+   {n:45,q:"discovered new interests through the challenge?",a:"A",e:"Ruby：discovering types of books I'd never have tried。"},
+   {n:46,q:"had a family member who tried to make the challenge harder?",a:"B",e:"Kai：My little sister kept trying to make me laugh。"},
+   {n:47,q:"completed the challenge with a parent?",a:"D",e:"Felix：My dad came with me。"},
+   {n:48,q:"says that something going wrong became a highlight?",a:"D",e:"Felix：迷路了，which I actually think was the most memorable part。"},
+   {n:49,q:"has shown their new skill in public?",a:"C",e:"Priya：I've even performed at a local festival。"},
+   {n:50,q:"achieved more than they had expected?",a:"B",e:"Kai：raised over £400, much more than I'd hoped for。"},
+   {n:51,q:"sometimes had to sacrifice sleep?",a:"A",e:"Ruby：weeks when I had to stay up late to finish。"},
+   {n:52,q:"would like to attempt a bigger version of the challenge?",a:"D",e:"Felix：I'd love to do a longer ride next year。"}]}
+],
+lis:[
+ {part:1,items:[
+   {n:1,q:"You hear a boy talking about a concert. What disappointed him?",o:["the band's performance","the size of the crowd","the sound quality"],a:2,s:[["B","The band were brilliant – they played all my favourite songs. The place was packed, which made the atmosphere amazing."],["B","It's just a shame the speakers were so bad. Half the time you couldn't make out the words."]],e:"喇叭很差、聽不清楚歌詞 → C。"},
+   {n:2,q:"You hear a girl talking to a shop assistant. What does she want to do?",o:["return an item for her money back","exchange an item","buy a new item"],a:1,s:[["G","Hi, I bought this jacket here last week, but it's a bit too small."],["G","I don't want my money back – I really like it – I'd just like the same one in a bigger size, please."]],e:"不要退錢，想換大一號 → 換貨 B。"},
+   {n:3,q:"You hear a teacher talking about a science project. What must students do first?",o:["choose a partner","pick a topic","read some articles"],a:1,s:[["W","Before you do anything else, you need to decide what your project will be about – you'll find a list of ideas on the school website."],["W","Once you've done that, you can choose who to work with, and then start your research."]],e:"Before you do anything else… decide what your project will be about → 先選主題 B。"},
+   {n:4,q:"You hear two friends talking about a computer game. What does the girl say about it?",o:["It's too difficult.","It's better than the first version.","It's too expensive."],a:1,s:[["B","Have you played the new version yet?"],["G","Yes, and I think it's much better than the first one – the graphics are amazing. It's not easy, but that's what makes it fun."]],e:"much better than the first one → B。陷阱 A：不簡單，但她覺得這樣才好玩。"},
+   {n:5,q:"You hear a boy talking about his best friend. What does he value most about him?",o:["He is funny.","He is loyal.","He is clever."],a:1,s:[["B","Max is really clever, and he always makes me laugh."],["B","But the thing I value most is that he's always on my side. When I got into trouble last year, he was the only one who stood by me."]],e:"always on my side、stood by me → 忠誠 B。"},
+   {n:6,q:"You hear a woman talking about a new bus service. What is its main advantage?",o:["It is cheaper.","It runs more often.","It is faster."],a:1,s:[["W","The new number 12 bus costs the same as the old service, and the journey takes about the same time."],["W","The big difference is that buses now come every ten minutes instead of every half an hour."]],e:"每 10 分鐘一班，比以前 30 分鐘一班更頻繁 → B。"},
+   {n:7,q:"You hear a girl talking about learning to swim. How does she feel now?",o:["confident","frightened","bored"],a:0,s:[["G","When I was little, I was terrified of water. I wouldn't even put my face in the bath!"],["G","But after a year of lessons, I can swim a whole length without stopping, and I'm not scared at all any more."]],e:"現在可以一口氣游完一趟、完全不怕 → A。陷阱 B：害怕是以前。"},
+   {n:8,q:"You hear a boy leaving a message for a friend. Why is he calling?",o:["to apologise","to invite her somewhere","to ask for help"],a:0,s:[["B","Hi Lucy, it's Ben. Listen, I'm really sorry about what I said yesterday. I didn't mean it, and I felt terrible all night."],["B","I hope we're still friends."]],e:"I'm really sorry about what I said → 道歉 A。"}]},
+ {part:2,
+  s:[["G","Hi, I'm Emma, and I'm going to tell you about Science Week at our school, which happens every March."],
+     ["G","This year's theme was space. On the first day, a scientist who works for a space agency came to give a talk. She showed us a real piece of rock from the Moon, which was much smaller than I'd expected – about the size of a coin."],
+     ["G","On Tuesday, each class had to build a rocket using only plastic bottles and water. Ours flew forty metres, which was the second-longest distance in the school."],
+     ["G","Wednesday was my favourite day, because we visited the planetarium in the city centre. We lay back in our seats and watched stars moving across the ceiling. It was so relaxing that one boy actually fell asleep!"],
+     ["G","On Thursday, we had to design a meal for astronauts. It's harder than it sounds – the food can't make crumbs, because they float around and can damage equipment."],
+     ["G","The week ended with a quiz on Friday afternoon. The prize was a telescope, and I'm happy to say my team won it! We've already used it to look at the rings of Saturn."],
+     ["G","Next year, the theme will be the ocean, and I'm already looking forward to it."]],
+  items:[
+   {n:9,before:"Science Week takes place every",after:".",a:["march"],e:"which happens every March。"},
+   {n:10,before:"This year's theme was",after:".",a:["space"],e:"This year's theme was space。"},
+   {n:11,before:"The piece of Moon rock was about the size of a",after:".",a:["coin"],e:"about the size of a coin。"},
+   {n:12,before:"Each class built a rocket from plastic",after:"and water.",a:["bottles","bottle"],e:"using only plastic bottles and water。"},
+   {n:13,before:"Emma's class's rocket flew",after:"metres.",a:["forty","40"],e:"Ours flew forty metres。"},
+   {n:14,before:"On Wednesday, the students visited the",after:".",a:["planetarium"],e:"we visited the planetarium。"},
+   {n:15,before:"Food for astronauts must not produce",after:".",a:["crumbs","crumb"],e:"the food can't make crumbs。"},
+   {n:16,before:"The prize for the quiz was a",after:".",a:["telescope"],e:"The prize was a telescope。"},
+   {n:17,before:"Emma's team has used the prize to see the rings of",after:".",a:["saturn"],e:"look at the rings of Saturn。"},
+   {n:18,before:"Next year's theme will be the",after:".",a:["ocean","sea","oceans"],e:"Next year, the theme will be the ocean。"}]},
+ {part:3,
+  opts:{A:"The teacher made a dull subject interesting.",B:"The teacher supported them during a difficult time.",C:"The teacher encouraged them to enter a competition.",D:"The teacher was strict but fair.",E:"The teacher changed how they saw their own ability.",F:"The teacher introduced them to a new hobby.",G:"The teacher has stayed in touch with them.",H:"The teacher made the class laugh every day."},
+  items:[
+   {n:19,sp:"Speaker 1",s:[["B","I'd always thought I was terrible at maths. Then Mr Lee took over our class, and he showed me that I was actually quite good at it – I just needed a different way of looking at problems. I got the top mark in my year last term."]],a:"E",e:"原本覺得自己數學很差，老師讓他發現自己其實不錯 → E。"},
+   {n:20,sp:"Speaker 2",s:[["G","Mrs Grant taught history, which I used to find really boring – all those dates! But she brought it to life with stories and acting. Sometimes she'd even dress up as people from the past. History's now my favourite subject."]],a:"A",e:"以前覺得歷史很無聊，老師用故事和表演讓它變有趣 → A。"},
+   {n:21,sp:"Speaker 3",s:[["G","When my parents were going through a difficult time, I found it really hard to concentrate at school. Ms Patel noticed and asked me to stay after class. She didn't push me to talk, but she made sure I knew she was there if I needed her. That meant a lot."]],a:"B",e:"家裡有狀況時老師關心、陪伴 → B。"},
+   {n:22,sp:"Speaker 4",s:[["B","Mr Brown, my PE teacher, ran a rock-climbing club after school. I'd never even thought about climbing before, but he persuaded me to give it a go. Now I climb every weekend."]],a:"F",e:"老師說服他試攀岩，現在每週末都去 → 新嗜好 F。"},
+   {n:23,sp:"Speaker 5",s:[["G","Miss Clarke left our school three years ago, but she still sends me an email every birthday, and she always asks how my writing is going. She was the first person who ever read my stories."]],a:"G",e:"老師離開三年了還每年寄生日信 → 保持聯絡 G。"}]},
+ {part:4,
+  s:[["W","My guest today is Ana Lopez, who at just fourteen runs a beach clean-up group with over two hundred members. Ana, how did it all begin?"],
+     ["G","Two years ago, I was on holiday at the coast and I saw a seabird with plastic wrapped around its neck. A man from the local wildlife centre came to help, and he told me how common it was. I couldn't stop thinking about it."],
+     ["W","How did you get people involved?"],
+     ["G","I started by asking my classmates, but only two of them came to the first clean-up! So I made a short video and posted it online. Within a month, we had fifty people."],
+     ["W","What do you find on the beach?"],
+     ["G","People expect us to find bottles and bags, and we do. But the real problem is the tiny pieces of plastic. They're the hardest to pick up, and animals mistake them for food."],
+     ["W","Has it been difficult to manage everything?"],
+     ["G","Very! At first I tried to do everything myself – organising, posting online, contacting the council – and I was exhausted. Now I share the jobs with a team of five friends, and it's much better."],
+     ["W","What do your parents think?"],
+     ["G","They're proud, but my mum worries about my schoolwork. We've agreed that clean-ups only happen once a month, on Sunday mornings, so I still have time to study."],
+     ["W","What's your next goal?"],
+     ["G","I'd love to start groups in other towns. A girl in Portugal has already contacted me about setting one up there, so maybe it'll go international!"],
+     ["W","Finally, what would you say to young people who want to help the environment?"],
+     ["G","Don't wait until you're older or until you feel like an expert. Just start with something small – even picking up one piece of rubbish makes a difference."]],
+  items:[
+   {n:24,q:"What made Ana want to start the group?",o:["a project at school","something she saw on holiday","a documentary she watched"],a:1,e:"度假時看到被塑膠纏住脖子的海鳥 → B。"},
+   {n:25,q:"How did Ana get more people to join?",o:["by asking her classmates","by making a video","by putting up posters"],a:1,e:"同學只來了兩個，所以她拍影片放上網 → B。陷阱 A：問同學效果不好。"},
+   {n:26,q:"What does Ana say is the biggest problem on the beach?",o:["plastic bottles","plastic bags","tiny pieces of plastic"],a:2,e:"the real problem is the tiny pieces of plastic → C。"},
+   {n:27,q:"What did Ana learn about running the group?",o:["She needed to share the work with others.","She should spend less time online.","She should ask adults for help."],a:0,e:"一開始全部自己做累壞了，現在和五個朋友分工 → A。"},
+   {n:28,q:"Why do clean-ups only happen once a month?",o:["The council does not allow more.","Ana needs time for her studies.","The beach is too far away."],a:1,e:"媽媽擔心功課，所以一個月一次 so I still have time to study → B。"},
+   {n:29,q:"What is Ana's next goal?",o:["to clean a bigger beach","to set up groups in other places","to write a book"],a:1,e:"I'd love to start groups in other towns → B。"},
+   {n:30,q:"What is Ana's advice to young people?",o:["Learn as much as possible first.","Start with small actions now.","Join an existing group."],a:1,e:"Don't wait… Just start with something small → B。陷阱 A：她說不用等到變成專家。"}]}
+],
+wri:{p1:{task:"In your English class you have been talking about sport and health. Now, your English teacher has asked you to write an essay.\nWrite an essay using all the notes and giving reasons for your point of view.",q:"Should all students have to do sport at school every day?",notes:["health","free time","........ (your own idea)"]},
+ p2:[{id:"article",title:"Article（文章）",task:"You see this announcement in an English-language magazine for teenagers.\n\nARTICLES WANTED!\nA day I'll never forget\nTell us about a day you will always remember. What happened? Why was it so special?\nThe best articles will be published next month.\n\nWrite your article."},
+  {id:"email",title:"Email（電子郵件）",task:"You have received this email from your English-speaking friend, Jo.\n\n\"I'm thinking of getting a pet, but I can't decide between a cat and a dog. Which do you think I should choose? And how do people usually look after their pets in your country?\"\n\nWrite your email."},
+  {id:"review",title:"Review（評論）",task:"You see this notice in your school's English-language magazine.\n\nREVIEWS WANTED!\nA book you have read recently\nTell us what the book is about, what you liked and didn't like about it, and whether you would recommend it to other students.\n\nWrite your review."}]},
+spk:[
+ {part:1,title:"Part 1 · Interview",zh:"考官問你關於自己的問題，每題回答 2–3 句。",secs:20,q:"What do you like doing after school?"},
+ {part:1,title:"Part 1 · Interview",zh:"",secs:20,q:"Tell us about your best friend."},
+ {part:1,title:"Part 1 · Interview",zh:"",secs:20,q:"What kind of music do you enjoy? Why?"},
+ {part:1,title:"Part 1 · Interview",zh:"",secs:20,q:"Where would you like to travel in the future? Why?"},
+ {part:2,title:"Part 2 · Long turn (1)",zh:"比較兩張圖片並回答上方的問題，講滿 1 分鐘。",secs:60,q:"Here are your photographs. They show people shopping in different ways. I'd like you to compare the photographs, and say why you think people choose to shop in these ways.",pics:[["🛒🍎🥕<br>👩‍👧","市場購物 Market"],["💻📦🛋️<br>👨","網路購物 Online"]]},
+ {part:2,title:"Part 2 · Follow-up",zh:"簡短回答（約 30 秒）。",secs:30,q:"Do you enjoy shopping? Why or why not?"},
+ {part:2,title:"Part 2 · Long turn (2)",zh:"比較兩張圖片並回答上方的問題，講滿 1 分鐘。",secs:60,q:"Now here are some more photographs. They show young people relaxing. Compare the photographs, and say what the young people might enjoy about these activities.",pics:[["🏠🎮📺<br>👦👦","在家打電動 Video games"],["🏞️🚲🌤️<br>👫","公園騎車 Cycling"]]},
+ {part:2,title:"Part 2 · Follow-up",zh:"簡短回答（約 30 秒）。",secs:30,q:"How do you like to relax? Why?"},
+ {part:3,title:"Part 3 · Collaborative task",zh:"真的考試是和同伴討論。這裡請你自己說：每個點子的好處和壞處（2 分鐘）。",secs:120,q:"Here are some places a class could visit on a school trip. Talk about what students could learn or enjoy at each place.",mind:{c:"What could students learn or enjoy on these school trips?",o:["a museum","a theme park","a nature walk","a theatre","a science centre"]}},
+ {part:3,title:"Part 3 · Decision",zh:"做出決定並說明原因（1 分鐘）。",secs:60,q:"Now decide which trip would be the best for your class."},
+ {part:4,title:"Part 4 · Discussion",zh:"說出看法＋理由＋例子。",secs:40,q:"Do you think school trips are important? Why?"},
+ {part:4,title:"Part 4 · Discussion",zh:"",secs:40,q:"Is it better to learn in a classroom or outside? Why?"},
+ {part:4,title:"Part 4 · Discussion",zh:"",secs:40,q:"Should students be allowed to choose where they go on school trips?"}
+]};
+
+/* ================= paper builder: fixed sets or random mix ================= */
+const META={ruoe:{title:'Reading and Use of English',zh:'閱讀與文法字彙',real:75,mins:75},lis:{title:'Listening',zh:'聽力',real:40,mins:40},wri:{title:'Writing',zh:'寫作',real:80,mins:80},spk:{title:'Speaking',zh:'口說',real:14,mins:14}};
+let SET=store.get('set',1);
+const K=k=>k+'_s'+SET;
+let RUOE,LIS,WRI,SPK;const PAPERS={};
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const pickSet=s=>s==='mix'?1+Math.floor(Math.random()*3):s;
+const clone=x=>JSON.parse(JSON.stringify(x));
+function buildPaper(id,set){const M=META[id];
+  if(id==='ruoe'||id==='lis'){const PM=id==='ruoe'?RU_META:LI_META;let n=0;
+    const parts=Object.keys(PM).map(Number).map(pn=>{const src=SETS[pickSet(set)][id].find(p=>p.part===pn);const p=Object.assign(clone(src),PM[pn]);
+      const map={};p.items.forEach(it=>{n++;map[it.n]=n;it.n=n;});
+      const rn=s=>s.replace(/\{(\d+)\}/g,(_,k)=>'{'+map[k]+'}');
+      if(p.text)p.text=rn(p.text);if(p.passage)p.passage=p.passage.map(rn);
+      p.instr=p.instr.replace('{R}',p.items[0].n+'–'+p.items[p.items.length-1].n);
+      p.items.forEach(it=>{if(Array.isArray(it.o)&&typeof it.a==='number'){const perm=shuffle([...it.o.keys()]);const o=it.o;it.a=perm.indexOf(it.a);it.o=perm.map(i=>o[i]);}});
+      return p;});
+    return {id,...M,parts,set};}
+  if(id==='wri'){return {id,...M,p1:Object.assign(clone(SETS[pickSet(set)].wri.p1),{title:'Part 1 · Essay（必寫）'}),p2:clone(SETS[pickSet(set)].wri.p2),set};}
+  const steps=[];[1,2,3,4].forEach(pn=>steps.push(...clone(SETS[pickSet(set)].spk.filter(s=>s.part===pn))));return {id,...M,steps,set};}
+function usePaper(id,P){PAPERS[id]=P;if(id==='ruoe')RUOE=P;if(id==='lis')LIS=P;if(id==='wri')WRI=P;if(id==='spk')SPK=P;}
+function getPaper(id){let P=store.get(K('paper_'+id),null);if(!P){P=buildPaper(id,SET);store.set(K('paper_'+id),P);if(id==='lis'){PLAYS={};store.set(K('plays'),{});}}usePaper(id,P);return P;}
+const SETNAME=s=>s==='mix'?'🎲 隨機混合':'第 '+s+' 回';
+function setSet(s){SET=s;store.set('set',s);PLAYS=store.get(K('plays'),{});render();}
+
+
+/* ================= capabilities (optional) ================= */
+let SAMPLE=null,DICT=null;
+/* offline: use the browser's own speech recognition (Chrome / Edge / Android) when available */
+function makeDict(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return null;let rec=null;const cb={};
+  return {onPartial(f){cb.p=f},onFinal(f){cb.f=f},onState(f){cb.s=f},
+   start(){return new Promise((res,rej)=>{try{rec=new SR();rec.lang='en-GB';rec.interimResults=true;rec.continuous=true;
+     rec.onresult=e=>{let interim='';for(let k=e.resultIndex;k<e.results.length;k++){const r=e.results[k];if(r.isFinal)cb.f&&cb.f({text:r[0].transcript.trim()});else interim+=r[0].transcript;}cb.p&&cb.p({text:interim});};
+     rec.onerror=ev=>{if(ev.error==='not-allowed'||ev.error==='service-not-allowed')rej({code:'not_granted'});};
+     rec.onend=()=>{micOnFlag=false;cb.s&&cb.s({state:'idle',reason:'stopped'});};
+     rec.onstart=()=>{cb.s&&cb.s({state:'listening'});res();};rec.start();}catch(e){rej(e)}});},
+   stop(){try{rec&&rec.stop()}catch(e){}return Promise.resolve();}};}
+DICT=makeDict();
+if(DICT){DICT.onPartial(({text})=>{const l=$('#live');if(l)l.textContent=text;});
+  DICT.onFinal(({text})=>{const ta=$('#spkText');if(ta){ta.value=(ta.value?ta.value.trim()+' ':'')+text;saveSpk();}const l=$('#live');if(l)l.textContent='';});
+  DICT.onState(({state})=>{const b=$('#micBtn');if(!b)return;const on=state==='listening';b.classList.toggle('on',on);b.textContent=on?'⏹ 停止錄音':'🎙 開始錄音';});}
+/* copy with a fallback box when the clipboard is blocked */
+function copyText(txt,label){const fallback=()=>modal(`<h3>請複製下面的文字</h3><p class="small">長按或全選後複製</p><textarea id="cpBox" style="min-height:200px;font-size:13px">${esc(txt)}</textarea>`,[['完成','b-main']]);
+  try{navigator.clipboard.writeText(txt).then(()=>toast(label||'已複製！'),()=>{fallback();setTimeout(()=>{const b=$('#cpBox');b&&b.select();},50);});}catch(e){fallback();}}
+async function askClaude(prompt){if(!SAMPLE)throw {code:'none'};
+  let r;try{r=await SAMPLE.json(prompt,{modelTier:'complex'});}catch(e){if(e&&e.code)throw e;const t=await SAMPLE(prompt,{modelTier:'complex'});r=JSON.parse(t.text.replace(/^[^{]*/,'').replace(/[^}]*$/,''));}
+  if(r&&typeof r==='object'&&'text' in r&&!('scores' in r)){try{r=JSON.parse(r.text.replace(/^[^{]*/,'').replace(/[^}]*$/,''))}catch(e){}}
+  return r;}
+
+/* ================= state ================= */
+let S={view:'home',paper:null,part:0,step:0};
+let ANS={};let timerId=null,endAt=0;
+function results(){return store.get(K('results'),{});}
+function saveResult(id,r){const all=results();all[id]=r;store.set(K('results'),all);}
+
+/* ================= TTS ================= */
+const VOICE={G:{pitch:1.35,rate:.92},B:{pitch:1.15,rate:.92},W:{pitch:1.0,rate:.9},E:{pitch:1.0,rate:.88}};
+function speak(lines,done){try{const s=speechSynthesis;s.cancel();const vs=s.getVoices().filter(v=>v.lang&&v.lang.startsWith('en'));const gb=vs.filter(v=>v.lang==='en-GB');const pool=gb.length?gb:vs;
+  const pick={G:pool[0],B:pool[1]||pool[0],W:pool[2]||pool[0],E:pool[0]};
+  lines.forEach(([sp,t],i)=>{const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';Object.assign(u,VOICE[sp]||VOICE.E);if(pick[sp])u.voice=pick[sp];if(i===lines.length-1)u.onend=()=>done&&done();s.speak(u);});}
+  catch(e){toast('無法播放聲音');done&&done();}}
+function stopSpeak(){try{speechSynthesis.cancel()}catch(e){}}
+
+/* ================= timer ================= */
+function startTimer(mins,onEnd){clearInterval(timerId);endAt=Date.now()+mins*60000;const t=$('#timer');t.style.display='block';
+  const tick=()=>{const left=Math.max(0,Math.round((endAt-Date.now())/1000));t.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');t.classList.toggle('low',left<=120);
+    if(left<=0){clearInterval(timerId);onEnd();}};tick();timerId=setInterval(tick,1000);}
+function stopTimer(){clearInterval(timerId);$('#timer').style.display='none';}
+
+/* ================= render ================= */
+function render(){const m=$('#main');stopSpeak();
+  $('#partnav').innerHTML='';$('#foot').style.display='none';
+  $('#brandSub').textContent=CAND()?'考生：'+CAND()+'・離線版':'離線版';
+  if(S.view==='home')return renderHome(m);
+  if(S.view==='exam')return renderExam(m);
+  if(S.view==='result'){const rr=results()[S.paper];if(rr&&rr.paper)usePaper(S.paper,rr.paper);return renderResult(m);}}
+
+function renderHome(m){stopTimer();const R=results();const name=CAND();const pet=store.get('pet',null);const petD=store.get('petDraft',{});
+  const st=id=>{const r=R[id];if(!r)return '<span class="pill">尚未作答</span>';if(r.pending)return '<span class="pill y">已交卷・等待評分</span>';return `<span class="pill g">已完成・約 ${r.scale}（${level(r.scale)}）</span>`;};
+  m.innerHTML=`<h1>B2 First for Schools 模擬考</h1>
+  <p class="sub">題型、作答說明和計分方式都照劍橋 B2 First <b>for Schools</b> 正式考試設計。交卷後會看到分數、正確答案和解說；寫作和口說交卷後可以一鍵「複製給 AI 批改」（貼到免費版 Claude 等 AI），或交給老師，再把分數填回來。</p>
+  <div class="beta"><b>📋 說明：</b>共 3 回完整模擬考，題型、題數和時間都和正式考試一樣（全部約 3.5 小時，可以分天考，一次考一份）。分數是依答對比例換算的<b>估算</b>，僅供練習參考。</div>
+  <div class="card"><h3>考生姓名 Candidate name</h3><div class="namebox"><input id="nm" value="${esc(name)}" placeholder="請輸入名字" maxlength="20" oninput="liveName(this.value)"><button class="b-main" onclick="setName()">確定</button></div></div>
+  <div class="card"><h3>📝 PET 成績（先分析，再考模擬考）</h3>
+    <p class="small">輸入成績單上 Reading / Writing / Listening / Speaking 四項分數（102–170），會先分析強弱項，告訴你模擬考要特別注意哪一份。</p>
+    <div class="petin">${[['R','Reading 閱讀'],['W','Writing 寫作'],['L','Listening 聽力'],['S','Speaking 口說']].map(([k,l])=>`<label>${l}<input id="pet${k}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" value="${pet?pet[k]:(petD[k]||'')}" oninput="petDraft()"></label>`).join('')}</div>
+    <div class="row" style="margin-top:10px"><button class="b-main" onclick="savePet()">分析 PET 成績</button>${pet?'<button class="b-ghost" onclick="clearPet()">清除</button>':''}</div>
+    ${pet?petAnalysis(pet):''}</div>
+  <a class="card" href="fce-academy.html" style="display:block;text-decoration:none;color:inherit"><b>📚 還沒準備好？先去 FCE 闖關學院練習 →</b><div class="small">單字、文法、聽力、閱讀、寫作、口說練習</div></a>
+  <h2>選擇第幾回</h2>
+  <div class="row">${[1,2,3,'mix'].map(s=>{const done=Object.keys(store.get('results_s'+s,{})).length;return `<button class="${SET===s?'b-main':'b-ghost'}" onclick="setSet(${s==='mix'?"'mix'":s})">${SETNAME(s)}<br><span style="font-size:12px;font-weight:600">已完成 ${done}/4</span></button>`;}).join('')}</div>
+  <p class="small">每一回都是完整的一套考試（題數和正式考試相同）。「隨機混合」每次會從三回裡隨機抽出各個 Part 組成新考卷；每次考試選項順序也會打亂。</p>
+  <h2>${SETNAME(SET)}・選擇考卷</h2>
+  <div class="grid">
+   ${[['ruoe','📖',META.ruoe],['wri','✏️',META.wri],['lis','🎧',META.lis],['spk','🗣',META.spk]].map(([id,em,P])=>`<div class="card paper" onclick="openPaper('${id}')"><div class="em">${em}</div><h3>${P.title}</h3><div class="small">${P.zh}・正式 ${P.real} 分鐘</div><div class="st">${st(id)}</div></div>`).join('')}
+  </div>
+  <h2>成績單 Statement of Results・${SETNAME(SET)}</h2>
+  ${sorHTML(R)}
+  <div class="row" style="margin-top:12px"><button class="b-ghost" onclick="resetAll()">🗑 清除所有成績重新考</button></div>`;}
+const PSK={R:['閱讀','Reading','ruoe'],W:['寫作','Writing','wri'],L:['聽力','Listening','lis'],S:['口說','Speaking','spk']};
+/* name is saved as you type, so other buttons never wipe it */
+function liveName(v){v=v.trim();store.set('name',v);$('#brandSub').textContent=v?'考生：'+v+($('#brandSub').textContent.includes('離線')?'・離線版':'・測試版'):$('#brandSub').textContent;}
+function petDraft(){const d={};for(const k of 'RWLS'){const e=$('#pet'+k);if(e)d[k]=e.value;}store.set('petDraft',d);}
+function savePet(){const v={};for(const k of 'RWLS'){const n=parseInt($('#pet'+k).value,10);if(!(n>=102&&n<=170)){toast('四項都要填，範圍 102–170');return;}v[k]=n;}store.set('pet',v);store.set('petDraft',{});toast('已分析 PET 成績');render();}
+function clearPet(){store.set('pet',null);store.set('petDraft',{});render();}
+function petAnalysis(v){const ks=['R','W','L','S'];const O=Math.round(ks.reduce((a,k)=>a+v[k],0)/4);
+  const petG=O>=160?'Pass at Grade A（B2）':O>=153?'Pass at Grade B（B1）':O>=140?'Pass at Grade C（B1）':O>=120?'Level A2':'未達 A2';
+  const lo=110,hi=180,pct=x=>Math.max(0,Math.min(100,(x-lo)/(hi-lo)*100));
+  const bars=ks.map(k=>`<div class="bar"><span>${PSK[k][1]}</span><div class="track"><div class="fill" style="width:${pct(v[k])}%;background:${v[k]>=160?'var(--green)':v[k]>=150?'#E0A800':'var(--red)'}"></div><div class="mark" style="left:${pct(160)}%"></div></div><span class="bal">${v[k]}</span></div>`).join('')+`<div class="bar"><span><b>Overall</b></span><div class="track"><div class="fill" style="width:${pct(O)}%;background:var(--navy)"></div><div class="mark" style="left:${pct(160)}%"></div></div><span class="bal">${O}</span></div>`;
+  const order=[...ks].sort((a,b)=>v[a]-v[b]);const strong=ks.filter(k=>v[k]>=160),weak=order.filter(k=>v[k]<160);
+  const head=O>=160?'已經有 B2 實力，可以直接用模擬考確認 FCE 程度。':O>=150?'接近 B2，模擬考可以找出還差在哪裡。':O>=140?'目前是 B1，模擬考會比較吃力，重點是找出最弱的題型。':'目前低於 B1，建議先多練基礎，模擬考當作「看看題型」就好。';
+  const tips={R:'閱讀 Part 5–7 文章較長，注意「換句話說」和陷阱選項。',W:'寫作要寫滿 140–190 字，Essay 的兩個重點＋自己的點子都要寫到。',L:'聽力每段只播 2 次，先讀題目再聽，注意「最後的決定」。',S:'口說每題都要加理由和例子，Part 2 要講滿 1 分鐘。'};
+  return `<div class="bars" style="padding:12px 0 4px">${bars}<div class="small">黑線＝160（FCE 及格線）。PET 總分 ${O}・${petG}</div></div>
+   <div class="ai"><p><b>${head}</b></p>
+   ${strong.length?`<p>💪 強項：${strong.map(k=>PSK[k][0]+' '+v[k]).join('、')}，已經達到 B2。</p>`:''}
+   ${weak.length?`<p>🎯 要加強（由弱到強）：${weak.map(k=>`<b>${PSK[k][0]} ${v[k]}</b>（差 ${160-v[k]}）`).join('、')}</p>`:''}
+   <p>📌 FCE 比 PET 多一份 <b>Use of English（文法字彙）</b>，PET 成績看不出這部分，模擬考時要特別注意。</p>
+   ${weak.length?`<p><b>模擬考建議先考：</b>${weak.slice(0,2).map(k=>PSK[k][1]).join('、')}</p><ul style="margin:4px 0">${weak.slice(0,2).map(k=>`<li>${tips[k]}</li>`).join('')}</ul>`:''}</div>`;}
+function setName(){petDraft();const v=$('#nm').value.trim();if(!v){toast('請輸入名字');return;}store.set('name',v);toast('已設定：'+v);render();}
+function resetAll(){modal('<h3>確定要清除所有成績嗎？</h3><p class="small">清除後可以重新考一次。</p>',[['取消','b-ghost'],['清除','b-red',()=>{store.set(K('results'),{});['ruoe','lis','wri','spk'].forEach(x=>{store.set(K('paper_'+x),null);store.set(K('draft_'+x),{});});store.set(K('plays'),{});store.set(K('spkText'),{});PLAYS={};ANS={};render();}]]);}
+
+function sorHTML(R){const comps=[['Reading',R.ruoe&&R.ruoe.readScale],['Use of English',R.ruoe&&R.ruoe.uoeScale],['Writing',R.wri&&!R.wri.pending&&R.wri.scale],['Listening',R.lis&&R.lis.scale],['Speaking',R.spk&&!R.spk.pending&&R.spk.scale]];
+  const done=comps.filter(c=>c[1]);if(!done.length)return '<div class="card small">完成任一份考卷後，這裡會出現類似正式成績單的分數圖。</div>';
+  const all=done.length===5;const ov=Math.round(done.reduce((a,c)=>a+c[1],0)/done.length);
+  const lo=120,hi=190,pct=x=>Math.max(0,Math.min(100,(x-lo)/(hi-lo)*100));
+  return `<div class="sor"><div class="top"><span>B2 First for Schools（模擬）</span><span>${all?'Overall '+ov+'・'+grade(ov):'已完成 '+done.length+'/5 項'}</span></div>
+  <div class="bars">${comps.map(([n,v])=>`<div class="bar"><span>${n}</span><div class="track">${v?`<div class="fill" style="width:${pct(v)}%"></div>`:''}<div class="mark" style="left:${pct(160)}%"></div></div><span class="bal" style="font-size:13px">${!v?'—':v<=102?'未得分':v+'<br>'+level(v)}</span></div>`).join('')}
+  ${all?`<div class="bar"><span><b>Overall</b></span><div class="track"><div class="fill" style="width:${pct(ov)}%;background:var(--navy)"></div><div class="mark" style="left:${pct(160)}%"></div></div><span class="bal">${ov}</span></div>`:''}
+  <div class="small">黑線＝160（B2 及格）。160–172 Grade C、173–179 Grade B、180 以上 Grade A。分數為估算。</div></div></div>${petCompare(R)}`;}
+function petCompare(R){const v=store.get('pet',null);if(!v)return '';
+  const mock={R:R.ruoe&&R.ruoe.readScale,W:R.wri&&!R.wri.pending&&R.wri.scale,L:R.lis&&R.lis.scale,S:R.spk&&!R.spk.pending&&R.spk.scale};
+  if(!Object.values(mock).some(Boolean))return '';
+  return `<div class="card"><h3>📈 和 PET 成績比較</h3><table><tr><th>項目</th><th>PET</th><th>FCE 模擬</th><th>變化</th></tr>${'RWLS'.split('').map(k=>{const m=mock[k];const d=m?m-v[k]:null;
+    return `<tr><td>${PSK[k][0]}</td><td>${v[k]}</td><td>${m?(m<=102?'未得分':m):'—'}</td><td class="${d===null?'':d>=0?'ok':'no'}">${d===null?'尚未考':d>=0?'▲ '+d:'▼ '+(-d)}</td></tr>`;}).join('')}</table>
+   <p class="small" style="margin-top:6px">兩種考試用同一把分數尺，可以直接比較。模擬考題數少、分數是估算，差 5 分以內都算正常起伏。</p></div>`;}
+
+/* ---------- open paper ---------- */
+function openPaper(id){if(!CAND()){toast('請先輸入考生姓名');$('#nm')&&$('#nm').focus();return;}
+  const R=results();if(R[id]&&R[id].paper)usePaper(id,R[id].paper);const P=R[id]&&R[id].paper?R[id].paper:getPaper(id);
+  if(R[id]){S={view:'result',paper:id};render();return;}
+  const timeTxt=id==='spk'?'口說大約 14 分鐘，每一題都有計時。':id==='wri'?`時間 ${P.real} 分鐘（和正式考試一樣），兩篇都要寫。`:`時間 ${P.mins} 分鐘（和正式考試一樣），時間到會自動交卷。可以先離開，答案會保留，但重新開始時計時會重新計算。`;
+  modal(`<div style="font-size:36px">📝</div><h3>${P.title}</h3><p>${timeTxt}</p><p class="small">開始後計時就不會暫停，準備好再按開始。</p>`,[['還沒準備好','b-ghost'],['開始考試','b-main',()=>startPaper(id)]]);}
+function startPaper(id){const P=PAPERS[id];ANS=store.get(K('draft_'+id),{});S={view:'exam',paper:id,part:0,step:0};
+  if(id!=='spk')startTimer(P.mins,()=>{toast('時間到！自動交卷');submitPaper(true);});
+  render();window.scrollTo(0,0);}
+function saveDraft(){store.set(K('draft_'+S.paper),ANS);}
+
+/* ---------- exam view ---------- */
+function renderExam(m){const id=S.paper;if(!PAPERS[id])getPaper(id);const P=PAPERS[id];
+  if(id==='wri')return renderWriting(m);
+  if(id==='spk')return renderSpeaking(m);
+  const parts=P.parts;const nav=$('#partnav');
+  nav.innerHTML=parts.map((p,i)=>`<button class="${i===S.part?'on':''}" onclick="goPart(${i})">Part ${p.part}</button>`).join('');
+  const p=parts[S.part];
+  let h=`<div class="small">${P.title}</div><h1>Part ${p.part}</h1><div class="instr"><div class="en">${p.instr}</div><div class="zh">${p.zh}</div></div>`;
+  h+=(id==='ruoe'?renderRuoePart(p):renderLisPart(p));
+  m.innerHTML=h;bindInputs();
+  $('#foot').style.display='block';
+  $('#footInfo').textContent=`已作答 ${answeredCount()} / ${totalItems()}`;
+  $('#prevBtn').textContent='← 上一部分';$('#prevBtn').style.visibility=S.part>0?'visible':'hidden';$('#prevBtn').onclick=()=>goPart(S.part-1);
+  const last=S.part===parts.length-1;$('#nextBtn').textContent=last?'交卷 ✔':'下一部分 →';$('#nextBtn').className=last?'b-org':'b-main';
+  $('#nextBtn').onclick=()=>last?confirmSubmit():goPart(S.part+1);}
+function goPart(i){S.part=i;render();window.scrollTo(0,0);}
+function allItems(){return PAPERS[S.paper].parts.flatMap(p=>p.items);}
+function totalItems(){return allItems().length;}
+function answeredCount(){return allItems().filter(it=>ANS[it.n]!==undefined&&String(ANS[it.n]).trim()!=='').length;}
+function confirmSubmit(){const left=totalItems()-answeredCount();
+  modal(`<h3>確定要交卷嗎？</h3><p>${left?`還有 <b>${left}</b> 題沒有作答。`:'所有題目都作答了 👍'}</p><p class="small">交卷後就不能再修改答案。</p>`,[['再檢查一下','b-ghost'],['交卷','b-org',()=>submitPaper(false)]]);}
+
+function gapInput(n,cls){const v=ANS[n]??'';return `<span class="gapn">${n}</span><input class="${cls||''}" data-n="${n}" value="${esc(v)}" autocomplete="off" autocapitalize="off" spellcheck="false">`;}
+function radioGroup(n,opts,inline){return `<div class="opts ${inline?'inline-opts':''}">${opts.map((o,j)=>`<label class="${ANS[n]===j?'sel':''}"><input type="radio" name="q${n}" data-n="${n}" value="${j}" ${ANS[n]===j?'checked':''}><span><b>${'ABCD'[j]}</b>　<span class="en">${esc(o)}</span></span></label>`).join('')}</div>`;}
+function selectBox(n,letters){return `<select data-n="${n}"><option value="">— 選擇 —</option>${letters.map(l=>`<option ${ANS[n]===l?'selected':''}>${l}</option>`).join('')}</select>`;}
+function bindInputs(){document.querySelectorAll('[data-n]').forEach(el=>{const n=+el.dataset.n;
+  const upd=()=>{if(el.type==='radio'){ANS[n]=+el.value;document.querySelectorAll(`input[name="q${n}"]`).forEach(r=>r.closest('label').classList.toggle('sel',r.checked));}else ANS[n]=el.value;saveDraft();$('#footInfo').textContent=`已作答 ${answeredCount()} / ${totalItems()}`;};
+  el.addEventListener(el.tagName==='SELECT'||el.type==='radio'?'change':'input',upd);});}
+
+function renderRuoePart(p){let h='';
+  if(p.type==='mcCloze'){h+=`<div class="card"><h3 class="en">${p.title}</h3><div class="passage en">${p.text.replace(/\{(\d+)\}/g,(_,n)=>`<span class="gapn">${n}</span>______`)}</div></div><div class="card">${p.items.map(it=>`<div class="q"><span class="qn">${it.n}</span>${radioGroup(it.n,it.o,true)}</div>`).join('')}</div>`;}
+  if(p.type==='open'||p.type==='wf'){const stems={};p.items.forEach(it=>stems[it.n]=it.stem);
+    h+=`<div class="card"><h3 class="en">${p.title}</h3><div class="passage en">${p.text.replace(/\{(\d+)\}/g,(_,n)=>gapInput(+n)+(stems[n]?`<span class="stem">(${stems[n]})</span>`:''))}</div></div>`;}
+  if(p.type==='kwt'){h+=`<div class="card">${p.items.map(it=>`<div class="q"><div><span class="qn">${it.n}</span><span class="en" style="font-size:17px">${esc(it.s1)}</span></div><div class="key">${it.key}</div><div class="en" style="font-size:17px">${esc(it.s2).replace('____','<b>__________</b>')}</div><input class="kwin en" data-n="${it.n}" value="${esc(ANS[it.n]??'')}" placeholder="寫 2–5 個字（含框框裡的字）" autocomplete="off" autocapitalize="off" spellcheck="false"></div>`).join('')}</div>`;}
+  if(p.type==='mc'){h+=`<div class="card"><h3 class="en">${p.title}</h3><div class="passage en" style="line-height:1.8">${p.passage.map(x=>`<p>${esc(x)}</p>`).join('')}</div></div><div class="card">${p.items.map(it=>`<div class="q"><div><span class="qn">${it.n}</span><span class="en" style="font-weight:600">${esc(it.q)}</span></div>${radioGroup(it.n,it.o)}</div>`).join('')}</div>`;}
+  if(p.type==='gapped'){h+=`<div class="card"><h3 class="en">${p.title}</h3><div class="passage en" style="line-height:1.9">${p.passage.map(x=>`<p>${esc(x).replace(/\{(\d+)\}/g,(_,n)=>`<span class="gapn">${n}</span>${selectBox(+n,Object.keys(p.sents))}`)}</p>`).join('')}</div></div><div class="card sentlist"><h3>Sentences</h3>${Object.entries(p.sents).map(([k,v])=>`<p class="en"><b>${k}</b>　${esc(v)}</p>`).join('')}</div>`;}
+  if(p.type==='match'){h+=`<div class="card">${p.texts.map(t=>`<div class="textbox"><b>${t.id}　${t.name}</b><p class="en">${esc(t.t)}</p></div>`).join('')}</div><div class="card"><p class="en" style="font-weight:700">Which person…</p>${p.items.map(it=>`<div class="q row" style="justify-content:space-between"><span><span class="qn">${it.n}</span><span class="en">${esc(it.q)}</span></span>${selectBox(it.n,p.texts.map(t=>t.id))}</div>`).join('')}</div>`;}
+  return h;}
+
+/* listening: each recording may be played twice, like the real exam */
+let PLAYS=store.get(K('plays'),{});
+function playBtn(key,lines){const used=PLAYS[key]||0;return `<div class="play"><button class="b-teal" ${used>=2?'disabled':''} onclick='doPlay(${JSON.stringify(key)},this)' data-lines='${esc(JSON.stringify(lines))}'>${used>=2?'已播完':'🔊 播放'}</button><span class="cnt" data-cnt="${esc(key)}">${used>=2?'已播放 2 次':`可以播放 2 次（已播 ${used} 次）`}</span></div>`;}
+function doPlay(key,btn){const lines=JSON.parse(btn.dataset.lines);document.querySelectorAll('.play button').forEach(b=>b.disabled=true);
+  PLAYS[key]=(PLAYS[key]||0)+1;store.set(K('plays'),PLAYS);const used=PLAYS[key];
+  document.querySelector(`[data-cnt="${CSS.escape(key)}"]`).textContent=`播放中…（第 ${used} 次）`;
+  speak(lines,()=>{document.querySelectorAll('.play button').forEach(b=>{const k=b.getAttribute('onclick').match(/doPlay\("([^"]+)"/);const u=k?PLAYS[k[1]]||0:0;b.disabled=u>=2;if(u>=2)b.textContent='已播完';});
+    const c=document.querySelector(`[data-cnt="${CSS.escape(key)}"]`);if(c)c.textContent=used>=2?'已播放 2 次':`可以再播 1 次`;});}
+function renderLisPart(p){let h='';
+  if(p.type==='lmc'&&!p.shared){h+=`<div class="card">${p.items.map(it=>`<div class="q"><div><span class="qn">${it.n}</span><span class="en" style="font-weight:600">${esc(it.q)}</span></div>${playBtn('l'+it.n,it.s)}${radioGroup(it.n,it.o)}</div>`).join('')}</div>`;}
+  if(p.type==='lmc'&&p.shared){h+=`<div class="card">${playBtn('p'+p.part,p.s)}${p.items.map(it=>`<div class="q"><div><span class="qn">${it.n}</span><span class="en" style="font-weight:600">${esc(it.q)}</span></div>${radioGroup(it.n,it.o)}</div>`).join('')}</div>`;}
+  if(p.type==='gapfill'){h+=`<div class="card">${playBtn('p'+p.part,p.s)}<div class="passage en">${p.items.map(it=>`<p>${esc(it.before)} ${gapInput(it.n)} ${esc(it.after)}</p>`).join('')}</div></div>`;}
+  if(p.type==='lmatch'){const all=p.items.flatMap((it,i)=>[['E',it.sp+'.'],...it.s]);
+    h+=`<div class="card">${playBtn('p'+p.part,all)}<div class="sentlist">${Object.entries(p.opts).map(([k,v])=>`<p class="en"><b>${k}</b>　${esc(v)}</p>`).join('')}</div>${p.items.map(it=>`<div class="q row" style="justify-content:space-between"><span><span class="qn">${it.n}</span><b>${it.sp}</b></span>${selectBox(it.n,Object.keys(p.opts))}</div>`).join('')}</div>`;}
+  return h;}
+
+/* ---------- marking ---------- */
+function kwtMarks(it,ans){const a=norm(ans);if(!a)return 0;const words=a.split(' ').length+(a.match(/'/g)||[]).length;
+  if(words<2||words>5||!a.includes(it.key.toLowerCase()))return 0;
+  const has=alt=>new RegExp('(^|\\s)'+alt.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'($|\\s)').test(a);
+  return it.chunks.filter(ch=>ch.some(has)).length;}
+function markItem(p,it){const v=ANS[it.n];
+  switch(p.type){
+   case 'mcCloze':case 'mc':case 'lmc':return v===it.a?1:0;
+   case 'open':case 'wf':case 'gapfill':return it.a.map(norm).includes(norm(v))?1:0;
+   case 'gapped':case 'match':case 'lmatch':return v===it.a?1:0;
+   case 'kwt':return kwtMarks(it,v);}}
+function submitPaper(auto){stopTimer();stopSpeak();const id=S.paper,P=PAPERS[id];
+  if(id==='wri')return submitWriting();if(id==='spk')return submitSpeaking();
+  const parts=P.parts.map(p=>{const got=p.items.map(it=>{const m=markItem(p,it);return p.type==='kwt'?m:m*(p.marks||1);});const max=p.items.length*(p.type==='kwt'?2:(p.marks||1));return {part:p.part,got:got.reduce((a,b)=>a+b,0),max,each:got};});
+  const r={answers:ANS,parts,auto,date:new Date().toISOString()};
+  const sum=f=>parts.filter(f).reduce((a,x)=>[a[0]+x.got,a[1]+x.max],[0,0]);
+  if(id==='ruoe'){const u=sum(x=>x.part<=4),rd=sum(x=>x.part>=5);r.uoeRaw=u;r.readRaw=rd;r.uoeScale=toScale(u[0]/u[1]*100);r.readScale=toScale(rd[0]/rd[1]*100);r.scale=Math.round((r.uoeScale+r.readScale)/2);}
+  else{const t=sum(()=>true);r.raw=t;r.scale=toScale(t[0]/t[1]*100);}
+  r.paper=PAPERS[id];saveResult(id,r);store.set(K('draft_'+id),{});S={view:'result',paper:id};render();window.scrollTo(0,0);}
+
+/* ---------- results ---------- */
+const TIPS={
+ ruoe:{1:'Part 1 考「搭配詞」：多背 make/do/take/have、片語動詞（pick up, give out）。看到空格要讀整句，選「習慣搭在一起」的字。',
+  2:'Part 2 考小字：關係代名詞（who/which/that）、介系詞、so/such、a/the。填完把整句念一遍，聽起來順不順。',
+  3:'Part 3 單字變身：先判斷詞性（名詞/形容詞/副詞），再想要不要加否定（un-/im-）。拼字要正確才給分！',
+  4:'Part 4 句子改寫：每題分兩部分各 1 分，就算不會整句也要寫，可以拿部分分數。常考：完成式、轉述句、被動、wish。',
+  5:'Part 5：先讀題目再回文章找那一句。小心「文章出現的字」的陷阱選項，找意思一樣的。',
+  6:'Part 6：看空格「前一句」和「後一句」的關鍵字（this, they, also, however）。放進去後要能前後連起來。',
+  7:'Part 7：先讀題目、畫關鍵字，再到文章找「換句話說」的地方。同一個人可以選很多次。'},
+ lis:{1:'Part 1：每段只考一題，聽「最後的決定」或「真正的原因」，不要被前面提到的東西騙。',
+  2:'Part 2：先讀句子猜空格要填什麼（時間？東西？），通常是聽到的原字，拼字要正確。',
+  3:'Part 3：先讀 A–E 選項畫重點，說話的人常常提到兩個選項的內容，但只有一個是真的意思。',
+  4:'Part 4：題目順序和訪問順序一樣。注意「別人怎麼做」和「他自己怎麼做」的差別。'}};
+function renderResult(m){const id=S.paper,P=PAPERS[id],r=results()[id];
+  if(!r){S.view='home';return render();}
+  if(id==='wri')return renderWriResult(m,r);if(id==='spk')return renderSpkResult(m,r);
+  let h=`<div class="row"><button class="b-ghost" onclick="goHome()">← 回首頁</button></div><h1>${P.title}・成績</h1>`;
+  if(r.auto)h+='<div class="beta">⏰ 時間到自動交卷。</div>';
+  if(id==='ruoe'){h+=`<div class="grid">${scoreCard('Reading 閱讀（Part 5–7）',r.readScale,r.readRaw,qCount(P,r,p=>p.part>=5))}${scoreCard('Use of English 文法字彙（Part 1–4）',r.uoeScale,r.uoeRaw,qCount(P,r,p=>p.part<=4))}</div>`;}
+  else h+=scoreCard('Listening 聽力（Part 1–4）',r.scale,r.raw,qCount(P,r));
+  h+=SCALE_NOTE;
+  const weak=r.parts.filter(x=>x.got/x.max<0.6);
+  h+=`<h2>💡 建議</h2><div class="card">${weak.length?weak.map(x=>`<p>🔸 ${TIPS[id][x.part]}</p>`).join(''):'<p>每個 Part 都有 60% 以上，表現很好！繼續挑戰更長的題目和完整模考。</p>'}</div>`;
+  h+=`<h2>各部分得分與解答</h2>`;
+  P.parts.forEach((p,pi)=>{const pr=r.parts[pi];
+    const pmax=p.type==='kwt'?2:(p.marks||1);const pok=pr.each.filter(g=>g===pmax).length,phalf=pr.each.filter(g=>g>0&&g<pmax).length;const ppct=pr.got/pr.max*100;
+    h+=`<div class="card"><h3>Part ${p.part}　<span class="${pr.got===0?'no':ppct>=60?'ok':'half'}">答對 ${pok} / ${p.items.length} 題</span>${phalf?`<span class="small">（${phalf} 題部分分數）</span>`:''}　<span class="small">得分 ${pr.got} / ${pr.max}・每題 ${pmax} 分${p.type==='kwt'?'（可得部分分數）':''}</span></h3>`;
+    if(p.type==='gapped')h+=`<div class="small">${Object.entries(p.sents).map(([k,v])=>`<b>${k}</b> ${esc(v)}`).join('<br>')}</div>`;
+    p.items.forEach((it,ii)=>{const v=r.answers[it.n];const got=pr.each[ii];const max=p.type==='kwt'?2:(p.marks||1);
+      let yours=v===undefined||String(v).trim()===''?'（未作答）':(typeof v==='number'?'ABCD'[v]+'  '+((it.o||[])[v]||''):v);
+      let right;if(['mcCloze','mc','lmc'].includes(p.type))right='ABCD'[it.a]+'  '+it.o[it.a];
+      else if(p.type==='kwt')right=it.full;else if(Array.isArray(it.a))right=it.a.join(' / ');else right=it.a+(p.sents?'  '+p.sents[it.a]:p.opts?'  '+p.opts[it.a]:p.texts?'  '+p.texts.find(t=>t.id===it.a).name:'');
+      const cls=got===max?'ok':got>0?'half':'no';
+      h+=`<div class="res-q"><span class="mk ${cls}">${got===max?'✔':got>0?'△':'✘'} ${got}/${max}</span><b class="qn">${it.n}</b>${it.q?`<span class="en">${esc(it.q)}</span>`:it.s1?`<span class="en">${esc(it.s1)}</span> <b>${it.key}</b>`:it.sp?`<b>${it.sp}</b>`:''}
+        <div>你的答案：<span class="en ${cls}">${esc(yours)}</span></div>${got<max?`<div>正確答案：<b class="en ok">${esc(right)}</b></div>`:''}<div class="expl">${it.e}</div></div>`;});
+    if(id==='lis'){const sc=p.s||p.items.flatMap(it=>it.s?(it.sp?[['E',it.sp]]:[]).concat(it.s):[]);h+=`<details style="margin-top:8px"><summary style="cursor:pointer;font-weight:700">看錄音稿 Transcript</summary><div class="en small" style="margin-top:6px">${sc.map(([sp,t])=>`<p>${sp==='E'?'<b>'+esc(t)+'</b>':esc(t)}</p>`).join('')}</div></details>`;}
+    h+='</div>';});
+  h+=`<div class="row"><button class="b-ghost" onclick="retake('${id}')">↻ 重考這份</button><button class="b-main" onclick="goHome()">回首頁</button></div>`;
+  m.innerHTML=h;}
+function goHome(){S={view:'home'};render();window.scrollTo(0,0);}
+function retake(id){modal('<h3>重考這份考卷？</h3><p class="small">這份的成績會被清除。</p>',[['取消','b-ghost'],['重考','b-org',()=>{const all=results();delete all[id];store.set(K('results'),all);
+  if(id==='lis'){PLAYS={};store.set(K('plays'),{});}if(id==='spk')store.set(K('spkText'),{});store.set(K('draft_'+id),{});store.set(K('paper_'+id),null);S={view:'home'};openPaper(id);}]]);}
+
+/* ================= WRITING ================= */
+function renderWriting(m){const W=WRI;const a=ANS;const nav=$('#partnav');
+  nav.innerHTML=['Part 1','Part 2'].map((t,i)=>`<button class="${i===S.part?'on':''}" onclick="goPart(${i})">${t}</button>`).join('');
+  let h=`<div class="small">Writing</div>`;
+  if(S.part===0){h+=`<h1>${W.p1.title}</h1><div class="instr"><div class="en">You must answer this question. Write your answer in <b>140–190 words</b>.</div><div class="zh">這題一定要寫，140–190 字。題目給的兩個重點和「你自己的點子」都要寫到。</div></div>
+    <div class="card en" style="font-size:16px;white-space:pre-line">${esc(W.p1.task)}</div>
+    <div class="card"><p class="en" style="font-size:18px;font-weight:700;color:var(--navy)">${esc(W.p1.q)}</p><p class="en"><b>Notes</b><br>Write about:</p><ol class="en">${W.p1.notes.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>
+    <textarea id="w1" class="en" placeholder="Write your essay here…">${esc(a.w1||'')}</textarea><div class="row" style="justify-content:space-between"><span>字數 <span class="wc" id="wc1"></span></span></div>`;}
+  else{h+=`<h1>Part 2</h1><div class="instr"><div class="en">Write an answer to <b>one</b> of the questions in this part. Write your answer in <b>140–190 words</b>.</div><div class="zh">三題選一題寫，140–190 字。</div></div>
+    <div class="opts">${W.p2.map((t,i)=>`<label class="${a.p2===t.id?'sel':''}"><input type="radio" name="p2" value="${t.id}" ${a.p2===t.id?'checked':''}><span><b>${i+2}</b>　${t.title}</span></label>`).join('')}</div>
+    <div id="p2task"></div><textarea id="w2" class="en" placeholder="Write your answer here…">${esc(a.w2||'')}</textarea><div>字數 <span class="wc" id="wc2"></span></div>`;}
+  m.innerHTML=h;
+  const upd=()=>{[1,2].forEach(i=>{const ta=$('#w'+i);if(!ta)return;a['w'+i]=ta.value;const n=wordCount(ta.value);const w=$('#wc'+i);w.textContent=n+(n<140?`（還差 ${140-n}）`:n>190?'（太長了）':' ✔');w.style.color=n<140?'var(--red)':n>190?'var(--orange)':'var(--green)';});saveDraft();
+    $('#footInfo').textContent=`Part 1：${wordCount(a.w1||'')} 字｜Part 2：${a.p2?wordCount(a.w2||'')+' 字':'尚未選題'}`;};
+  document.querySelectorAll('textarea').forEach(t=>t.oninput=upd);
+  document.querySelectorAll('input[name="p2"]').forEach(r=>r.onchange=()=>{a.p2=r.value;saveDraft();showTask();document.querySelectorAll('input[name="p2"]').forEach(x=>x.closest('label').classList.toggle('sel',x.checked));});
+  function showTask(){const t=W.p2.find(x=>x.id===a.p2);const box=$('#p2task');if(box)box.innerHTML=t?`<div class="card en" style="font-size:16px;white-space:pre-line">${esc(t.task)}</div>`:'<p class="small">先選一題。</p>';const w=$('#w2');if(w)w.style.display=t?'block':'none';}
+  showTask();upd();
+  $('#foot').style.display='block';$('#prevBtn').style.visibility=S.part>0?'visible':'hidden';$('#prevBtn').onclick=()=>goPart(0);
+  $('#nextBtn').textContent=S.part===0?'下一部分 →':'交卷 ✔';$('#nextBtn').className=S.part===0?'b-main':'b-org';
+  $('#nextBtn').onclick=()=>S.part===0?goPart(1):modal(`<h3>確定要交卷嗎？</h3><p>Part 1：${wordCount(a.w1||'')} 字<br>Part 2：${a.p2?wordCount(a.w2||'')+' 字':'還沒選題'}</p>`,[['再檢查','b-ghost'],['交卷','b-org',()=>submitPaper(false)]]);}
+
+const WRUBRIC=`Use the official Cambridge B2 First Writing assessment scale. Score each subscale 0-5:
+- Content: all content is relevant; target reader fully informed (all notes + own idea covered for the essay).
+- Communicative Achievement: uses the conventions of the task type (essay/article/email/story) to hold the reader's attention and communicate ideas.
+- Organisation: well organised, coherent, variety of linking words and cohesive devices.
+- Language: range of vocabulary (including less common lexis) and grammar (simple and complex), with good control; errors do not impede communication.
+Band 3 in each subscale is roughly the B2 pass standard. Be accurate and fair, not generous. Answers far under 140 words usually lose Content and Communicative Achievement marks.`;
+function wPrompt(task,text){return `You are an experienced Cambridge English examiner marking B2 First for Schools Writing. The candidate is a young learner in Taiwan (around 10–14 years old).
+${WRUBRIC}
+
+TASK:
+${task}
+
+CANDIDATE'S ANSWER (${wordCount(text)} words; required 140–190):
+"""${text}"""
+
+Return ONLY valid JSON with this shape:
+{"scores":{"content":0-5,"communicative":0-5,"organisation":0-5,"language":0-5},
+"summary_zh":"2-3 sentences overall comment",
+"strengths_zh":["..."],
+"improve_zh":["specific, actionable advice"],
+"corrections":[{"original":"exact phrase from the answer","better":"corrected English","why_zh":"short reason"}],
+"model":"an improved version of the candidate's answer at B2 level, keeping their ideas, 140-190 words"}
+All *_zh fields must be in Traditional Chinese (Taiwan), simple enough for a child to understand. Give up to 6 corrections, choosing the most important errors.`;}
+async function submitWriting(){stopTimer();const a=ANS;const W=WRI;const t2=W.p2.find(x=>x.id===a.p2);
+  const r={answers:{...a},pending:true,date:new Date().toISOString(),paper:WRI};saveResult('wri',r);store.set(K('draft_wri'),{});
+  S={view:'result',paper:'wri'};render();gradeWriting();}
+async function gradeWriting(){const r=results().wri;if(!r)return;const a=r.answers;const W=WRI;const t2=W.p2.find(x=>x.id===a.p2);
+  if(!SAMPLE){render();return;}
+  r.pending=true;r.error=null;saveResult('wri',r);render();
+  try{const tasks=[[`${W.p1.task}\n\nEssay question: ${W.p1.q}\nNotes: 1. ${W.p1.notes[0]} 2. ${W.p1.notes[1]} 3. (your own idea)`,a.w1||''],t2?[t2.task,a.w2||'']:null];
+    const out=[];for(const t of tasks){if(!t||!t[1].trim()){out.push(null);continue;}out.push(await askClaude(wPrompt(t[0],t[1])));}
+    const tot=out.map(o=>o?Object.values(o.scores).reduce((x,y)=>x+(+y||0),0):0);
+    r.ai=out;r.rawW=[tot[0]+tot[1],40];r.scale=toScale((tot[0]+tot[1])/40*100);r.pending=false;}
+  catch(e){r.error=e&&e.code==='rate_limited'?'評分請求太頻繁，請稍後再按「重新評分」。':e&&e.code==='not_granted'?'沒有開啟 Claude 評分權限。':'評分時發生問題，請按「重新評分」再試一次。';}
+  saveResult('wri',r);if(S.view==='result'&&S.paper==='wri')render();}
+function critTable(s){const L={content:'Content 內容',communicative:'Communicative Achievement 溝通效果',organisation:'Organisation 組織',language:'Language 語言'};return `<div class="crit">${Object.entries(L).map(([k,v])=>`<span>${v}</span><b>${s[k]} / 5</b>`).join('')}</div>`;}
+function renderWriResult(m,r){const a=r.answers;const t2=WRI.p2.find(x=>x.id===a.p2);
+  let h=`<div class="row"><button class="b-ghost" onclick="goHome()">← 回首頁</button></div><h1>Writing・成績</h1>`;
+  if(r.pending&&!r.error&&SAMPLE)h+=`<div class="ai"><span class="spin"></span>　Claude 正在依照劍橋評分標準批改，大約需要 30–60 秒…</div>`;
+  if(r.error)h+=`<div class="beta">${r.error}　<button class="b-main" onclick="gradeWriting()">重新評分</button></div>`;
+  h+=`<div class="beta"><b>怎麼批改：</b>① 每篇按「📋 複製給 AI 批改」② 打開免費版 Claude（claude.ai）或其他 AI，貼上送出 ③ AI 會給四項分數和修改建議 ④ 把分數選在下面，按「存入分數」，成績單就會更新。也可以把作文交給老師批改，再填入老師的分數。</div>`;
+  if((r.ai||r.manual)&&!r.pending)h+=`<div class="card"><div class="small">Writing（兩篇合計 ${r.rawW[0]} / 40）</div><div class="bigscore">${r.scale}</div><div class="small">${grade(r.scale)}・估算</div><div style="margin-top:6px">${lvPill(r.scale)}</div></div>`;
+  [[0,'Part 1 · Essay',a.w1],[1,'Part 2 · '+(t2?t2.title:'未選題'),a.w2]].forEach(([i,title,text])=>{
+    h+=`<div class="card"><h3>${title}　<span class="small">${wordCount(text||'')} 字</span></h3><details><summary style="cursor:pointer;font-weight:700">看我寫的</summary><div class="en" style="white-space:pre-wrap;margin-top:6px">${esc(text||'（沒有作答）')}</div></details>`;
+    const o=r.ai&&r.ai[i];const mm=r.manual&&r.manual[i];
+    if(mm&&!o)h+=`<div class="ai">${critTable(mm)}</div>`;
+    if(o){h+=`<div class="ai">${critTable(o.scores)}<p style="margin-top:8px">${esc(o.summary_zh)}</p></div>
+      <p><b>👍 做得好的地方</b></p><ul>${(o.strengths_zh||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      <p><b>🔧 怎麼改會更好</b></p><ul>${(o.improve_zh||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      ${(o.corrections||[]).length?`<p><b>✏️ 修正</b></p><table><tr><th>原句</th><th>改成</th><th>原因</th></tr>${o.corrections.map(c=>`<tr><td class="en no">${esc(c.original)}</td><td class="en ok">${esc(c.better)}</td><td>${esc(c.why_zh)}</td></tr>`).join('')}</table>`:''}
+      <details style="margin-top:10px"><summary style="cursor:pointer;font-weight:700">📄 修改後的範文</summary><div class="en" style="white-space:pre-wrap;margin-top:6px">${esc(o.model)}</div></details>`;}
+    h+=`<div class="row" style="margin-top:8px"><button class="b-org" onclick="copyAIW(${i})">📋 複製給 AI 批改</button><button class="b-ghost" onclick="copyTxt(${i})">只複製作文</button></div>
+      <p style="margin-top:10px"><b>填入分數</b> <span class="small">（每項 0–5 分）</span></p>${scoreSelects('w'+i,WCRIT,mm)}</div>`;});
+  h+=`<div class="row"><button class="b-main" onclick="saveManualW()">💾 存入分數</button></div>`;
+  h+=`<div class="row"><button class="b-ghost" onclick="retake('wri')">↻ 重寫</button>${SAMPLE&&!r.pending?'<button class="b-ghost" onclick="gradeWriting()">重新評分</button>':''}<button class="b-main" onclick="goHome()">回首頁</button></div>`;
+  m.innerHTML=h;}
+const WCRIT=[['content','Content 內容'],['communicative','Communicative Achievement 溝通效果'],['organisation','Organisation 組織'],['language','Language 語言']];
+const SCRIT=[['grammar_vocab','Grammar & Vocabulary 文法字彙'],['discourse','Discourse Management 表達組織'],['interactive','Interactive Communication 互動']];
+function scoreSelects(pre,crit,cur){return `<div class="crit" style="row-gap:8px">${crit.map(([k,l])=>`<span>${l}</span><select id="ms_${pre}_${k}"><option value="">—</option>${[0,1,2,3,4,5].map(n=>`<option ${cur&&+cur[k]===n?'selected':''}>${n}</option>`).join('')}</select>`).join('')}</div>`;}
+function readSel(pre,crit){const o={};for(const [k] of crit){const v=$('#ms_'+pre+'_'+k).value;if(v==='')return null;o[k]=+v;}return o;}
+function saveManualW(){const r=results().wri;const m=[readSel('w0',WCRIT),readSel('w1',WCRIT)];
+  if(!m[0]&&!m[1]){toast('請先選分數');return;}
+  for(let i=0;i<2;i++){if(!m[i]){const any=WCRIT.some(([k])=>$('#ms_w'+i+'_'+k).value!=='');if(any){toast(`Part ${i+1} 的四項都要選`);return;}}}
+  const tot=m.map(o=>o?Object.values(o).reduce((a,b)=>a+b,0):0);r.manual=m;r.rawW=[tot[0]+tot[1],40];r.scale=toScale((tot[0]+tot[1])/40*100);r.pending=false;saveResult('wri',r);toast('分數已存入');render();}
+function saveManualS(){const r=results().spk;const m=readSel('s',SCRIT);if(!m){toast('三項都要選');return;}
+  const avg=(m.grammar_vocab+m.discourse+m.interactive)/3;r.manual=m;r.scale=toScale(avg/5*100);r.pending=false;saveResult('spk',r);toast('分數已存入');render();}
+function copyAIW(i){const r=results().wri;const a=r.answers;const t2=WRI.p2.find(x=>x.id===a.p2);
+  const task=i===0?`${WRI.p1.task}\n\nEssay question: ${WRI.p1.q}\nNotes: 1. ${WRI.p1.notes[0]}  2. ${WRI.p1.notes[1]}  3. (your own idea)`:(t2?t2.task:'');const text=(i===0?a.w1:a.w2)||'';
+  if(!text.trim()){toast('這篇沒有作答');return;}
+  copyText(`請你扮演劍橋 B2 First for Schools 寫作考官，依照官方寫作評分標準批改下面這篇作答。
+評分四項，各 0–5 分（3 分約等於 B2 及格）：Content（內容）、Communicative Achievement（溝通效果）、Organisation（組織）、Language（語言）。考生是台灣的中小學生，請公正評分，不要放水；字數要求 140–190 字，字數不足要扣分。
+
+請用繁體中文回覆，格式如下：
+1. 四項分數（Content / Communicative Achievement / Organisation / Language）
+2. 做得好的地方
+3. 需要改進的地方（具體、小朋友看得懂）
+4. 最重要的錯誤修正（原句 → 改正 → 原因），最多 6 個
+5. 一篇保留考生想法、140–190 字、B2 程度的英文修改範文
+
+【題目】
+${task}
+
+【考生作答】（${wordCount(text)} 字）
+${text}`,'已複製！貼到 AI 送出即可');}
+function copyAIS(){const r=results().spk;
+  const tr=SPK.steps.map((st,i)=>`[${st.title}] 考官：${st.q}${st.mind?'（提示：'+st.mind.o.join(', ')+'）':''}\n考生：${(r.answers[i]||'（沒有回答）').trim()}`).join('\n\n');
+  copyText(`請你扮演劍橋 B2 First for Schools 口說考官。下面是考生口說練習的「語音轉文字」紀錄（考生自己練習，沒有同伴；無法判斷發音）。
+請依官方口說評分標準，各 0–5 分（3 分約等於 B2 及格）：Grammar and Vocabulary（文法字彙）、Discourse Management（表達組織：回答夠不夠長、有沒有理由和連接詞）、Interactive Communication（互動，請依討論和做決定的部分估算）。考生是台灣的中小學生，請公正評分，回答太短或沒回答要給低分。
+
+請用繁體中文回覆：
+1. 三項分數
+2. 做得好的地方
+3. 需要改進的地方
+4. Part 1–4 各給一個「更好的英文說法」示範
+5. 建議學起來的英文句型
+
+【紀錄】
+${tr}`,'已複製！貼到 AI 送出即可');}
+function copyTxt(i){const r=results().wri;const a=r.answers;const t2=WRI.p2.find(x=>x.id===a.p2);
+  const txt=i===0?`FCE for Schools Writing Part 1 Essay\nQuestion: ${WRI.p1.q}\n\n${a.w1||''}`:`FCE for Schools Writing Part 2 (${t2?t2.title:''})\n${t2?t2.task:''}\n\n${a.w2||''}`;
+  copyText(txt);}
+
+/* ================= SPEAKING ================= */
+let spkTimer=null,spkLeft=0;
+function saveSpk(){const ta=$('#spkText');if(!ta)return;const all=store.get(K('spkText'),{});all[S.step]=ta.value;store.set(K('spkText'),all);}
+function renderSpeaking(m){const st=SPK.steps[S.step];const texts=store.get(K('spkText'),{});
+  $('#partnav').innerHTML=[1,2,3,4].map(p=>`<button class="${st.part===p?'on':''}" disabled>Part ${p}</button>`).join('');
+  let h=`<div class="small">Speaking・第 ${S.step+1} / ${SPK.steps.length} 題</div><h1>${st.title}</h1>${st.zh?`<div class="instr"><div class="zh" style="margin:0;color:var(--ink)">${st.zh}</div></div>`:''}`;
+  if(st.pics)h+=`<div class="pics">${st.pics.map(([e,c])=>`<div class="pic">${e}<span>${c}</span></div>`).join('')}</div>`;
+  if(st.mind)h+=`<div class="mind"><div class="c en">${esc(st.mind.c)}</div>${st.mind.o.map(x=>`<div class="en">${esc(x)}</div>`).join('')}</div>`;
+  h+=`<div class="card"><div class="small">Examiner 考官說：</div><p class="en" style="font-size:18px;font-weight:600">${esc(st.q)}</p>
+    <div class="row"><button class="b-teal" onclick="sayExaminer()">🔊 聽考官說</button></div></div>
+    <div class="card" style="text-align:center"><div class="bigscore" id="spkClock">${fmt(st.secs)}</div><div class="small">建議回答時間</div>
+    <div class="row" style="justify-content:center;margin-top:10px"><button class="b-org" id="spkGo" onclick="spkStart()">▶ 開始回答</button>${DICT?'<button class="mic" id="micBtn" onclick="micToggle()">🎙 開始錄音</button>':''}</div></div>
+    <div class="card"><h3>我說的內容 ${DICT?'<span class="small">（錄音會自動轉成文字，也可以自己修改）</span>':''}</h3>
+    ${DICT?'<div class="live" id="live"></div>':'<p class="small">這個瀏覽器不能錄音轉文字（需要 Chrome 或 Edge 瀏覽器，電腦或 Android 手機）。請大聲回答，再把說的話打在下面（家長可以幫忙），交卷後 Claude 才能給建議。</p>'}
+    <textarea id="spkText" class="en" style="min-height:110px" placeholder="Your answer will appear here…">${esc(texts[S.step]||'')}</textarea></div>`;
+  m.innerHTML=h;$('#spkText').oninput=saveSpk;
+  $('#foot').style.display='block';$('#footInfo').textContent=`Part ${st.part}`;
+  $('#prevBtn').textContent='← 上一題';$('#prevBtn').style.visibility=S.step>0?'visible':'hidden';$('#prevBtn').onclick=()=>{spkStop();micOff();S.step--;render();};
+  const last=S.step===SPK.steps.length-1;$('#nextBtn').textContent=last?'結束口說 ✔':'下一題 →';$('#nextBtn').className=last?'b-org':'b-main';
+  $('#nextBtn').onclick=()=>{spkStop();micOff();if(last){const n=Object.values(store.get(K('spkText'),{})).filter(x=>x&&x.trim()).length;
+      modal(`<h3>結束口說測驗？</h3><p>已記錄 ${n} / ${SPK.steps.length} 題的回答。</p>`,[['返回','b-ghost'],['結束並評分','b-org',()=>submitPaper(false)]]);}
+    else{S.step++;render();window.scrollTo(0,0);setTimeout(sayExaminer,400);}};}
+function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+function sayExaminer(){if(S.view!=='exam'||S.paper!=='spk')return;const st=SPK.steps[S.step];if(!st)return;speak([['E',st.q]]);}
+function spkStart(){const st=SPK.steps[S.step];if(spkTimer){spkStop();return;}spkLeft=st.secs;$('#spkGo').textContent='⏸ 停止';
+  spkTimer=setInterval(()=>{spkLeft--;const c=$('#spkClock');if(c){c.textContent=fmt(Math.max(0,spkLeft));c.style.color=spkLeft<=5?'var(--red)':'';}if(spkLeft<=0){spkStop();toast('時間到！');}},1000);}
+function spkStop(){clearInterval(spkTimer);spkTimer=null;const b=$('#spkGo');if(b)b.textContent='▶ 開始回答';}
+let micOnFlag=false;
+function micToggle(){if(!DICT)return;if(micOnFlag){micOnFlag=false;DICT.stop().catch(()=>{});return;}
+  micOnFlag=true;DICT.start().catch(e=>{micOnFlag=false;toast(e&&e.code==='not_granted'?'沒有麥克風權限，請用打字':'無法錄音');});if(!spkTimer)spkStart();}
+function micOff(){if(DICT&&micOnFlag){micOnFlag=false;DICT.stop().catch(()=>{});}}
+
+function submitSpeaking(){micOff();const texts=store.get(K('spkText'),{});const r={answers:texts,pending:true,date:new Date().toISOString(),paper:SPK};saveResult('spk',r);S={view:'result',paper:'spk'};render();gradeSpeaking();}
+async function gradeSpeaking(){const r=results().spk;if(!r||!SAMPLE){render();return;}r.pending=true;r.error=null;saveResult('spk',r);render();
+  const tr=SPK.steps.map((st,i)=>`[${st.title}] Examiner: ${st.q}${st.mind?' Prompts: '+st.mind.o.join(', '):''}\nCandidate: ${(r.answers[i]||'(no answer)').trim()}`).join('\n\n');
+  const prompt=`You are an experienced Cambridge English examiner assessing B2 First for Schools Speaking. The candidate is a young learner in Taiwan (around 10–14). This is practice: the candidate answered alone (no partner), and you only have a speech-to-text transcript, so pronunciation cannot be judged and Interactive Communication can only be estimated from how they discuss, give opinions and reach a decision.
+Score each 0-5 using the B2 First speaking scales (band 3 ≈ B2 pass): grammar_vocab (Grammar and Vocabulary), discourse (Discourse Management: extended answers, relevance, organisation, linking), interactive (Interactive Communication, estimated). Be accurate, not generous. Very short or missing answers score low.
+
+TRANSCRIPT:
+${tr}
+
+Return ONLY valid JSON:
+{"scores":{"grammar_vocab":0-5,"discourse":0-5,"interactive":0-5},
+"summary_zh":"2-3 sentences",
+"strengths_zh":["..."],
+"improve_zh":["specific advice"],
+"parts":[{"part":"Part 1","comment_zh":"...","better":"an example of a stronger B2 answer in English to one question from this part"},{"part":"Part 2",...},{"part":"Part 3",...},{"part":"Part 4",...}],
+"useful_phrases":["English phrases the candidate should learn"]}
+All *_zh fields in Traditional Chinese (Taiwan), simple enough for a child.`;
+  try{const o=await askClaude(prompt);const s=o.scores;const avg=((+s.grammar_vocab||0)+(+s.discourse||0)+(+s.interactive||0))/3;
+    r.ai=o;r.scale=toScale(avg/5*100);r.pending=false;}
+  catch(e){r.error=e&&e.code==='rate_limited'?'評分請求太頻繁，請稍後再按「重新評分」。':'評分時發生問題，請按「重新評分」再試一次。';}
+  saveResult('spk',r);if(S.view==='result'&&S.paper==='spk')render();}
+function renderSpkResult(m,r){let h=`<div class="row"><button class="b-ghost" onclick="goHome()">← 回首頁</button></div><h1>Speaking・成績</h1>`;
+  if(r.pending&&!r.error&&SAMPLE)h+=`<div class="ai"><span class="spin"></span>　Claude 正在聽你的回答內容並評分…</div>`;
+  if(r.error)h+=`<div class="beta">${r.error}　<button class="b-main" onclick="gradeSpeaking()">重新評分</button></div>`;
+  h+=`<div class="beta"><b>怎麼批改：</b>按「📋 複製給 AI 批改」，貼到免費版 Claude（claude.ai）或其他 AI，AI 會依劍橋標準給三項分數和建議，再把分數選在下面按「存入分數」。（只看文字無法評發音。）</div>
+    <div class="card"><div class="row"><button class="b-org" onclick="copyAIS()">📋 複製給 AI 批改</button></div><p style="margin-top:10px"><b>填入分數</b> <span class="small">（每項 0–5 分）</span></p>${scoreSelects('s',SCRIT,r.manual)}<div class="row" style="margin-top:8px"><button class="b-main" onclick="saveManualS()">💾 存入分數</button></div></div>`;
+  if(r.manual&&!r.ai&&!r.pending)h+=`<div class="card"><div class="small">Speaking（依填入分數估算）</div><div class="bigscore">${r.scale}</div><div class="small">${grade(r.scale)}・估算</div><div style="margin-top:6px">${lvPill(r.scale)}</div></div>`;
+  const o=r.ai;
+  if(o&&!r.pending){h+=`<div class="card"><div class="small">Speaking（依錄音文字估算）</div><div class="bigscore">${r.scale}</div><div class="small">${grade(r.scale)}・估算</div><div style="margin-top:6px">${lvPill(r.scale)}</div></div>
+    <div class="ai"><div class="crit"><span>Grammar &amp; Vocabulary 文法字彙</span><b>${o.scores.grammar_vocab} / 5</b><span>Discourse Management 表達組織</span><b>${o.scores.discourse} / 5</b><span>Interactive Communication 互動（估算）</span><b>${o.scores.interactive} / 5</b><span>Pronunciation 發音</span><b>無法評分</b></div><p style="margin-top:8px">${esc(o.summary_zh)}</p></div>
+    <div class="card"><p><b>👍 做得好的地方</b></p><ul>${(o.strengths_zh||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p><b>🔧 怎麼改會更好</b></p><ul>${(o.improve_zh||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    ${(o.parts||[]).map(p=>`<div class="card"><h3>${esc(p.part)}</h3><p>${esc(p.comment_zh)}</p><div class="expl"><b>更好的說法：</b><span class="en">${esc(p.better)}</span></div></div>`).join('')}
+    ${(o.useful_phrases||[]).length?`<div class="card"><h3>🛟 要學起來的句子</h3><ul class="en">${o.useful_phrases.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}`;}
+  h+=`<details class="card"><summary style="cursor:pointer;font-weight:700">我說的內容（錄音文字）</summary>${SPK.steps.map((st,i)=>`<p class="small" style="margin-top:8px"><b>${st.title}</b>：${esc(st.q)}</p><p class="en">${esc(r.answers[i]||'（沒有記錄）')}</p>`).join('')}</details>`;
+  h+=`<div class="row"><button class="b-ghost" onclick="retake('spk')">↻ 重考</button>${SAMPLE&&!r.pending?'<button class="b-ghost" onclick="gradeSpeaking()">重新評分</button>':''}<button class="b-main" onclick="goHome()">回首頁</button></div>`;
+  m.innerHTML=h;}
+
+render();
+</script>
+</body>
+</html>
