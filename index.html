@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FCE for Schools 模擬考（離線版）</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;
+  --bg:#F6F4EF;--card:#fff;--ink:#22223A;--soft:#66657A;--line:#E4E0D6;
+  --navy:#1F2D5A;--navy2:#E3E8F6;--orange:#FF8A3D;--teal:#1FB5A6;--teal2:#D3F4EF;
+  --red:#D93B41;--red2:#FFE1E1;--green:#22985A;--green2:#DDF6E6;--yellow2:#FFF3CC;--purple:#6C4FE0;--purple2:#ECE7FF;
+  --cam:#D0614B;}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.65}
+input,textarea,select{color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--ink);font-family:inherit}
+input::placeholder,textarea::placeholder{color:#A9A6B8;-webkit-text-fill-color:#A9A6B8}
+.en{font-family:Georgia,"Times New Roman",serif}
+.bal{font-family:"Baloo 2","Noto Sans TC",sans-serif}
+header{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff}
+.hin{max-width:900px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.brand{font-weight:900;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{display:block;font-weight:500;font-size:12px;opacity:.75}
+.timer{margin-left:auto;font-family:"Baloo 2";font-weight:800;font-size:22px;background:rgba(255,255,255,.12);padding:2px 12px;border-radius:10px;white-space:nowrap}
+.timer.low{background:var(--red)}
+.partnav{max-width:900px;margin:0 auto;display:flex;gap:6px;padding:0 12px 10px;overflow-x:auto}
+.partnav button{flex:0 0 auto;background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:999px;padding:4px 12px;font-weight:700;font-size:13px}
+.partnav button.on{background:#fff;color:var(--navy)}
+main{max-width:900px;margin:0 auto;padding:18px 16px 110px}
+h1{font-size:24px;line-height:1.3;margin:4px 0 8px;font-weight:900}
+h2{font-size:19px;margin:22px 0 10px;font-weight:900}
+h3{font-size:16px;margin:0 0 6px;font-weight:800}
+p{margin:6px 0}
+.sub{color:var(--soft);font-size:15px}
+.small{font-size:13px;color:var(--soft)}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.pill{display:inline-block;font-size:12px;font-weight:800;padding:2px 10px;border-radius:999px;background:var(--navy2);color:var(--navy)}
+.pill.g{background:var(--green2);color:#14683B}.pill.r{background:var(--red2);color:#9B1E23}.pill.y{background:var(--yellow2);color:#7A5600}.pill.p{background:var(--purple2);color:#4227B5}
+button{font-family:inherit;font-weight:800;font-size:15px;border:none;border-radius:12px;padding:10px 16px;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+.b-main{background:var(--navy);color:#fff}
+.b-org{background:var(--orange);color:#fff}
+.b-teal{background:var(--teal);color:#fff}
+.b-ghost{background:#fff;color:var(--soft);border:1.5px solid var(--line)}
+.b-red{background:var(--red);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.paper{cursor:pointer}
+.paper .em{font-size:28px}
+.paper .st{font-size:13px;font-weight:700;margin-top:6px}
+.instr{background:var(--navy2);border-radius:12px;padding:12px 14px;margin:10px 0}
+.instr .en{font-size:15.5px;font-weight:600}
+.instr .zh{font-size:13.5px;color:var(--soft);margin-top:4px}
+.passage{font-size:17px;line-height:2.05}
+.passage p{margin:0 0 10px}
+.gapn{display:inline-block;font-family:"Baloo 2";font-weight:800;background:var(--navy);color:#fff;border-radius:6px;padding:0 6px;font-size:13px;line-height:1.6;margin-right:3px}
+.passage input{width:110px;font-size:16px;padding:1px 6px;border:1.5px solid #B9B4A6;border-radius:6px;background:#FFFDF8;text-align:center}
+.passage .stem{font-family:"Baloo 2";font-weight:800;color:var(--purple);font-size:14px;margin-left:3px}
+.q{border-top:1px solid var(--line);padding:12px 0}
+.q:first-child{border-top:none}
+.qn{font-family:"Baloo 2";font-weight:800;color:var(--navy);margin-right:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border:1.5px solid var(--line);border-radius:10px;margin:6px 0;cursor:pointer;background:#FFFDF8}
+.opts input{margin-top:5px;width:18px;height:18px;accent-color:var(--navy)}
+.opts label.sel{border-color:var(--navy);background:var(--navy2)}
+.inline-opts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.inline-opts label{margin:0}
+@media (max-width:560px){.inline-opts{grid-template-columns:1fr 1fr}}
+.kwin{width:100%;font-size:16px;padding:9px 10px;border:1.5px solid #B9B4A6;border-radius:10px;background:#FFFDF8;margin-top:6px}
+.key{display:inline-block;background:var(--ink);color:#fff;font-weight:800;padding:0 10px;border-radius:6px;font-family:"Baloo 2";letter-spacing:1px;margin:6px 0}
+select{font-size:15px;padding:7px 8px;border:1.5px solid #B9B4A6;border-radius:8px;background:#FFFDF8}
+.sentlist p{padding:6px 10px;border-radius:8px;background:#FAF8F2;margin:6px 0}
+.textbox{background:#FAF8F2;border-radius:12px;padding:10px 14px;margin:8px 0}
+.textbox b{font-family:"Baloo 2";color:var(--navy)}
+textarea{width:100%;min-height:240px;font-size:16px;line-height:1.7;padding:12px;border:1.5px solid #B9B4A6;border-radius:12px;background:#FFFDF8;resize:vertical}
+.wc{font-family:"Baloo 2";font-weight:800}
+.foot{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1.5px solid var(--line);z-index:15}
+.footin{max-width:900px;margin:0 auto;padding:10px 16px;display:flex;gap:8px;align-items:center}
+.footin .grow{flex:1;font-size:13px;color:var(--soft)}
+.play{display:flex;gap:10px;align-items:center;background:var(--teal2);border-radius:12px;padding:10px 12px;margin:8px 0}
+.play .cnt{font-size:13px;font-weight:700;color:#0E7067}
+/* results */
+.res-q{border-top:1px solid var(--line);padding:10px 0;font-size:15px}
+.res-q .mk{font-family:"Baloo 2";font-weight:800;float:right}
+.ok{color:var(--green)}.no{color:var(--red)}.half{color:#B07800}
+.expl{background:#FAF8F2;border-radius:10px;padding:8px 10px;margin-top:6px;font-size:14px}
+.bigscore{font-family:"Baloo 2";font-weight:800;font-size:46px;line-height:1;color:var(--navy)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--soft);font-size:13px}
+.sor{border:2px solid var(--cam);border-radius:14px;overflow:hidden}
+.sor .top{background:var(--cam);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-weight:800}
+.bars{display:flex;flex-direction:column;gap:10px;padding:14px}
+.bar{display:grid;grid-template-columns:120px 1fr 54px;gap:8px;align-items:center;font-size:14px;font-weight:700}
+.track{position:relative;height:20px;background:#EFECE4;border-radius:999px}
+.fill{height:100%;border-radius:999px;background:var(--cam)}
+.mark{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink)}
+.ai{border-left:5px solid var(--purple);background:var(--purple2);border-radius:12px;padding:12px 14px;margin:10px 0}
+.crit{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:15px}
+.crit b{font-family:"Baloo 2";font-size:17px}
+.spin{display:inline-block;width:16px;height:16px;border:3px solid var(--purple2);border-top-color:var(--purple);border-radius:50%;animation:sp 1s linear infinite;vertical-align:-3px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.pic{background:linear-gradient(160deg,#E7F2FF,#FFF4E3);border-radius:12px;text-align:center;padding:16px 6px;font-size:40px;line-height:1.3;border:1.5px solid var(--line)}
+.pic span{display:block;font-size:12px;color:var(--soft);font-family:"Noto Sans TC"}
+.mind{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;text-align:center}
+.mind .c{grid-column:1/-1;background:var(--navy);color:#fff;border-radius:12px;padding:10px;font-weight:700}
+.mind div:not(.c){background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px;font-size:15px}
+.mic{background:var(--red);color:#fff}
+.mic.on{animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.6}}
+.live{color:var(--soft);font-style:italic;min-height:22px;font-size:14px}
+.modal{position:fixed;inset:0;background:rgba(20,20,40,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:#fff;border-radius:18px;padding:20px;max-width:380px;width:100%;text-align:center}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 18px;border-radius:999px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+.toast.on{opacity:1}
+.beta{background:var(--yellow2);border:1.5px dashed #E0B640;border-radius:12px;padding:10px 14px;font-size:14px;margin:10px 0}
+.petin{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.petin label{font-size:14px;font-weight:700;display:flex;flex-direction:column;gap:4px}
+.petin input{font-size:18px;padding:8px 10px;border:1.5px solid #B9B4A6;border-radius:10px;background:#FFFDF8;width:100%;font-family:'Baloo 2'}
+.namebox{display:flex;gap:8px}
+.namebox input{flex:1;font-size:17px;padding:9px 12px;border:1.5px solid #B9B4A6;border-radius:10px;background:#FFFDF8;min-width:0}
+</style>
+</head>
+<body>
+<header>
+  <div class="hin">
+    <div class="brand" id="brand">B2 First for Schools 模擬考<small id="brandSub">離線版</small></div>
+    <div class="timer" id="timer" style="display:none">00:00</div>
+  </div>
+  <div class="partnav" id="partnav"></div>
+</header>
+<main id="main"></main>
+<div class="foot" id="foot" style="display:none"><div class="footin"><div class="grow" id="footInfo"></div><button class="b-ghost" id="prevBtn">← 上一部分</button><button class="b-main" id="nextBtn">下一部分 →</button></div></div>
+<div class="modal" id="modal"><div class="box"><div id="mBody"></div><div class="row" style="justify-content:center;margin-top:14px" id="mBtns"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= utilities ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s||'').toLowerCase().replace(/[’‘`]/g,"'").replace(/[.,!?;:"]/g,'').replace(/\s+/g,' ').trim();
+const store={get(k,d){try{const v=localStorage.getItem('fcemock_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('fcemock_'+k,JSON.stringify(v))}catch(e){}}};
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1600);}
+function modal(html,btns){$('#mBody').innerHTML=html;const w=$('#mBtns');w.innerHTML='';btns.forEach(([t,cls,fn])=>{const b=document.createElement('button');b.className=cls;b.textContent=t;b.onclick=()=>{$('#modal').classList.remove('on');fn&&fn();};w.appendChild(b);});$('#modal').classList.add('on');}
+const wordCount=s=>(String(s).trim().match(/[A-Za-z0-9’'-]+/g)||[]).length;
+/* Cambridge-style estimate: raw % → scale (approximate, for practice only) */
+function toScale(p){if(p>=80)return Math.round(180+(p-80)/20*10);if(p>=60)return Math.round(160+(p-60));if(p>=40)return Math.round(140+(p-40));return Math.round(102+p/40*38);}
+function level(s){return s>=180?'C1':s>=160?'B2':s>=140?'B1':s>=120?'A2':'A2 以下';}
+const LVCOL={C1:'g',B2:'g',B1:'y',A2:'r','A2 以下':'r'};
+function lvPill(s){const l=level(s);return `<span class="pill ${LVCOL[l]}">程度 ${l}</span>`;}
+/* count fully-correct and partly-correct questions in given parts */
+function qCount(P,r,f){let ok=0,half=0,n=0;P.parts.forEach((p,pi)=>{if(f&&!f(p))return;const max=p.type==='kwt'?2:(p.marks||1);r.parts[pi].each.forEach(g=>{n++;if(g===max)ok++;else if(g>0)half++;});});return {ok,half,n};}
+function scoreCard(title,scale,raw,q){const zero=raw[0]===0;
+  return `<div class="card"><div class="small">${title}</div><div class="bigscore" style="${zero?'color:var(--red)':''}">${zero?'未得分':scale}</div>
+  <div style="margin-top:6px;font-weight:700">答對 ${q.ok} / ${q.n} 題${q.half?`（另有 ${q.half} 題拿部分分數）`:''}</div>
+  <div class="small">得分 ${raw[0]} / ${raw[1]} 分</div><div style="margin-top:6px">${zero?'<span class="pill r">這部分沒有拿到分數</span>':lvPill(scale)}</div></div>`;}
+const SCALE_NOTE='<p class="small">分數是依「得分比例」換算的估算：得分 40% ≈ 140（B1）、60% ≈ 160（B2 及格）、80% ≈ 180（C1）。有些題目 1 分、有些 2 分，所以「答對題數」和「得分」會不一樣。</p>';
+function grade(s){return s>=180?'Grade A（C1）':s>=173?'Grade B（B2）':s>=160?'Grade C（B2）':s>=140?'Level B1':'未達 B1';}
+const CAND=()=>store.get('name','');
+
+/* ================= exam content (original practice material) ================= */
+const RUOE={id:'ruoe',title:'Reading and Use of English',zh:'閱讀與文法字彙',real:75,mins:30,parts:[
+ {part:1,type:'mcCloze',marks:1,instr:'For questions 1–4, read the text below and decide which answer (A, B, C or D) best fits each gap.',zh:'讀短文，每個空格選出最適合的 A、B、C 或 D。',
+  title:'A Day at the Science Fair',
+  text:'Every year, our school {1} a science fair, and this year I finally decided to {2} part. I spent weeks building a small robot that could {3} rubbish from the floor. On the day of the fair, I was so nervous that my hands were {4} when the judges came to my table. But in the end, my robot won second prize!',
+  items:[{n:1,o:['holds','makes','does','keeps'],a:0,e:'hold an event（舉辦活動）。make/do 不能搭配 a fair。'},
+   {n:2,o:['have','take','get','join'],a:1,e:'take part（參加）是固定搭配。join 後面不接 part。'},
+   {n:3,o:['pick up','take off','put on','give out'],a:0,e:'pick up rubbish 撿起垃圾。take off 是脫掉/起飛，give out 是分發。'},
+   {n:4,o:['shaking','moving','rolling','waving'],a:0,e:'緊張到手在發抖 → shaking。waving 是揮手（故意的動作）。'}]},
+ {part:2,type:'open',marks:1,instr:'For questions 5–8, read the text below and think of the word which best fits each gap. Use only one word in each gap.',zh:'每個空格只填一個字。',
+  title:'Why I Love Rainy Days',
+  text:'Most people prefer sunny weather, but I am one of the few people {5} actually enjoy rain. When it rains, I like to sit by the window {6} a cup of hot chocolate and a good book. My mum says I am the only person she knows {7} gets excited about grey skies! I also love the sound of the raindrops on the roof. It is {8} relaxing that I often fall asleep.',
+  items:[{n:5,a:['who','that'],e:'指「人」(people) 的關係代名詞 → who / that。'},
+   {n:6,a:['with'],e:'with a cup of hot chocolate 帶著一杯熱可可。'},
+   {n:7,a:['who','that'],e:'the only person (that/who) she knows ___ gets excited → 主格關係代名詞 who / that。'},
+   {n:8,a:['so'],e:'so + 形容詞 + that…「太…以至於…」。such 後面要接名詞。'}]},
+ {part:3,type:'wf',marks:1,instr:'For questions 9–12, read the text below. Use the word given in capitals at the end of some of the lines to form a word that fits in the gap in the same line.',zh:'用括號裡的大寫字變化成適合的字。',
+  title:'Our School Garden',
+  text:'Last year our class decided to start a vegetable garden behind the school. At first, the project seemed almost {9} because none of us knew much about {10}. Luckily, our teacher gave us a lot of {11}, and we worked hard every week. Now the garden is {12} beautiful, and we even cook our own vegetables!',
+  items:[{n:9,stem:'POSSIBLE',a:['impossible'],e:'一開始「幾乎不可能」→ im + possible。'},
+   {n:10,stem:'GARDEN',a:['gardening'],e:'knew much about ___（園藝這件事）→ 動名詞 gardening。'},
+   {n:11,stem:'ENCOURAGE',a:['encouragement'],e:'a lot of 後面要名詞 → encouragement。'},
+   {n:12,stem:'SURPRISE',a:['surprisingly'],e:'修飾形容詞 beautiful 要用副詞 → surprisingly（出乎意料地）。'}]},
+ {part:4,type:'kwt',marks:2,instr:'For questions 13–15, complete the second sentence so that it has a similar meaning to the first sentence, using the word given. Do not change the word given. You must use between two and five words, including the word given.',zh:'用框框裡的字（不可改變）完成第二句，意思和第一句相同，填 2–5 個字。每題 2 分，可得部分分數。',
+  items:[{n:13,s1:"I haven't seen my cousin for two years.",key:'LAST',s2:'The ____ my cousin was two years ago.',chunks:[['last time'],['i saw','i had seen']],full:'last time I saw',e:'「兩年沒見」=「上次見到是兩年前」→ The last time I saw。每個部分各 1 分：last time ／ I saw。'},
+   {n:14,s1:'Paul started playing the guitar when he was six.',key:'BEEN',s2:'Paul ____ the guitar since he was six.',chunks:[['has been'],['playing']],full:'has been playing',e:'since + 過去時間 → 現在完成進行式 has been playing。'},
+   {n:15,s1:'"Don\'t touch the paint," the teacher said to us.',key:'TOLD',s2:'The teacher ____ the paint.',chunks:[['told us'],['not to touch']],full:'told us not to touch',e:'轉述命令：told + 人 + not to + 原形動詞。told us（1 分）＋ not to touch（1 分）。'}]},
+ {part:5,type:'mc',marks:2,instr:'You are going to read an article written by a girl about joining a drama club. For questions 16–19, choose the answer (A, B, C or D) which you think fits best according to the text.',zh:'閱讀文章，依照文章內容選出最適合的答案。每題 2 分。',
+  title:'My First Week at Drama Club',
+  passage:['I had always been the quiet one in my class. So when my best friend Hana suggested we join the school drama club, my first answer was a firm no. "You don\'t have to be loud to act," she said. "You just have to be brave for a few minutes at a time." Somehow, that made it sound possible.','At the first meeting, the teacher, Mr Clarke, asked everyone to stand in a circle and say their name with an action. My heart was beating so fast that I was sure everyone could hear it. When it was my turn, I waved my arms like a bird. Nobody laughed at me – in fact, three people copied my action.','By the end of the week, we were practising a short play about a lost dog. I didn\'t get the main part, but I didn\'t mind at all. My character only had four lines, and I said every one of them clearly. Walking home, Hana asked me if I would come back next week. I surprised myself by saying, "I wouldn\'t miss it."'],
+  items:[{n:16,q:'Why did the writer agree to join the drama club?',o:['Hana told her that acting was easy.','Hana\'s words made it seem achievable.','Her teacher asked her to join.','She wanted to become more popular.'],a:1,e:'第 1 段：that made it sound possible（聽起來做得到）= achievable → B。陷阱 A：Hana 沒說「簡單」，是說「只要勇敢幾分鐘」。'},
+   {n:17,q:'How did the other students react to her action?',o:['They laughed in a friendly way.','They did not notice it.','Some of them did the same action.','They asked her to do it again.'],a:2,e:'第 2 段：three people copied my action（三個人學她的動作）→ C。陷阱 A：文章說 Nobody laughed。'},
+   {n:18,q:'How did the writer feel about her part in the play?',o:['disappointed that it was small','happy with it','worried about forgetting her lines','jealous of the main actor'],a:1,e:'第 3 段：I didn\'t mind at all，而且每句台詞都說得很清楚 → B。'},
+   {n:19,q:'What does "I wouldn\'t miss it" show about the writer?',o:['She is not sure what to do.','She definitely wants to go back.','She will be too busy next week.','She thinks Hana should go too.'],a:1,e:'I wouldn\'t miss it =「我絕對不會錯過」→ 一定要再去 → B。'}]},
+ {part:6,type:'gapped',marks:2,instr:'You are going to read an article about penguins. Three sentences have been removed from the article. Choose from the sentences A–D the one which fits each gap (20–22). There is one extra sentence which you do not need to use.',zh:'把句子 A–D 放回文章的空格，有一句用不到。每題 2 分。',
+  title:'How Penguins Keep Warm',
+  passage:['Emperor penguins live in one of the coldest places on Earth. In winter, temperatures in Antarctica can fall below minus 40 degrees. {20}','One of their most important tricks is to stand close together in large groups called huddles. {21} The penguins take turns, slowly moving from the cold outside edge to the warm middle and back again.','Their bodies also help. Penguins have a thick layer of fat under their skin, and their feathers are packed tightly together. {22} This means that even their feet, which touch the ice all day, do not freeze.'],
+  sents:{A:'So how do these birds survive such freezing conditions?',B:'Inside a huddle, the temperature can be more than 30 degrees warmer than outside.',C:'In addition, the blood flowing to their feet is carefully controlled to save heat.',D:'Penguins can also fly long distances to find warmer weather.'},
+  items:[{n:20,a:'A',e:'前面講「非常冷」，後面開始講「方法」→ 中間要一個問句帶出主題：So how do these birds survive…? → A。'},
+   {n:21,a:'B',e:'前一句介紹 huddles，後一句說「輪流移到溫暖的中間」→ 中間說明 huddle 裡面很溫暖 → B。'},
+   {n:22,a:'C',e:'後一句 This means that even their feet… do not freeze → 前面一定提到「腳」→ C。D 是錯的：企鵝不會飛！'}]},
+ {part:7,type:'match',marks:1,instr:'You are going to read about three young people and their hobbies. For questions 23–28, choose from the people (A–C). The people may be chosen more than once.',zh:'閱讀三個人的介紹，判斷每題說的是誰。同一個人可以選不只一次。',
+  texts:[{id:'A',name:'Mia',t:'I\'ve been collecting stamps since I was seven. My grandfather gave me his old collection, and I\'ve added to it ever since. The best thing is learning about countries I\'ve never visited. Some of my friends think it\'s an old-fashioned hobby, but I don\'t care what they say.'},
+   {id:'B',name:'Tom',t:'I joined a rock-climbing club last year. It was scary at first, especially looking down! What I like most is that you have to trust your partner, who holds the rope for you. I\'ve made two close friends at the club. The only problem is that the club is quite far from my home.'},
+   {id:'C',name:'Aiko',t:'I make short videos about cooking and share them with my family. My aunt, who is a chef, gives me advice on how to improve them. Filming takes much longer than people imagine – a two-minute video can take a whole afternoon! When I\'m older, I\'d love to have my own cooking show.'}],
+  items:[{n:23,q:'was given something by a relative that started their hobby?',a:'A',e:'Mia：My grandfather gave me his old collection。陷阱 C：Aiko 的阿姨是給「建議」，不是讓她開始這個嗜好。'},
+   {n:24,q:'has a dream for when they are older?',a:'C',e:'Aiko：When I\'m older, I\'d love to have my own cooking show。'},
+   {n:25,q:'mentions that other people do not appreciate their hobby?',a:'A',e:'Mia：friends think it\'s an old-fashioned hobby。'},
+   {n:26,q:'says the hobby takes more time than people expect?',a:'C',e:'Aiko：Filming takes much longer than people imagine。'},
+   {n:27,q:'enjoys having to depend on another person?',a:'B',e:'Tom：What I like most is that you have to trust your partner。'},
+   {n:28,q:'has made new friends through the hobby?',a:'B',e:'Tom：I\'ve made two close friends at the club。'}]}
+]};
+
+const LIS={id:'lis',title:'Listening',zh:'聽力',real:40,mins:20,parts:[
+ {part:1,type:'lmc',instr:'You will hear people talking in three different situations. For questions 1–3, choose the best answer (A, B or C).',zh:'聽三段不同情境的對話，選出最適合的答案。每段播 2 次，先讀題目再播放。',
+  items:[{n:1,q:'You hear a boy talking about a football match. What was he unhappy about?',o:['the result','the weather','the referee'],a:2,
+    s:[['B','We won three-one, so I should be pleased. And luckily the rain stopped just before kick-off.'],['B','But the referee kept stopping the game for no reason. It was so annoying!']],e:'贏了、雨也停了，他不開心的是裁判一直亂停比賽 → C。'},
+   {n:2,q:'You hear a girl leaving a message for her friend. Why is she calling?',o:['to change the time they will meet','to invite her friend to a party','to ask to borrow something'],a:0,
+    s:[['G','Hi Emma, it\'s Sara. About tomorrow – I know we said we\'d meet at ten, but I\'ve got a dentist appointment, so can we make it eleven instead?'],['G','Oh, and don\'t forget the book you promised to lend me!']],e:'主要目的是把見面時間從 10 點改成 11 點 → A。陷阱 C：借書只是最後順便提，不是打電話的原因。'},
+   {n:3,q:'You hear a teacher talking to her class. What is she doing?',o:['explaining a new school rule','describing a competition','giving the class homework'],a:1,
+    s:[['W','Right, everyone. The library is running a story-writing contest this term. Your story should be no longer than five hundred words, and the winner gets a set of books.'],['W','This isn\'t homework, so it\'s up to you whether you take part.']],e:'contest = 比賽 → B。陷阱 C：老師特別說 This isn\'t homework。'}]},
+ {part:2,type:'gapfill',instr:'You will hear a girl called Lucy talking about volunteering at an animal shelter. For questions 4–8, complete the sentences with a word or short phrase.',zh:'聽 Lucy 的介紹，用一個字或短語完成句子。整段播 2 次。',
+  s:[['G','Hi, I\'m Lucy, and I\'d like to tell you about my volunteering at the Greenhill Animal Shelter. I started going there last spring, when I was eleven.'],['G','I go every Saturday morning – not Sunday, as many people think. Most of my work is with the rabbits. I clean their cages and give them fresh vegetables. Dogs are more popular with volunteers, but I find rabbits really calm.'],['G','The hardest part of the job is saying goodbye when an animal goes to a new home – although that\'s also the best feeling. Next month, the shelter is holding a fun run to raise money for a new roof.']],
+  items:[{n:4,before:'Lucy started volunteering at the shelter last',after:'.',a:['spring'],e:'I started going there last spring。'},
+   {n:5,before:'She goes to the shelter every',after:'morning.',a:['saturday'],e:'every Saturday morning – not Sunday。陷阱：Sunday 是別人以為的。'},
+   {n:6,before:'Most of her work is with the',after:'.',a:['rabbits','rabbit'],e:'Most of my work is with the rabbits。陷阱：Dogs 是別的志工比較喜歡的。'},
+   {n:7,before:'Lucy says the hardest part of the job is saying',after:'.',a:['goodbye','good-bye','good bye','goodbye to the animals','goodbye to animals'],e:'The hardest part of the job is saying goodbye。'},
+   {n:8,before:'Next month the shelter is holding a',after:'to raise money.',a:['fun run','fun-run','funrun'],e:'the shelter is holding a fun run to raise money。'}]},
+ {part:3,type:'lmatch',instr:'You will hear three young people talking about why they enjoy reading. For questions 9–11, choose from the list (A–E) what each speaker says. Use the letters only once. There are two extra letters which you do not need to use.',zh:'聽三個人說為什麼喜歡閱讀，從 A–E 選出每個人說的。每個字母只能用一次，有兩個用不到。',
+  opts:{A:'It helps them relax at the end of the day.',B:'It helps them with their school work.',C:'It lets them imagine being someone else.',D:'A family member reads with them.',E:'They enjoy discussing books with friends.'},
+  items:[{n:9,sp:'Speaker 1',s:[['B','Some of my friends say reading is boring, and we sometimes argue about it! For me, the best time to read is at night. After a busy day at school, a chapter or two calms me down, and I fall asleep easily.']],a:'A',e:'a chapter or two calms me down（讓我平靜下來）→ A。陷阱 E：他和朋友是「爭論」閱讀無不無聊，不是一起討論書。'},
+   {n:10,sp:'Speaker 2',s:[['G','My teacher keeps recommending science books to help with our projects, but I\'m not really into them. What I love are adventure stories. When I read, I\'m not just a girl in a small flat any more – I\'m a pirate, or an explorer!']],a:'C',e:'我變成海盜、探險家 → 想像成別人 → C。陷阱 B：她說對科學書沒興趣。'},
+   {n:11,sp:'Speaker 3',s:[['G','Every Friday, my friends and I swap the books we\'ve finished, and we spend the whole lunch break chatting about them. My dad reads a lot too, but he prefers history books, which I find a bit boring!']],a:'E',e:'和朋友交換書、整個午休聊書 → E。陷阱 D：爸爸也看書，但沒有和她一起讀。'}]},
+ {part:4,type:'lmc',instr:'You will hear an interview with a boy called Ken, who has won a chess competition. For questions 12–14, choose the best answer (A, B or C).',zh:'聽訪問 Ken 的內容，選出最適合的答案。整段播 2 次。',
+  shared:true,
+  s:[['W','Today I\'m talking to Ken, who\'s twelve and has just won a national chess competition. Ken, how did you start playing?'],['B','Well, people expect me to say my parents taught me, but actually neither of them plays. I found an old chess set in my grandad\'s cupboard and taught myself from videos.'],['W','How do you prepare for big games?'],['B','Lots of players study for hours the night before, but I think that just makes you tired. I go for a long walk and get to bed early.'],['W','And what advice would you give to young players?'],['B','Don\'t be scared of losing. I lost almost every game in my first year, but each mistake taught me something new.']],
+  items:[{n:12,q:'How did Ken learn to play chess?',o:['His parents taught him.','He taught himself.','His grandfather taught him.'],a:1,e:'taught myself from videos → B。陷阱 C：爺爺的櫃子裡只是找到棋盤。'},
+   {n:13,q:'What does Ken do before an important game?',o:['He studies for many hours.','He plays practice games online.','He tries to relax and rest.'],a:2,e:'散步、早點睡 → 放鬆休息 → C。陷阱 A：那是「別的選手」做的事。'},
+   {n:14,q:'What is Ken\'s advice for young players?',o:['Losing helps you improve.','Practise every single day.','Watch famous players.'],a:0,e:'每次犯錯都學到新東西 → 輸了也能進步 → A。'}]}
+]};
+
+const WRI={id:'wri',title:'Writing',zh:'寫作',real:80,mins:80,
+ p1:{title:'Part 1 · Essay（必寫）',task:'In your English class you have been talking about free time. Now, your English teacher has asked you to write an essay.\nWrite an essay using all the notes and giving reasons for your point of view.',q:'Is it better for young people to spend their free time outdoors or indoors?',notes:['health','making friends','........ (your own idea)']},
+ p2:[{id:'article',title:'Article（文章）',task:'You see this announcement in an English-language magazine for teenagers.\n\nARTICLES WANTED!\nMy favourite place\nTell us about a place you love to go to. Why is it special to you? What do you do there?\nThe best articles will be published next month.\n\nWrite your article.'},
+  {id:'email',title:'Email（電子郵件）',task:'You have received this email from your English-speaking friend, Alex.\n\n"I\'m coming to visit your country next month! What will the weather be like? Which food should I try? And what could we do together at the weekend?"\n\nWrite your email.'},
+  {id:'story',title:'Story（故事）',task:'Your English teacher has asked you to write a story.\nYour story must begin with this sentence:\nWhen Sam opened the box, he couldn\'t believe his eyes.\n\nYour story must include:\n• a phone call\n• a surprise\n\nWrite your story.'}]};
+
+const SPK={id:'spk',title:'Speaking',zh:'口說',real:14,mins:14,steps:[
+ {part:1,title:'Part 1 · Interview',zh:'考官問你關於自己的問題，每題回答 2–3 句。',secs:20,q:'Where do you live? What do you like about it?'},
+ {part:1,title:'Part 1 · Interview',zh:'',secs:20,q:'What do you usually do at the weekend?'},
+ {part:1,title:'Part 1 · Interview',zh:'',secs:20,q:'Tell us about a teacher you really like.'},
+ {part:1,title:'Part 1 · Interview',zh:'',secs:20,q:'What would you like to learn to do in the future? Why?'},
+ {part:2,title:'Part 2 · Long turn',zh:'比較兩張圖片並回答上方的問題，講滿 1 分鐘。',secs:60,q:'Here are your photographs. They show families on holiday in different places. I\'d like you to compare the photographs, and say why you think the families have chosen these holidays.',pics:[['🏕️⛺🌲<br>👨‍👩‍👧‍👦🔥','露營 Camping'],['🏨🏊‍♀️🌴<br>👨‍👩‍👧🍹','飯店度假 Hotel']]},
+ {part:2,title:'Part 2 · Follow-up',zh:'簡短回答（約 30 秒）。',secs:30,q:'Which of these holidays would you prefer? Why?'},
+ {part:3,title:'Part 3 · Collaborative task',zh:'真的考試是和同伴討論。這裡請你自己說：每個點子的好處和壞處（2 分鐘）。',secs:120,q:'Here are some things that could make a town better for young people. Talk about how these things could help young people.',mind:{c:'How could these things help young people in a town?',o:['a skate park','free music lessons','a youth café','more bike paths','a science museum']}},
+ {part:3,title:'Part 3 · Decision',zh:'做出決定並說明原因（1 分鐘）。',secs:60,q:'Now decide which two things would be the most useful for young people.'},
+ {part:4,title:'Part 4 · Discussion',zh:'說出看法＋理由＋例子。',secs:40,q:'Do you think young people have enough places to meet their friends?'},
+ {part:4,title:'Part 4 · Discussion',zh:'',secs:40,q:'Is it better to have lots of hobbies or just one? Why?'},
+ {part:4,title:'Part 4 · Discussion',zh:'',secs:40,q:'Some people say children spend too much time on screens. What do you think?'}
+]};
+
+const PAPERS={ruoe:RUOE,lis:LIS,wri:WRI,spk:SPK};
+
+/* ================= capabilities (optional) ================= */
+let SAMPLE=null,DICT=null;
+/* offline: use the browser's own speech recognition (Chrome / Edge / Android) when available */
+function makeDict(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return null;let rec=null;const cb={};
+  return {onPartial(f){cb.p=f},onFinal(f){cb.f=f},onState(f){cb.s=f},
+   start(){return new Promise((res,rej)=>{try{rec=new SR();rec.lang='en-GB';rec.interimResults=true;rec.continuous=true;
+     rec.onresult=e=>{let interim='';for(let k=e.resultIndex;k<e.results.length;k++){const r=e.results[k];if(r.isFinal)cb.f&&cb.f({text:r[0].transcript.trim()});else interim+=r[0].transcript;}cb.p&&cb.p({text:interim});};
+     rec.onerror=ev=>{if(ev.error==='not-allowed'||ev.error==='service-not-allowed')rej({code:'not_granted'});};
+     rec.onend=()=>{micOnFlag=false;cb.s&&cb.s({state:'idle',reason:'stopped'});};
+     rec.onstart=()=>{cb.s&&cb.s({state:'listening'});res();};rec.start();}catch(e){rej(e)}});},
+   stop(){try{rec&&rec.stop()}catch(e){}return Promise.resolve();}};}
+DICT=makeDict();
+if(DICT){DICT.onPartial(({text})=>{const l=$('#live');if(l)l.textContent=text;});
+  DICT.onFinal(({text})=>{const ta=$('#spkText');if(ta){ta.value=(ta.value?ta.value.trim()+' ':'')+text;saveSpk();}const l=$('#live');if(l)l.textContent='';});
+  DICT.onState(({state})=>{const b=$('#micBtn');if(!b)return;const on=state==='listening';b.classList.toggle('on',on);b.textContent=on?'⏹ 停止錄音':'🎙 開始錄音';});}
+/* copy with a fallback box when the clipboard is blocked */
+function copyText(txt,label){const fallback=()=>modal(`<h3>請複製下面的文字</h3><p class="small">長按或全選後複製</p><textarea id="cpBox" style="min-height:200px;font-size:13px">${esc(txt)}</textarea>`,[['完成','b-main']]);
+  try{navigator.clipboard.writeText(txt).then(()=>toast(label||'已複製！'),()=>{fallback();setTimeout(()=>{const b=$('#cpBox');b&&b.select();},50);});}catch(e){fallback();}}
+async function askClaude(prompt){if(!SAMPLE)throw {code:'none'};
+  let r;try{r=await SAMPLE.json(prompt,{modelTier:'complex'});}catch(e){if(e&&e.code)throw e;const t=await SAMPLE(prompt,{modelTier:'complex'});r=JSON.parse(t.text.replace(/^[^{]*/,'').replace(/[^}]*$/,''));}
+  if(r&&typeof r==='object'&&'text' in r&&!('scores' in r)){try{r=JSON.parse(r.text.replace(/^[^{]*/,'').replace(/[^}]*$/,''))}catch(e){}}
+  return r;}
+
+/* ================= state ================= */
+let S={view:'home',paper:null,part:0,step:0};
+let ANS={};let timerId=null,endAt=0;
+function results(){return store.get('results',{});}
+function saveResult(id,r){const all=results();all[id]=r;store.set('results',all);}
+
+/* ================= TTS ================= */
+const VOICE={G:{pitch:1.35,rate:.92},B:{pitch:1.15,rate:.92},W:{pitch:1.0,rate:.9},E:{pitch:1.0,rate:.88}};
+function speak(lines,done){try{const s=speechSynthesis;s.cancel();const vs=s.getVoices().filter(v=>v.lang&&v.lang.startsWith('en'));const gb=vs.filter(v=>v.lang==='en-GB');const pool=gb.length?gb:vs;
+  const pick={G:pool[0],B:pool[1]||pool[0],W:pool[2]||pool[0],E:pool[0]};
+  lines.forEach(([sp,t],i)=>{const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';Object.assign(u,VOICE[sp]||VOICE.E);if(pick[sp])u.voice=pick[sp];if(i===lines.length-1)u.onend=()=>done&&done();s.speak(u);});}
+  catch(e){toast('無法播放聲音');done&&done();}}
+function stopSpeak(){try{speechSynthesis.cancel()}catch(e){}}
+
+/* ================= timer ================= */
+function startTimer(mins,onEnd){clearInterval(timerId);endAt=Date.now()+mins*60000;const t=$('#timer');t.style.display='block';
+  const tick=()=>{const left=Math.max(0,Math.round((endAt-Date.now())/1000));t.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');t.classList.toggle('low',left<=120);
+    if(left<=0){clearInterval(timerId);onEnd();}};tick();timerId=setInterval(tick,1000);}
+function stopTimer(){clearInterval(timerId);$('#timer').style.display='none';}
+
+/* ================= render ================= */
+function render(){const m=$('#main');stopSpeak();
+  $('#partnav').innerHTML='';$('#foot').style.display='none';
+  $('#brandSub').textContent=CAND()?'考生：'+CAND()+'・離線版':'離線版';
+  if(S.view==='home')return renderHome(m);
+  if(S.view==='exam')return renderExam(m);
+  if(S.view==='result')return renderResult(m);}
+
+function renderHome(m){stopTimer();const R=results();const name=CAND();const pet=store.get('pet',null);const petD=store.get('petDraft',{});
+  const st=id=>{const r=R[id];if(!r)return '<span class="pill">尚未作答</span>';if(r.pending)return '<span class="pill y">已交卷・等待評分</span>';return `<span class="pill g">已完成・約 ${r.scale}（${level(r.scale)}）</span>`;};
+  m.innerHTML=`<h1>B2 First for Schools 模擬考</h1>
+  <p class="sub">題型、作答說明和計分方式都照劍橋 B2 First <b>for Schools</b> 正式考試設計。交卷後會看到分數、正確答案和解說；寫作和口說交卷後可以一鍵「複製給 AI 批改」（貼到免費版 Claude 等 AI），或交給老師，再把分數填回來。</p>
+  <div class="beta"><b>🧪 測試版說明：</b>每個 Part 的題型都和正式考試一樣，但<b>題數較少</b>（正式考試約 3.5 小時）。分數是依答對比例換算的<b>估算</b>，僅供練習參考。</div>
+  <div class="card"><h3>考生姓名 Candidate name</h3><div class="namebox"><input id="nm" value="${esc(name)}" placeholder="請輸入名字" maxlength="20" oninput="liveName(this.value)"><button class="b-main" onclick="setName()">確定</button></div></div>
+  <div class="card"><h3>📝 PET 成績（先分析，再考模擬考）</h3>
+    <p class="small">輸入成績單上 Reading / Writing / Listening / Speaking 四項分數（102–170），會先分析強弱項，告訴你模擬考要特別注意哪一份。</p>
+    <div class="petin">${[['R','Reading 閱讀'],['W','Writing 寫作'],['L','Listening 聽力'],['S','Speaking 口說']].map(([k,l])=>`<label>${l}<input id="pet${k}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" value="${pet?pet[k]:(petD[k]||'')}" oninput="petDraft()"></label>`).join('')}</div>
+    <div class="row" style="margin-top:10px"><button class="b-main" onclick="savePet()">分析 PET 成績</button>${pet?'<button class="b-ghost" onclick="clearPet()">清除</button>':''}</div>
+    ${pet?petAnalysis(pet):''}</div>
+  <h2>選擇考卷</h2>
+  <div class="grid">
+   ${[['ruoe','📖',RUOE],['wri','✏️',WRI],['lis','🎧',LIS],['spk','🗣',SPK]].map(([id,em,P])=>`<div class="card paper" onclick="openPaper('${id}')"><div class="em">${em}</div><h3>${P.title}</h3><div class="small">${P.zh}・正式 ${P.real} 分鐘${id==='spk'||id==='wri'?'':'・測試版 '+P.mins+' 分鐘'}</div><div class="st">${st(id)}</div></div>`).join('')}
+  </div>
+  <h2>成績單 Statement of Results</h2>
+  ${sorHTML(R)}
+  <div class="row" style="margin-top:12px"><button class="b-ghost" onclick="resetAll()">🗑 清除所有成績重新考</button></div>`;}
+const PSK={R:['閱讀','Reading','ruoe'],W:['寫作','Writing','wri'],L:['聽力','Listening','lis'],S:['口說','Speaking','spk']};
+/* name is saved as you type, so other buttons never wipe it */
+function liveName(v){v=v.trim();store.set('name',v);$('#brandSub').textContent=v?'考生：'+v+($('#brandSub').textContent.includes('離線')?'・離線版':'・測試版'):$('#brandSub').textContent;}
+function petDraft(){const d={};for(const k of 'RWLS'){const e=$('#pet'+k);if(e)d[k]=e.value;}store.set('petDraft',d);}
+function savePet(){const v={};for(const k of 'RWLS'){const n=parseInt($('#pet'+k).value,10);if(!(n>=102&&n<=170)){toast('四項都要填，範圍 102–170');return;}v[k]=n;}store.set('pet',v);store.set('petDraft',{});toast('已分析 PET 成績');render();}
+function clearPet(){store.set('pet',null);store.set('petDraft',{});render();}
+function petAnalysis(v){const ks=['R','W','L','S'];const O=Math.round(ks.reduce((a,k)=>a+v[k],0)/4);
+  const petG=O>=160?'Pass at Grade A（B2）':O>=153?'Pass at Grade B（B1）':O>=140?'Pass at Grade C（B1）':O>=120?'Level A2':'未達 A2';
+  const lo=110,hi=180,pct=x=>Math.max(0,Math.min(100,(x-lo)/(hi-lo)*100));
+  const bars=ks.map(k=>`<div class="bar"><span>${PSK[k][1]}</span><div class="track"><div class="fill" style="width:${pct(v[k])}%;background:${v[k]>=160?'var(--green)':v[k]>=150?'#E0A800':'var(--red)'}"></div><div class="mark" style="left:${pct(160)}%"></div></div><span class="bal">${v[k]}</span></div>`).join('')+`<div class="bar"><span><b>Overall</b></span><div class="track"><div class="fill" style="width:${pct(O)}%;background:var(--navy)"></div><div class="mark" style="left:${pct(160)}%"></div></div><span class="bal">${O}</span></div>`;
+  const order=[...ks].sort((a,b)=>v[a]-v[b]);const strong=ks.filter(k=>v[k]>=160),weak=order.filter(k=>v[k]<160);
+  const head=O>=160?'已經有 B2 實力，可以直接用模擬考確認 FCE 程度。':O>=150?'接近 B2，模擬考可以找出還差在哪裡。':O>=140?'目前是 B1，模擬考會比較吃力，重點是找出最弱的題型。':'目前低於 B1，建議先多練基礎，模擬考當作「看看題型」就好。';
+  const tips={R:'閱讀 Part 5–7 文章較長，注意「換句話說」和陷阱選項。',W:'寫作要寫滿 140–190 字，Essay 的兩個重點＋自己的點子都要寫到。',L:'聽力每段只播 2 次，先讀題目再聽，注意「最後的決定」。',S:'口說每題都要加理由和例子，Part 2 要講滿 1 分鐘。'};
+  return `<div class="bars" style="padding:12px 0 4px">${bars}<div class="small">黑線＝160（FCE 及格線）。PET 總分 ${O}・${petG}</div></div>
+   <div class="ai"><p><b>${head}</b></p>
+   ${strong.length?`<p>💪 強項：${strong.map(k=>PSK[k][0]+' '+v[k]).join('、')}，已經達到 B2。</p>`:''}
+   ${weak.length?`<p>🎯 要加強（由弱到強）：${weak.map(k=>`<b>${PSK[k][0]} ${v[k]}</b>（差 ${160-v[k]}）`).join('、')}</p>`:''}
+   <p>📌 FCE 比 PET 多一份 <b>Use of English（文法字彙）</b>，PET 成績看不出這部分，模擬考時要特別注意。</p>
+   ${weak.length?`<p><b>模擬考建議先考：</b>${weak.slice(0,2).map(k=>PSK[k][1]).join('、')}</p><ul style="margin:4px 0">${weak.slice(0,2).map(k=>`<li>${tips[k]}</li>`).join('')}</ul>`:''}</div>`;}
+function setName(){petDraft();const v=$('#nm').value.trim();if(!v){toast('請輸入名字');return;}store.set('name',v);toast('已設定：'+v);render();}
+function resetAll(){modal('<h3>確定要清除所有成績嗎？</h3><p class="small">清除後可以重新考一次。</p>',[['取消','b-ghost'],['清除','b-red',()=>{store.set('results',{});ANS={};render();}]]);}
+
+function sorHTML(R){const comps=[['Reading',R.ruoe&&R.ruoe.readScale],['Use of English',R.ruoe&&R.ruoe.uoeScale],['Writing',R.wri&&!R.wri.pending&&R.wri.scale],['Listening',R.lis&&R.lis.scale],['Speaking',R.spk&&!R.spk.pending&&R.spk.scale]];
+  const done=comps.filter(c=>c[1]);if(!done.length)return '<div class="card small">完成任一份考卷後，這裡會出現類似正式成績單的分數圖。</div>';
+  const all=done.length===5;const ov=Math.round(done.reduce((a,c)=>a+c[1],0)/done.length);
+  const lo=120,hi=190,pct=x=>Math.max(0,Math.min(100,(x-lo)/(hi-lo)*100));
+  return `<div class="sor"><div class="top"><span>B2 First for Schools（模擬）</span><span>${all?'Overall '+ov+'・'+grade(ov):'已完成 '+done.length+'/5 項'}</span></div>
+  <div class="bars">${comps.map(([n,v])=>`<div class="bar"><span>${n}</span><div class="track">${v?`<div class="fill" style="width:${pct(v)}%"></div>`:''}<div class="mark" style="left:${pct(160)}%"></div></div><span class="bal" style="font-size:13px">${!v?'—':v<=102?'未得分':v+'<br>'+level(v)}</span></div>`).join('')}
+  ${all?`<div class="bar"><span><b>Overall</b></span><div class="track"><div class="fill" style="width:${pct(ov)}%;background:var(--navy)"></div><div class="mark" style="left:${pct(160)}%"></div></div><span class="bal">${ov}</span></div>`:''}
+  <div class="small">黑線＝160（B2 及格）。160–172 Grade C、173–179 Grade B、180 以上 Grade A。分數為估算。</div></div></div>${petCompare(R)}`;}
+function petCompare(R){const v=store.get('pet',null);if(!v)return '';
+  const mock={R:R.ruoe&&R.ruoe.readScale,W:R.wri&&!R.wri.pending&&R.wri.scale,L:R.lis&&R.lis.scale,S:R.spk&&!R.spk.pending&&R.spk.scale};
+  if(!Object.values(mock).some(Boolean))return '';
+  return `<div class="card"><h3>📈 和 PET 成績比較</h3><table><tr><th>項目</th><th>PET</th><th>FCE 模擬</th><th>變化</th></tr>${'RWLS'.split('').map(k=>{const m=mock[k];const d=m?m-v[k]:null;
+    return `<tr><td>${PSK[k][0]}</td><td>${v[k]}</td><td>${m?(m<=102?'未得分':m):'—'}</td><td class="${d===null?'':d>=0?'ok':'no'}">${d===null?'尚未考':d>=0?'▲ '+d:'▼ '+(-d)}</td></tr>`;}).join('')}</table>
+   <p class="small" style="margin-top:6px">兩種考試用同一把分數尺，可以直接比較。模擬考題數少、分數是估算，差 5 分以內都算正常起伏。</p></div>`;}
+
+/* ---------- open paper ---------- */
+function openPaper(id){if(!CAND()){toast('請先輸入考生姓名');$('#nm')&&$('#nm').focus();return;}
+  const R=results();const P=PAPERS[id];
+  if(R[id]){S={view:'result',paper:id};render();return;}
+  const timeTxt=id==='spk'?'口說大約 14 分鐘，每一題都有計時。':id==='wri'?`時間 ${P.real} 分鐘（和正式考試一樣），兩篇都要寫。`:`正式考試 ${P.real} 分鐘；測試版題數較少，時間 ${P.mins} 分鐘。時間到會自動交卷。`;
+  modal(`<div style="font-size:36px">📝</div><h3>${P.title}</h3><p>${timeTxt}</p><p class="small">開始後計時就不會暫停，準備好再按開始。</p>`,[['還沒準備好','b-ghost'],['開始考試','b-main',()=>startPaper(id)]]);}
+function startPaper(id){const P=PAPERS[id];ANS=store.get('draft_'+id,{});S={view:'exam',paper:id,part:0,step:0};
+  if(id!=='spk')startTimer(P.mins,()=>{toast('時間到！自動交卷');submitPaper(true);});
+  render();window.scrollTo(0,0);}
+function saveDraft(){store.set('draft_'+S.paper,ANS);}
+
+/* ---------- exam view ---------- */
+function renderExam(m){const id=S.paper,P=PAPERS[id];
+  if(id==='wri')return renderWriting(m);
+  if(id==='spk')return renderSpeaking(m);
+  const parts=P.parts;const nav=$('#partnav');
+  nav.innerHTML=parts.map((p,i)=>`<button class="${i===S.part?'on':''}" onclick="goPart(${i})">Part ${p.part}</button>`).join('');
+  const p=parts[S.part];
+  let h=`<div class="small">${P.title}</div><h1>Part ${p.part}</h1><div class="instr"><div class="en">${p.instr}</div><div class="zh">${p.zh}</div></div>`;
+  h+=(id==='ruoe'?renderRuoePart(p):renderLisPart(p));
+  m.innerHTML=h;bindInputs();
+  $('#foot').style.display='block';
+  $('#footInfo').textContent=`已作答 ${answeredCount()} / ${totalItems()}`;
+  $('#prevBtn').textContent='← 上一部分';$('#prevBtn').style.visibility=S.part>0?'visible':'hidden';$('#prevBtn').onclick=()=>goPart(S.part-1);
+  const last=S.part===parts.length-1;$('#nextBtn').textContent=last?'交卷 ✔':'下一部分 →';$('#nextBtn').className=last?'b-org':'b-main';
+  $('#nextBtn').onclick=()=>last?confirmSubmit():goPart(S.part+1);}
+function goPart(i){S.part=i;render();window.scrollTo(0,0);}
+function allItems(){return PAPERS[S.paper].parts.flatMap(p=>p.items);}
+function totalItems(){return allItems().length;}
+function answeredCount(){return allItems().filter(it=>ANS[it.n]!==undefined&&String(ANS[it.n]).trim()!=='').length;}
+function confirmSubmit(){const left=totalItems()-answeredCount();
+  modal(`<h3>確定要交卷嗎？</h3><p>${left?`還有 <b>${left}</b> 題沒有作答。`:'所有題目都作答了 👍'}</p><p class="small">交卷後就不能再修改答案。</p>`,[['再檢查一下','b-ghost'],['交卷','b-org',()=>submitPaper(false)]]);}
+
+function gapInput(n,cls){const v=ANS[n]??'';return `<span class="gapn">${n}</span><input class="${cls||''}" data-n="${n}" value="${esc(v)}" autocomplete="off" autocapitalize="off" spellcheck="false">`;}
+function radioGroup(n,opts,inline){return `<div class="opts ${inline?'inline-opts':''}">${opts.map((o,j)=>`<label class="${ANS[n]===j?'sel':''}"><input type="radio" name="q${n}" data-n="${n}" value="${j}" ${ANS[n]===j?'checked':''}><span><b>${'ABCD'[j]}</b>　<span class="en">${esc(o)}</span></span></label>`).join('')}</div>`;}
+function selectBox(n,letters){return `<select data-n="${n}"><option value="">— 選擇 —</option>${letters.map(l=>`<option ${ANS[n]===l?'selected':''}>${l}</option>`).join('')}</select>`;}
+function bindInputs(){document.querySelectorAll('[data-n]').forEach(el=>{const n=+el.dataset.n;
+  const upd=()=>{if(el.type==='radio'){ANS[n]=+el.value;document.querySelectorAll(`input[name="q${n}"]`).forEach(r=>r.closest('label').classList.toggle('sel',r.checked));}else ANS[n]=el.value;saveDraft();$('#footInfo').textContent=`已作答 ${answeredCount()} / ${totalItems()}`;};
+  el.addEventListener(el.tagName==='SELECT'||el.type==='radio'?'change':'input',upd);});}
+
+function renderRuoePart(p){let h='';
+  if(p.type==='mcCloze'){h+=`<div class="card"><h3 class="en">${p.title}</h3><div class="passage en">${p.text.replace(/\{(\d+)\}/g,(_,n)=>`<span class="gapn">${n}</span>______`)}</div></div><div class="card">${p.items.map(it=>`<div class="q"><span class="qn">${it.n}</span>${radioGroup(it.n,it.o,true)}</div>`).join('')}</div>`;}
+  if(p.type==='open'||p.type==='wf'){const stems={};p.items.forEach(it=>stems[it.n]=it.stem);
+    h+=`<div class="card"><h3 class="en">${p.title}</h3><div class="passage en">${p.text.replace(/\{(\d+)\}/g,(_,n)=>gapInput(+n)+(stems[n]?`<span class="stem">(${stems[n]})</span>`:''))}</div></div>`;}
+  if(p.type==='kwt'){h+=`<div class="card">${p.items.map(it=>`<div class="q"><div><span class="qn">${it.n}</span><span class="en" style="font-size:17px">${esc(it.s1)}</span></div><div class="key">${it.key}</div><div class="en" style="font-size:17px">${esc(it.s2).replace('____','<b>__________</b>')}</div><input class="kwin en" data-n="${it.n}" value="${esc(ANS[it.n]??'')}" placeholder="寫 2–5 個字（含框框裡的字）" autocomplete="off" autocapitalize="off" spellcheck="false"></div>`).join('')}</div>`;}
+  if(p.type==='mc'){h+=`<div class="card"><h3 class="en">${p.title}</h3><div class="passage en" style="line-height:1.8">${p.passage.map(x=>`<p>${esc(x)}</p>`).join('')}</div></div><div class="card">${p.items.map(it=>`<div class="q"><div><span class="qn">${it.n}</span><span class="en" style="font-weight:600">${esc(it.q)}</span></div>${radioGroup(it.n,it.o)}</div>`).join('')}</div>`;}
+  if(p.type==='gapped'){h+=`<div class="card"><h3 class="en">${p.title}</h3><div class="passage en" style="line-height:1.9">${p.passage.map(x=>`<p>${esc(x).replace(/\{(\d+)\}/g,(_,n)=>`<span class="gapn">${n}</span>${selectBox(+n,Object.keys(p.sents))}`)}</p>`).join('')}</div></div><div class="card sentlist"><h3>Sentences</h3>${Object.entries(p.sents).map(([k,v])=>`<p class="en"><b>${k}</b>　${esc(v)}</p>`).join('')}</div>`;}
+  if(p.type==='match'){h+=`<div class="card">${p.texts.map(t=>`<div class="textbox"><b>${t.id}　${t.name}</b><p class="en">${esc(t.t)}</p></div>`).join('')}</div><div class="card"><p class="en" style="font-weight:700">Which person…</p>${p.items.map(it=>`<div class="q row" style="justify-content:space-between"><span><span class="qn">${it.n}</span><span class="en">${esc(it.q)}</span></span>${selectBox(it.n,p.texts.map(t=>t.id))}</div>`).join('')}</div>`;}
+  return h;}
+
+/* listening: each recording may be played twice, like the real exam */
+let PLAYS=store.get('plays',{});
+function playBtn(key,lines){const used=PLAYS[key]||0;return `<div class="play"><button class="b-teal" ${used>=2?'disabled':''} onclick='doPlay(${JSON.stringify(key)},this)' data-lines='${esc(JSON.stringify(lines))}'>${used>=2?'已播完':'🔊 播放'}</button><span class="cnt" data-cnt="${esc(key)}">${used>=2?'已播放 2 次':`可以播放 2 次（已播 ${used} 次）`}</span></div>`;}
+function doPlay(key,btn){const lines=JSON.parse(btn.dataset.lines);document.querySelectorAll('.play button').forEach(b=>b.disabled=true);
+  PLAYS[key]=(PLAYS[key]||0)+1;store.set('plays',PLAYS);const used=PLAYS[key];
+  document.querySelector(`[data-cnt="${CSS.escape(key)}"]`).textContent=`播放中…（第 ${used} 次）`;
+  speak(lines,()=>{document.querySelectorAll('.play button').forEach(b=>{const k=b.getAttribute('onclick').match(/doPlay\("([^"]+)"/);const u=k?PLAYS[k[1]]||0:0;b.disabled=u>=2;if(u>=2)b.textContent='已播完';});
+    const c=document.querySelector(`[data-cnt="${CSS.escape(key)}"]`);if(c)c.textContent=used>=2?'已播放 2 次':`可以再播 1 次`;});}
+function renderLisPart(p){let h='';
+  if(p.type==='lmc'&&!p.shared){h+=`<div class="card">${p.items.map(it=>`<div class="q"><div><span class="qn">${it.n}</span><span class="en" style="font-weight:600">${esc(it.q)}</span></div>${playBtn('l'+it.n,it.s)}${radioGroup(it.n,it.o)}</div>`).join('')}</div>`;}
+  if(p.type==='lmc'&&p.shared){h+=`<div class="card">${playBtn('p'+p.part,p.s)}${p.items.map(it=>`<div class="q"><div><span class="qn">${it.n}</span><span class="en" style="font-weight:600">${esc(it.q)}</span></div>${radioGroup(it.n,it.o)}</div>`).join('')}</div>`;}
+  if(p.type==='gapfill'){h+=`<div class="card">${playBtn('p'+p.part,p.s)}<div class="passage en">${p.items.map(it=>`<p>${esc(it.before)} ${gapInput(it.n)} ${esc(it.after)}</p>`).join('')}</div></div>`;}
+  if(p.type==='lmatch'){const all=p.items.flatMap((it,i)=>[['E',it.sp+'.'],...it.s]);
+    h+=`<div class="card">${playBtn('p'+p.part,all)}<div class="sentlist">${Object.entries(p.opts).map(([k,v])=>`<p class="en"><b>${k}</b>　${esc(v)}</p>`).join('')}</div>${p.items.map(it=>`<div class="q row" style="justify-content:space-between"><span><span class="qn">${it.n}</span><b>${it.sp}</b></span>${selectBox(it.n,Object.keys(p.opts))}</div>`).join('')}</div>`;}
+  return h;}
+
+/* ---------- marking ---------- */
+function kwtMarks(it,ans){const a=norm(ans);if(!a)return 0;const words=a.split(' ').length+(a.match(/'/g)||[]).length;
+  if(words<2||words>5||!a.includes(it.key.toLowerCase()))return 0;
+  const has=alt=>new RegExp('(^|\\s)'+alt.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'($|\\s)').test(a);
+  return it.chunks.filter(ch=>ch.some(has)).length;}
+function markItem(p,it){const v=ANS[it.n];
+  switch(p.type){
+   case 'mcCloze':case 'mc':case 'lmc':return v===it.a?1:0;
+   case 'open':case 'wf':case 'gapfill':return it.a.map(norm).includes(norm(v))?1:0;
+   case 'gapped':case 'match':case 'lmatch':return v===it.a?1:0;
+   case 'kwt':return kwtMarks(it,v);}}
+function submitPaper(auto){stopTimer();stopSpeak();const id=S.paper,P=PAPERS[id];
+  if(id==='wri')return submitWriting();if(id==='spk')return submitSpeaking();
+  const parts=P.parts.map(p=>{const got=p.items.map(it=>{const m=markItem(p,it);return p.type==='kwt'?m:m*(p.marks||1);});const max=p.items.length*(p.type==='kwt'?2:(p.marks||1));return {part:p.part,got:got.reduce((a,b)=>a+b,0),max,each:got};});
+  const r={answers:ANS,parts,auto,date:new Date().toISOString()};
+  const sum=f=>parts.filter(f).reduce((a,x)=>[a[0]+x.got,a[1]+x.max],[0,0]);
+  if(id==='ruoe'){const u=sum(x=>x.part<=4),rd=sum(x=>x.part>=5);r.uoeRaw=u;r.readRaw=rd;r.uoeScale=toScale(u[0]/u[1]*100);r.readScale=toScale(rd[0]/rd[1]*100);r.scale=Math.round((r.uoeScale+r.readScale)/2);}
+  else{const t=sum(()=>true);r.raw=t;r.scale=toScale(t[0]/t[1]*100);}
+  saveResult(id,r);store.set('draft_'+id,{});S={view:'result',paper:id};render();window.scrollTo(0,0);}
+
+/* ---------- results ---------- */
+const TIPS={
+ ruoe:{1:'Part 1 考「搭配詞」：多背 make/do/take/have、片語動詞（pick up, give out）。看到空格要讀整句，選「習慣搭在一起」的字。',
+  2:'Part 2 考小字：關係代名詞（who/which/that）、介系詞、so/such、a/the。填完把整句念一遍，聽起來順不順。',
+  3:'Part 3 單字變身：先判斷詞性（名詞/形容詞/副詞），再想要不要加否定（un-/im-）。拼字要正確才給分！',
+  4:'Part 4 句子改寫：每題分兩部分各 1 分，就算不會整句也要寫，可以拿部分分數。常考：完成式、轉述句、被動、wish。',
+  5:'Part 5：先讀題目再回文章找那一句。小心「文章出現的字」的陷阱選項，找意思一樣的。',
+  6:'Part 6：看空格「前一句」和「後一句」的關鍵字（this, they, also, however）。放進去後要能前後連起來。',
+  7:'Part 7：先讀題目、畫關鍵字，再到文章找「換句話說」的地方。同一個人可以選很多次。'},
+ lis:{1:'Part 1：每段只考一題，聽「最後的決定」或「真正的原因」，不要被前面提到的東西騙。',
+  2:'Part 2：先讀句子猜空格要填什麼（時間？東西？），通常是聽到的原字，拼字要正確。',
+  3:'Part 3：先讀 A–E 選項畫重點，說話的人常常提到兩個選項的內容，但只有一個是真的意思。',
+  4:'Part 4：題目順序和訪問順序一樣。注意「別人怎麼做」和「他自己怎麼做」的差別。'}};
+function renderResult(m){const id=S.paper,P=PAPERS[id],r=results()[id];
+  if(!r){S.view='home';return render();}
+  if(id==='wri')return renderWriResult(m,r);if(id==='spk')return renderSpkResult(m,r);
+  let h=`<div class="row"><button class="b-ghost" onclick="goHome()">← 回首頁</button></div><h1>${P.title}・成績</h1>`;
+  if(r.auto)h+='<div class="beta">⏰ 時間到自動交卷。</div>';
+  if(id==='ruoe'){h+=`<div class="grid">${scoreCard('Reading 閱讀（Part 5–7）',r.readScale,r.readRaw,qCount(P,r,p=>p.part>=5))}${scoreCard('Use of English 文法字彙（Part 1–4）',r.uoeScale,r.uoeRaw,qCount(P,r,p=>p.part<=4))}</div>`;}
+  else h+=scoreCard('Listening 聽力（Part 1–4）',r.scale,r.raw,qCount(P,r));
+  h+=SCALE_NOTE;
+  const weak=r.parts.filter(x=>x.got/x.max<0.6);
+  h+=`<h2>💡 建議</h2><div class="card">${weak.length?weak.map(x=>`<p>🔸 ${TIPS[id][x.part]}</p>`).join(''):'<p>每個 Part 都有 60% 以上，表現很好！繼續挑戰更長的題目和完整模考。</p>'}</div>`;
+  h+=`<h2>各部分得分與解答</h2>`;
+  P.parts.forEach((p,pi)=>{const pr=r.parts[pi];
+    const pmax=p.type==='kwt'?2:(p.marks||1);const pok=pr.each.filter(g=>g===pmax).length,phalf=pr.each.filter(g=>g>0&&g<pmax).length;const ppct=pr.got/pr.max*100;
+    h+=`<div class="card"><h3>Part ${p.part}　<span class="${pr.got===0?'no':ppct>=60?'ok':'half'}">答對 ${pok} / ${p.items.length} 題</span>${phalf?`<span class="small">（${phalf} 題部分分數）</span>`:''}　<span class="small">得分 ${pr.got} / ${pr.max}・每題 ${pmax} 分${p.type==='kwt'?'（可得部分分數）':''}</span></h3>`;
+    if(p.type==='gapped')h+=`<div class="small">${Object.entries(p.sents).map(([k,v])=>`<b>${k}</b> ${esc(v)}`).join('<br>')}</div>`;
+    p.items.forEach((it,ii)=>{const v=r.answers[it.n];const got=pr.each[ii];const max=p.type==='kwt'?2:(p.marks||1);
+      let yours=v===undefined||String(v).trim()===''?'（未作答）':(typeof v==='number'?'ABCD'[v]+'  '+((it.o||[])[v]||''):v);
+      let right;if(['mcCloze','mc','lmc'].includes(p.type))right='ABCD'[it.a]+'  '+it.o[it.a];
+      else if(p.type==='kwt')right=it.full;else if(Array.isArray(it.a))right=it.a.join(' / ');else right=it.a+(p.sents?'  '+p.sents[it.a]:p.opts?'  '+p.opts[it.a]:p.texts?'  '+p.texts.find(t=>t.id===it.a).name:'');
+      const cls=got===max?'ok':got>0?'half':'no';
+      h+=`<div class="res-q"><span class="mk ${cls}">${got===max?'✔':got>0?'△':'✘'} ${got}/${max}</span><b class="qn">${it.n}</b>${it.q?`<span class="en">${esc(it.q)}</span>`:it.s1?`<span class="en">${esc(it.s1)}</span> <b>${it.key}</b>`:it.sp?`<b>${it.sp}</b>`:''}
+        <div>你的答案：<span class="en ${cls}">${esc(yours)}</span></div>${got<max?`<div>正確答案：<b class="en ok">${esc(right)}</b></div>`:''}<div class="expl">${it.e}</div></div>`;});
+    if(id==='lis'){const sc=p.s||p.items.flatMap(it=>it.s?(it.sp?[['E',it.sp]]:[]).concat(it.s):[]);h+=`<details style="margin-top:8px"><summary style="cursor:pointer;font-weight:700">看錄音稿 Transcript</summary><div class="en small" style="margin-top:6px">${sc.map(([sp,t])=>`<p>${sp==='E'?'<b>'+esc(t)+'</b>':esc(t)}</p>`).join('')}</div></details>`;}
+    h+='</div>';});
+  h+=`<div class="row"><button class="b-ghost" onclick="retake('${id}')">↻ 重考這份</button><button class="b-main" onclick="goHome()">回首頁</button></div>`;
+  m.innerHTML=h;}
+function goHome(){S={view:'home'};render();window.scrollTo(0,0);}
+function retake(id){modal('<h3>重考這份考卷？</h3><p class="small">這份的成績會被清除。</p>',[['取消','b-ghost'],['重考','b-org',()=>{const all=results();delete all[id];store.set('results',all);
+  if(id==='lis'){PLAYS={};store.set('plays',{});}if(id==='spk')store.set('spkText',{});if(id==='wri')store.set('draft_wri',{});S={view:'home'};openPaper(id);}]]);}
+
+/* ================= WRITING ================= */
+function renderWriting(m){const W=WRI;const a=ANS;const nav=$('#partnav');
+  nav.innerHTML=['Part 1','Part 2'].map((t,i)=>`<button class="${i===S.part?'on':''}" onclick="goPart(${i})">${t}</button>`).join('');
+  let h=`<div class="small">Writing</div>`;
+  if(S.part===0){h+=`<h1>${W.p1.title}</h1><div class="instr"><div class="en">You must answer this question. Write your answer in <b>140–190 words</b>.</div><div class="zh">這題一定要寫，140–190 字。題目給的兩個重點和「你自己的點子」都要寫到。</div></div>
+    <div class="card en" style="font-size:16px;white-space:pre-line">${esc(W.p1.task)}</div>
+    <div class="card"><p class="en" style="font-size:18px;font-weight:700;color:var(--navy)">${esc(W.p1.q)}</p><p class="en"><b>Notes</b><br>Write about:</p><ol class="en">${W.p1.notes.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>
+    <textarea id="w1" class="en" placeholder="Write your essay here…">${esc(a.w1||'')}</textarea><div class="row" style="justify-content:space-between"><span>字數 <span class="wc" id="wc1"></span></span></div>`;}
+  else{h+=`<h1>Part 2</h1><div class="instr"><div class="en">Write an answer to <b>one</b> of the questions in this part. Write your answer in <b>140–190 words</b>.</div><div class="zh">三題選一題寫，140–190 字。</div></div>
+    <div class="opts">${W.p2.map((t,i)=>`<label class="${a.p2===t.id?'sel':''}"><input type="radio" name="p2" value="${t.id}" ${a.p2===t.id?'checked':''}><span><b>${i+2}</b>　${t.title}</span></label>`).join('')}</div>
+    <div id="p2task"></div><textarea id="w2" class="en" placeholder="Write your answer here…">${esc(a.w2||'')}</textarea><div>字數 <span class="wc" id="wc2"></span></div>`;}
+  m.innerHTML=h;
+  const upd=()=>{[1,2].forEach(i=>{const ta=$('#w'+i);if(!ta)return;a['w'+i]=ta.value;const n=wordCount(ta.value);const w=$('#wc'+i);w.textContent=n+(n<140?`（還差 ${140-n}）`:n>190?'（太長了）':' ✔');w.style.color=n<140?'var(--red)':n>190?'var(--orange)':'var(--green)';});saveDraft();
+    $('#footInfo').textContent=`Part 1：${wordCount(a.w1||'')} 字｜Part 2：${a.p2?wordCount(a.w2||'')+' 字':'尚未選題'}`;};
+  document.querySelectorAll('textarea').forEach(t=>t.oninput=upd);
+  document.querySelectorAll('input[name="p2"]').forEach(r=>r.onchange=()=>{a.p2=r.value;saveDraft();showTask();document.querySelectorAll('input[name="p2"]').forEach(x=>x.closest('label').classList.toggle('sel',x.checked));});
+  function showTask(){const t=W.p2.find(x=>x.id===a.p2);const box=$('#p2task');if(box)box.innerHTML=t?`<div class="card en" style="font-size:16px;white-space:pre-line">${esc(t.task)}</div>`:'<p class="small">先選一題。</p>';const w=$('#w2');if(w)w.style.display=t?'block':'none';}
+  showTask();upd();
+  $('#foot').style.display='block';$('#prevBtn').style.visibility=S.part>0?'visible':'hidden';$('#prevBtn').onclick=()=>goPart(0);
+  $('#nextBtn').textContent=S.part===0?'下一部分 →':'交卷 ✔';$('#nextBtn').className=S.part===0?'b-main':'b-org';
+  $('#nextBtn').onclick=()=>S.part===0?goPart(1):modal(`<h3>確定要交卷嗎？</h3><p>Part 1：${wordCount(a.w1||'')} 字<br>Part 2：${a.p2?wordCount(a.w2||'')+' 字':'還沒選題'}</p>`,[['再檢查','b-ghost'],['交卷','b-org',()=>submitPaper(false)]]);}
+
+const WRUBRIC=`Use the official Cambridge B2 First Writing assessment scale. Score each subscale 0-5:
+- Content: all content is relevant; target reader fully informed (all notes + own idea covered for the essay).
+- Communicative Achievement: uses the conventions of the task type (essay/article/email/story) to hold the reader's attention and communicate ideas.
+- Organisation: well organised, coherent, variety of linking words and cohesive devices.
+- Language: range of vocabulary (including less common lexis) and grammar (simple and complex), with good control; errors do not impede communication.
+Band 3 in each subscale is roughly the B2 pass standard. Be accurate and fair, not generous. Answers far under 140 words usually lose Content and Communicative Achievement marks.`;
+function wPrompt(task,text){return `You are an experienced Cambridge English examiner marking B2 First for Schools Writing. The candidate is a young learner in Taiwan (around 10–14 years old).
+${WRUBRIC}
+
+TASK:
+${task}
+
+CANDIDATE'S ANSWER (${wordCount(text)} words; required 140–190):
+"""${text}"""
+
+Return ONLY valid JSON with this shape:
+{"scores":{"content":0-5,"communicative":0-5,"organisation":0-5,"language":0-5},
+"summary_zh":"2-3 sentences overall comment",
+"strengths_zh":["..."],
+"improve_zh":["specific, actionable advice"],
+"corrections":[{"original":"exact phrase from the answer","better":"corrected English","why_zh":"short reason"}],
+"model":"an improved version of the candidate's answer at B2 level, keeping their ideas, 140-190 words"}
+All *_zh fields must be in Traditional Chinese (Taiwan), simple enough for a child to understand. Give up to 6 corrections, choosing the most important errors.`;}
+async function submitWriting(){stopTimer();const a=ANS;const W=WRI;const t2=W.p2.find(x=>x.id===a.p2);
+  const r={answers:{...a},pending:true,date:new Date().toISOString()};saveResult('wri',r);store.set('draft_wri',{});
+  S={view:'result',paper:'wri'};render();gradeWriting();}
+async function gradeWriting(){const r=results().wri;if(!r)return;const a=r.answers;const W=WRI;const t2=W.p2.find(x=>x.id===a.p2);
+  if(!SAMPLE){render();return;}
+  r.pending=true;r.error=null;saveResult('wri',r);render();
+  try{const tasks=[[`${W.p1.task}\n\nEssay question: ${W.p1.q}\nNotes: 1. ${W.p1.notes[0]} 2. ${W.p1.notes[1]} 3. (your own idea)`,a.w1||''],t2?[t2.task,a.w2||'']:null];
+    const out=[];for(const t of tasks){if(!t||!t[1].trim()){out.push(null);continue;}out.push(await askClaude(wPrompt(t[0],t[1])));}
+    const tot=out.map(o=>o?Object.values(o.scores).reduce((x,y)=>x+(+y||0),0):0);
+    r.ai=out;r.rawW=[tot[0]+tot[1],40];r.scale=toScale((tot[0]+tot[1])/40*100);r.pending=false;}
+  catch(e){r.error=e&&e.code==='rate_limited'?'評分請求太頻繁，請稍後再按「重新評分」。':e&&e.code==='not_granted'?'沒有開啟 Claude 評分權限。':'評分時發生問題，請按「重新評分」再試一次。';}
+  saveResult('wri',r);if(S.view==='result'&&S.paper==='wri')render();}
+function critTable(s){const L={content:'Content 內容',communicative:'Communicative Achievement 溝通效果',organisation:'Organisation 組織',language:'Language 語言'};return `<div class="crit">${Object.entries(L).map(([k,v])=>`<span>${v}</span><b>${s[k]} / 5</b>`).join('')}</div>`;}
+function renderWriResult(m,r){const a=r.answers;const t2=WRI.p2.find(x=>x.id===a.p2);
+  let h=`<div class="row"><button class="b-ghost" onclick="goHome()">← 回首頁</button></div><h1>Writing・成績</h1>`;
+  if(r.pending&&!r.error&&SAMPLE)h+=`<div class="ai"><span class="spin"></span>　Claude 正在依照劍橋評分標準批改，大約需要 30–60 秒…</div>`;
+  if(r.error)h+=`<div class="beta">${r.error}　<button class="b-main" onclick="gradeWriting()">重新評分</button></div>`;
+  h+=`<div class="beta"><b>怎麼批改：</b>① 每篇按「📋 複製給 AI 批改」② 打開免費版 Claude（claude.ai）或其他 AI，貼上送出 ③ AI 會給四項分數和修改建議 ④ 把分數選在下面，按「存入分數」，成績單就會更新。也可以把作文交給老師批改，再填入老師的分數。</div>`;
+  if((r.ai||r.manual)&&!r.pending)h+=`<div class="card"><div class="small">Writing（兩篇合計 ${r.rawW[0]} / 40）</div><div class="bigscore">${r.scale}</div><div class="small">${grade(r.scale)}・估算</div><div style="margin-top:6px">${lvPill(r.scale)}</div></div>`;
+  [[0,'Part 1 · Essay',a.w1],[1,'Part 2 · '+(t2?t2.title:'未選題'),a.w2]].forEach(([i,title,text])=>{
+    h+=`<div class="card"><h3>${title}　<span class="small">${wordCount(text||'')} 字</span></h3><details><summary style="cursor:pointer;font-weight:700">看我寫的</summary><div class="en" style="white-space:pre-wrap;margin-top:6px">${esc(text||'（沒有作答）')}</div></details>`;
+    const o=r.ai&&r.ai[i];const mm=r.manual&&r.manual[i];
+    if(mm&&!o)h+=`<div class="ai">${critTable(mm)}</div>`;
+    if(o){h+=`<div class="ai">${critTable(o.scores)}<p style="margin-top:8px">${esc(o.summary_zh)}</p></div>
+      <p><b>👍 做得好的地方</b></p><ul>${(o.strengths_zh||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      <p><b>🔧 怎麼改會更好</b></p><ul>${(o.improve_zh||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      ${(o.corrections||[]).length?`<p><b>✏️ 修正</b></p><table><tr><th>原句</th><th>改成</th><th>原因</th></tr>${o.corrections.map(c=>`<tr><td class="en no">${esc(c.original)}</td><td class="en ok">${esc(c.better)}</td><td>${esc(c.why_zh)}</td></tr>`).join('')}</table>`:''}
+      <details style="margin-top:10px"><summary style="cursor:pointer;font-weight:700">📄 修改後的範文</summary><div class="en" style="white-space:pre-wrap;margin-top:6px">${esc(o.model)}</div></details>`;}
+    h+=`<div class="row" style="margin-top:8px"><button class="b-org" onclick="copyAIW(${i})">📋 複製給 AI 批改</button><button class="b-ghost" onclick="copyTxt(${i})">只複製作文</button></div>
+      <p style="margin-top:10px"><b>填入分數</b> <span class="small">（每項 0–5 分）</span></p>${scoreSelects('w'+i,WCRIT,mm)}</div>`;});
+  h+=`<div class="row"><button class="b-main" onclick="saveManualW()">💾 存入分數</button></div>`;
+  h+=`<div class="row"><button class="b-ghost" onclick="retake('wri')">↻ 重寫</button>${SAMPLE&&!r.pending?'<button class="b-ghost" onclick="gradeWriting()">重新評分</button>':''}<button class="b-main" onclick="goHome()">回首頁</button></div>`;
+  m.innerHTML=h;}
+const WCRIT=[['content','Content 內容'],['communicative','Communicative Achievement 溝通效果'],['organisation','Organisation 組織'],['language','Language 語言']];
+const SCRIT=[['grammar_vocab','Grammar & Vocabulary 文法字彙'],['discourse','Discourse Management 表達組織'],['interactive','Interactive Communication 互動']];
+function scoreSelects(pre,crit,cur){return `<div class="crit" style="row-gap:8px">${crit.map(([k,l])=>`<span>${l}</span><select id="ms_${pre}_${k}"><option value="">—</option>${[0,1,2,3,4,5].map(n=>`<option ${cur&&+cur[k]===n?'selected':''}>${n}</option>`).join('')}</select>`).join('')}</div>`;}
+function readSel(pre,crit){const o={};for(const [k] of crit){const v=$('#ms_'+pre+'_'+k).value;if(v==='')return null;o[k]=+v;}return o;}
+function saveManualW(){const r=results().wri;const m=[readSel('w0',WCRIT),readSel('w1',WCRIT)];
+  if(!m[0]&&!m[1]){toast('請先選分數');return;}
+  for(let i=0;i<2;i++){if(!m[i]){const any=WCRIT.some(([k])=>$('#ms_w'+i+'_'+k).value!=='');if(any){toast(`Part ${i+1} 的四項都要選`);return;}}}
+  const tot=m.map(o=>o?Object.values(o).reduce((a,b)=>a+b,0):0);r.manual=m;r.rawW=[tot[0]+tot[1],40];r.scale=toScale((tot[0]+tot[1])/40*100);r.pending=false;saveResult('wri',r);toast('分數已存入');render();}
+function saveManualS(){const r=results().spk;const m=readSel('s',SCRIT);if(!m){toast('三項都要選');return;}
+  const avg=(m.grammar_vocab+m.discourse+m.interactive)/3;r.manual=m;r.scale=toScale(avg/5*100);r.pending=false;saveResult('spk',r);toast('分數已存入');render();}
+function copyAIW(i){const r=results().wri;const a=r.answers;const t2=WRI.p2.find(x=>x.id===a.p2);
+  const task=i===0?`${WRI.p1.task}\n\nEssay question: ${WRI.p1.q}\nNotes: 1. ${WRI.p1.notes[0]}  2. ${WRI.p1.notes[1]}  3. (your own idea)`:(t2?t2.task:'');const text=(i===0?a.w1:a.w2)||'';
+  if(!text.trim()){toast('這篇沒有作答');return;}
+  copyText(`請你扮演劍橋 B2 First for Schools 寫作考官，依照官方寫作評分標準批改下面這篇作答。
+評分四項，各 0–5 分（3 分約等於 B2 及格）：Content（內容）、Communicative Achievement（溝通效果）、Organisation（組織）、Language（語言）。考生是台灣的中小學生，請公正評分，不要放水；字數要求 140–190 字，字數不足要扣分。
+
+請用繁體中文回覆，格式如下：
+1. 四項分數（Content / Communicative Achievement / Organisation / Language）
+2. 做得好的地方
+3. 需要改進的地方（具體、小朋友看得懂）
+4. 最重要的錯誤修正（原句 → 改正 → 原因），最多 6 個
+5. 一篇保留考生想法、140–190 字、B2 程度的英文修改範文
+
+【題目】
+${task}
+
+【考生作答】（${wordCount(text)} 字）
+${text}`,'已複製！貼到 AI 送出即可');}
+function copyAIS(){const r=results().spk;
+  const tr=SPK.steps.map((st,i)=>`[${st.title}] 考官：${st.q}${st.mind?'（提示：'+st.mind.o.join(', ')+'）':''}\n考生：${(r.answers[i]||'（沒有回答）').trim()}`).join('\n\n');
+  copyText(`請你扮演劍橋 B2 First for Schools 口說考官。下面是考生口說練習的「語音轉文字」紀錄（考生自己練習，沒有同伴；無法判斷發音）。
+請依官方口說評分標準，各 0–5 分（3 分約等於 B2 及格）：Grammar and Vocabulary（文法字彙）、Discourse Management（表達組織：回答夠不夠長、有沒有理由和連接詞）、Interactive Communication（互動，請依討論和做決定的部分估算）。考生是台灣的中小學生，請公正評分，回答太短或沒回答要給低分。
+
+請用繁體中文回覆：
+1. 三項分數
+2. 做得好的地方
+3. 需要改進的地方
+4. Part 1–4 各給一個「更好的英文說法」示範
+5. 建議學起來的英文句型
+
+【紀錄】
+${tr}`,'已複製！貼到 AI 送出即可');}
+function copyTxt(i){const r=results().wri;const a=r.answers;const t2=WRI.p2.find(x=>x.id===a.p2);
+  const txt=i===0?`FCE for Schools Writing Part 1 Essay\nQuestion: ${WRI.p1.q}\n\n${a.w1||''}`:`FCE for Schools Writing Part 2 (${t2?t2.title:''})\n${t2?t2.task:''}\n\n${a.w2||''}`;
+  copyText(txt);}
+
+/* ================= SPEAKING ================= */
+let spkTimer=null,spkLeft=0;
+function saveSpk(){const ta=$('#spkText');if(!ta)return;const all=store.get('spkText',{});all[S.step]=ta.value;store.set('spkText',all);}
+function renderSpeaking(m){const st=SPK.steps[S.step];const texts=store.get('spkText',{});
+  $('#partnav').innerHTML=[1,2,3,4].map(p=>`<button class="${st.part===p?'on':''}" disabled>Part ${p}</button>`).join('');
+  let h=`<div class="small">Speaking・第 ${S.step+1} / ${SPK.steps.length} 題</div><h1>${st.title}</h1>${st.zh?`<div class="instr"><div class="zh" style="margin:0;color:var(--ink)">${st.zh}</div></div>`:''}`;
+  if(st.pics)h+=`<div class="pics">${st.pics.map(([e,c])=>`<div class="pic">${e}<span>${c}</span></div>`).join('')}</div>`;
+  if(st.mind)h+=`<div class="mind"><div class="c en">${esc(st.mind.c)}</div>${st.mind.o.map(x=>`<div class="en">${esc(x)}</div>`).join('')}</div>`;
+  h+=`<div class="card"><div class="small">Examiner 考官說：</div><p class="en" style="font-size:18px;font-weight:600">${esc(st.q)}</p>
+    <div class="row"><button class="b-teal" onclick="sayExaminer()">🔊 聽考官說</button></div></div>
+    <div class="card" style="text-align:center"><div class="bigscore" id="spkClock">${fmt(st.secs)}</div><div class="small">建議回答時間</div>
+    <div class="row" style="justify-content:center;margin-top:10px"><button class="b-org" id="spkGo" onclick="spkStart()">▶ 開始回答</button>${DICT?'<button class="mic" id="micBtn" onclick="micToggle()">🎙 開始錄音</button>':''}</div></div>
+    <div class="card"><h3>我說的內容 ${DICT?'<span class="small">（錄音會自動轉成文字，也可以自己修改）</span>':''}</h3>
+    ${DICT?'<div class="live" id="live"></div>':'<p class="small">這個瀏覽器不能錄音轉文字（需要 Chrome 或 Edge 瀏覽器，電腦或 Android 手機）。請大聲回答，再把說的話打在下面（家長可以幫忙），交卷後 Claude 才能給建議。</p>'}
+    <textarea id="spkText" class="en" style="min-height:110px" placeholder="Your answer will appear here…">${esc(texts[S.step]||'')}</textarea></div>`;
+  m.innerHTML=h;$('#spkText').oninput=saveSpk;
+  $('#foot').style.display='block';$('#footInfo').textContent=`Part ${st.part}`;
+  $('#prevBtn').textContent='← 上一題';$('#prevBtn').style.visibility=S.step>0?'visible':'hidden';$('#prevBtn').onclick=()=>{spkStop();micOff();S.step--;render();};
+  const last=S.step===SPK.steps.length-1;$('#nextBtn').textContent=last?'結束口說 ✔':'下一題 →';$('#nextBtn').className=last?'b-org':'b-main';
+  $('#nextBtn').onclick=()=>{spkStop();micOff();if(last){const n=Object.values(store.get('spkText',{})).filter(x=>x&&x.trim()).length;
+      modal(`<h3>結束口說測驗？</h3><p>已記錄 ${n} / ${SPK.steps.length} 題的回答。</p>`,[['返回','b-ghost'],['結束並評分','b-org',()=>submitPaper(false)]]);}
+    else{S.step++;render();window.scrollTo(0,0);setTimeout(sayExaminer,400);}};}
+function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+function sayExaminer(){const st=SPK.steps[S.step];speak([['E',st.q]]);}
+function spkStart(){const st=SPK.steps[S.step];if(spkTimer){spkStop();return;}spkLeft=st.secs;$('#spkGo').textContent='⏸ 停止';
+  spkTimer=setInterval(()=>{spkLeft--;const c=$('#spkClock');if(c){c.textContent=fmt(Math.max(0,spkLeft));c.style.color=spkLeft<=5?'var(--red)':'';}if(spkLeft<=0){spkStop();toast('時間到！');}},1000);}
+function spkStop(){clearInterval(spkTimer);spkTimer=null;const b=$('#spkGo');if(b)b.textContent='▶ 開始回答';}
+let micOnFlag=false;
+function micToggle(){if(!DICT)return;if(micOnFlag){micOnFlag=false;DICT.stop().catch(()=>{});return;}
+  micOnFlag=true;DICT.start().catch(e=>{micOnFlag=false;toast(e&&e.code==='not_granted'?'沒有麥克風權限，請用打字':'無法錄音');});if(!spkTimer)spkStart();}
+function micOff(){if(DICT&&micOnFlag){micOnFlag=false;DICT.stop().catch(()=>{});}}
+
+function submitSpeaking(){micOff();const texts=store.get('spkText',{});const r={answers:texts,pending:true,date:new Date().toISOString()};saveResult('spk',r);S={view:'result',paper:'spk'};render();gradeSpeaking();}
+async function gradeSpeaking(){const r=results().spk;if(!r||!SAMPLE){render();return;}r.pending=true;r.error=null;saveResult('spk',r);render();
+  const tr=SPK.steps.map((st,i)=>`[${st.title}] Examiner: ${st.q}${st.mind?' Prompts: '+st.mind.o.join(', '):''}\nCandidate: ${(r.answers[i]||'(no answer)').trim()}`).join('\n\n');
+  const prompt=`You are an experienced Cambridge English examiner assessing B2 First for Schools Speaking. The candidate is a young learner in Taiwan (around 10–14). This is practice: the candidate answered alone (no partner), and you only have a speech-to-text transcript, so pronunciation cannot be judged and Interactive Communication can only be estimated from how they discuss, give opinions and reach a decision.
+Score each 0-5 using the B2 First speaking scales (band 3 ≈ B2 pass): grammar_vocab (Grammar and Vocabulary), discourse (Discourse Management: extended answers, relevance, organisation, linking), interactive (Interactive Communication, estimated). Be accurate, not generous. Very short or missing answers score low.
+
+TRANSCRIPT:
+${tr}
+
+Return ONLY valid JSON:
+{"scores":{"grammar_vocab":0-5,"discourse":0-5,"interactive":0-5},
+"summary_zh":"2-3 sentences",
+"strengths_zh":["..."],
+"improve_zh":["specific advice"],
+"parts":[{"part":"Part 1","comment_zh":"...","better":"an example of a stronger B2 answer in English to one question from this part"},{"part":"Part 2",...},{"part":"Part 3",...},{"part":"Part 4",...}],
+"useful_phrases":["English phrases the candidate should learn"]}
+All *_zh fields in Traditional Chinese (Taiwan), simple enough for a child.`;
+  try{const o=await askClaude(prompt);const s=o.scores;const avg=((+s.grammar_vocab||0)+(+s.discourse||0)+(+s.interactive||0))/3;
+    r.ai=o;r.scale=toScale(avg/5*100);r.pending=false;}
+  catch(e){r.error=e&&e.code==='rate_limited'?'評分請求太頻繁，請稍後再按「重新評分」。':'評分時發生問題，請按「重新評分」再試一次。';}
+  saveResult('spk',r);if(S.view==='result'&&S.paper==='spk')render();}
+function renderSpkResult(m,r){let h=`<div class="row"><button class="b-ghost" onclick="goHome()">← 回首頁</button></div><h1>Speaking・成績</h1>`;
+  if(r.pending&&!r.error&&SAMPLE)h+=`<div class="ai"><span class="spin"></span>　Claude 正在聽你的回答內容並評分…</div>`;
+  if(r.error)h+=`<div class="beta">${r.error}　<button class="b-main" onclick="gradeSpeaking()">重新評分</button></div>`;
+  h+=`<div class="beta"><b>怎麼批改：</b>按「📋 複製給 AI 批改」，貼到免費版 Claude（claude.ai）或其他 AI，AI 會依劍橋標準給三項分數和建議，再把分數選在下面按「存入分數」。（只看文字無法評發音。）</div>
+    <div class="card"><div class="row"><button class="b-org" onclick="copyAIS()">📋 複製給 AI 批改</button></div><p style="margin-top:10px"><b>填入分數</b> <span class="small">（每項 0–5 分）</span></p>${scoreSelects('s',SCRIT,r.manual)}<div class="row" style="margin-top:8px"><button class="b-main" onclick="saveManualS()">💾 存入分數</button></div></div>`;
+  if(r.manual&&!r.ai&&!r.pending)h+=`<div class="card"><div class="small">Speaking（依填入分數估算）</div><div class="bigscore">${r.scale}</div><div class="small">${grade(r.scale)}・估算</div><div style="margin-top:6px">${lvPill(r.scale)}</div></div>`;
+  const o=r.ai;
+  if(o&&!r.pending){h+=`<div class="card"><div class="small">Speaking（依錄音文字估算）</div><div class="bigscore">${r.scale}</div><div class="small">${grade(r.scale)}・估算</div><div style="margin-top:6px">${lvPill(r.scale)}</div></div>
+    <div class="ai"><div class="crit"><span>Grammar &amp; Vocabulary 文法字彙</span><b>${o.scores.grammar_vocab} / 5</b><span>Discourse Management 表達組織</span><b>${o.scores.discourse} / 5</b><span>Interactive Communication 互動（估算）</span><b>${o.scores.interactive} / 5</b><span>Pronunciation 發音</span><b>無法評分</b></div><p style="margin-top:8px">${esc(o.summary_zh)}</p></div>
+    <div class="card"><p><b>👍 做得好的地方</b></p><ul>${(o.strengths_zh||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p><b>🔧 怎麼改會更好</b></p><ul>${(o.improve_zh||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    ${(o.parts||[]).map(p=>`<div class="card"><h3>${esc(p.part)}</h3><p>${esc(p.comment_zh)}</p><div class="expl"><b>更好的說法：</b><span class="en">${esc(p.better)}</span></div></div>`).join('')}
+    ${(o.useful_phrases||[]).length?`<div class="card"><h3>🛟 要學起來的句子</h3><ul class="en">${o.useful_phrases.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}`;}
+  h+=`<details class="card"><summary style="cursor:pointer;font-weight:700">我說的內容（錄音文字）</summary>${SPK.steps.map((st,i)=>`<p class="small" style="margin-top:8px"><b>${st.title}</b>：${esc(st.q)}</p><p class="en">${esc(r.answers[i]||'（沒有記錄）')}</p>`).join('')}</details>`;
+  h+=`<div class="row"><button class="b-ghost" onclick="retake('spk')">↻ 重考</button>${SAMPLE&&!r.pending?'<button class="b-ghost" onclick="gradeSpeaking()">重新評分</button>':''}<button class="b-main" onclick="goHome()">回首頁</button></div>`;
+  m.innerHTML=h;}
+
+render();
+</script>
+</body>
+</html>
